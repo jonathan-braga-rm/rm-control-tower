@@ -1,0 +1,935 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RM LatAm — Control Tower</title>
+<style>
+  :root{
+    --bg:#0c1220;--panel:#131c2e;--panel2:#182338;--line:#24314c;
+    --tx:#dbe4f2;--tx2:#8fa0bc;--tx3:#5f6f8d;
+    --red:#ff5c6c;--amber:#ffb454;--green:#3ddc97;--blue:#4da3ff;--purple:#b48cff;--gray:#7a8699;
+    --shadow:rgba(0,0,0,.5);
+  }
+  body.light{
+    --bg:#eef1f7;--panel:#ffffff;--panel2:#f4f7fc;--line:#d8e0ea;
+    --tx:#17212f;--tx2:#516079;--tx3:#8291a7;
+    --red:#d63a49;--amber:#c47d16;--green:#12915f;--blue:#2f6fd0;--purple:#7a5fc0;--gray:#7a8699;
+    --shadow:rgba(30,45,70,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--tx);font:14px/1.45 "Segoe UI",system-ui,Arial,sans-serif;min-height:100vh;transition:background .2s,color .2s}
+  .top{display:flex;align-items:center;gap:16px;padding:14px 26px;background:linear-gradient(90deg,#101a2c,#0d1526);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+  .logo{display:flex;align-items:center;gap:12px}
+  .logo .mark{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#2f6fd0,#4da3ff);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff}
+  .logo h1{font-size:16px;font-weight:700;letter-spacing:.6px;color:#fff}.logo h1 span{color:#4da3ff}
+  .logo small{display:block;color:#8fa3c2;font-size:11px}
+  .top .right{margin-left:auto;display:flex;align-items:center;gap:14px}
+  .top .meta{text-align:right;font-size:11px;color:#8fa3c2}.top .meta b{color:#dbe4f2}
+  .themebtn{cursor:pointer;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#dbe4f2;border-radius:99px;padding:7px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+  .themebtn:hover{background:rgba(255,255,255,.16)}
+  .modeflag{display:inline-block;padding:3px 10px;border-radius:99px;font-size:10.5px;font-weight:700;letter-spacing:.5px;margin-left:8px}
+  .flag-admin{background:rgba(180,140,255,.22);color:#c3a8f7;border:1px solid rgba(180,140,255,.4)}
+  .flag-view{background:rgba(77,163,255,.2);color:#79b0f5;border:1px solid rgba(77,163,255,.4)}
+  .wrap{max-width:1400px;margin:0 auto;padding:20px 26px 80px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,var(--blue))}
+  .kpi .v{font-size:30px;font-weight:800;color:var(--c,var(--blue));line-height:1.1}
+  .kpi .l{font-size:10.5px;color:var(--tx2);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
+  .tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+  .tab{padding:9px 20px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--tx2);cursor:pointer;font-size:13px;font-weight:600;transition:.15s}
+  .tab:hover{color:var(--tx);border-color:#33436a}
+  .tab.on{background:linear-gradient(135deg,#2f6fd0,#3b82e0);color:#fff;border-color:transparent}
+  .tab .b{display:inline-block;min-width:20px;padding:1px 6px;border-radius:99px;background:rgba(128,128,128,.22);font-size:11px;margin-left:6px}
+  .tab .pend{background:var(--amber);color:#101a2c}
+  .btn{padding:9px 18px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--tx);cursor:pointer;font-size:13px;font-weight:600}
+  .btn:hover{border-color:var(--blue)}
+  .btn.primary{background:linear-gradient(135deg,#2f6fd0,#3b82e0);border-color:transparent;color:#fff}
+  .btn.green{background:linear-gradient(135deg,#1e9e6a,#2bbd80);border-color:transparent;color:#fff}
+  .btn.ghost{background:transparent}.btn.sm{padding:5px 12px;font-size:12px}
+  .btn.big{padding:11px 22px;font-size:14px}
+  .btn.danger{color:#fff;background:linear-gradient(135deg,#c53442,#ff5c6c);border-color:transparent}
+  .btn.dangerghost{color:var(--red);border-color:rgba(214,58,73,.5);background:transparent}
+  .actbar{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .savehint{font-size:11px;color:var(--amber);font-weight:600}
+  .toggle{cursor:pointer;font-size:12px;color:var(--tx2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-weight:600}
+  .toggle.on{color:var(--amber);border-color:var(--amber)}
+  .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:18px}
+  .chip{padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--tx2);cursor:pointer;font-size:12px;font-weight:600}
+  .chip.on{color:#fff;border-color:transparent}
+  .chip[data-p="TODAS"].on{background:#33436a}.chip[data-p="ANDINA"].on{background:#2f6fd0}
+  .chip[data-p="SOUTH CONE"].on{background:#1e9e6a}.chip[data-p="MEXICO & CARIBBEAN"].on{background:#c8862c}.chip[data-p="CORP"].on{background:#7a5fc0}
+  select,input[type=text],input[type=date],input[type=number],textarea{background:var(--panel2);border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:7px 10px;font-size:12.5px;outline:none;font-family:inherit}
+  input[type=text]{min-width:200px}textarea{width:100%;min-height:60px;resize:vertical}
+  select:focus,input:focus,textarea:focus{border-color:var(--blue)}
+  .filters .spacer{flex:1}.filters .count{font-size:12px;color:var(--tx3)}
+  .sec{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:16px;overflow:hidden}
+  .sec>header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel2)}
+  .sec>header h2{font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+  .sec>header .n{margin-left:auto;font-size:12px;color:var(--tx3)}
+  .dot{width:9px;height:9px;border-radius:99px;background:var(--c,var(--blue));box-shadow:0 0 8px var(--c,var(--blue))}
+  .empty{padding:16px;color:var(--tx3);font-size:12.5px}
+  table{width:100%;border-collapse:collapse}
+  th{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:9px 12px;border-bottom:1px solid var(--line);font-size:12.8px;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tbody tr.clik{cursor:pointer}
+  tbody tr.clik:hover td{background:rgba(77,163,255,.09)}
+  tbody tr.del td{opacity:.45;text-decoration:line-through}
+  .sub{display:block;font-size:11px;color:var(--tx3);margin-top:2px}
+  .nowrap{white-space:nowrap}
+  .rowbtn{cursor:pointer;background:transparent;border:1px solid var(--line);color:var(--tx3);border-radius:7px;padding:3px 9px;font-size:13px;line-height:1}
+  .rowbtn:hover{color:var(--red);border-color:var(--red)}
+  .rowbtn.restore:hover{color:var(--green);border-color:var(--green)}
+  .badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:10.5px;font-weight:700;white-space:nowrap}
+  .b-atr{background:rgba(255,92,108,.16);color:var(--red);border:1px solid rgba(255,92,108,.45)}
+  .b-hoje{background:rgba(255,180,84,.16);color:var(--amber);border:1px solid rgba(255,180,84,.45)}
+  .b-pen{background:rgba(77,163,255,.14);color:var(--blue);border:1px solid rgba(77,163,255,.4)}
+  .b-ok{background:rgba(61,220,151,.14);color:var(--green);border:1px solid rgba(61,220,151,.4)}
+  .b-sp{background:rgba(122,134,153,.16);color:var(--gray);border:1px solid rgba(122,134,153,.45)}
+  .b-and{background:rgba(255,180,84,.16);color:var(--amber);border:1px solid rgba(255,180,84,.45)}
+  .b-canc{background:rgba(122,134,153,.16);color:var(--gray);border:1px solid rgba(122,134,153,.45)}
+  .b-del{background:rgba(255,92,108,.12);color:var(--red);border:1px dashed rgba(255,92,108,.5)}
+  .plat{display:inline-block;padding:2px 9px;border-radius:6px;font-size:10px;font-weight:800;white-space:nowrap}
+  .p-ANDINA{background:rgba(47,111,208,.2);color:#3f80d8}.p-SOUTHCONE{background:rgba(30,158,106,.18);color:#149a63}
+  .p-MEX{background:rgba(200,134,44,.2);color:#b3781f}.p-CORP{background:rgba(122,95,192,.2);color:#7a5fc0}
+  body:not(.light) .p-ANDINA{color:#79b0f5}body:not(.light) .p-SOUTHCONE{color:#4fd6a2}body:not(.light) .p-MEX{color:#f0b45e}body:not(.light) .p-CORP{color:#c3a8f7}
+  .late{color:var(--red);font-weight:700}.soon{color:var(--amber);font-weight:700}.okc{color:var(--green)}.muted{color:var(--tx3)}
+  .pill{display:inline-block;width:8px;height:8px;border-radius:99px;margin-left:5px;vertical-align:middle}
+  .pill.c{background:var(--blue)}.pill.p{background:var(--amber)}
+  .pcard{border:1px solid var(--line);border-radius:12px;background:var(--panel);margin-bottom:14px;overflow:hidden}
+  .pcard>.head{padding:14px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;cursor:pointer;background:var(--panel2)}
+  .pcard>.head:hover{background:var(--line)}
+  .pcard .t{font-size:14.5px;font-weight:700}.pcard .who{font-size:12px;color:var(--tx2)}
+  .pcard .right{margin-left:auto;display:flex;gap:18px;align-items:center}
+  .bar{position:relative;width:200px;height:9px;border-radius:99px;background:var(--line)}
+  .bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,#2f6fd0,#4da3ff)}
+  .bar .fill.bad{background:linear-gradient(90deg,#d04a58,#ff5c6c)}.bar .fill.good{background:linear-gradient(90deg,#1e9e6a,#3ddc97)}
+  .bar .mark{position:absolute;top:-3px;bottom:-3px;width:2px;background:#ffb454}
+  .pct{font-size:15px;font-weight:800;min-width:46px;text-align:right}
+  .pcard .body{display:none;border-top:1px solid var(--line)}.pcard.open .body{display:block}
+  .caret{color:var(--tx3);font-size:11px;transition:.2s}.pcard.open .caret{transform:rotate(90deg)}
+  .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .person{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .person .nm{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .av{width:42px;height:42px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff}
+  .person h3{font-size:14px}.person .role{font-size:11px;color:var(--tx2)}
+  .person .stats{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .stat{flex:1;min-width:70px;background:var(--panel2);border-radius:8px;padding:8px;text-align:center}
+  .stat .v{font-size:18px;font-weight:800}.stat .l{font-size:9.5px;color:var(--tx3);text-transform:uppercase}
+  .person .mail{font-size:11px;color:var(--tx3);margin-top:10px;word-break:break-all}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:1000px){.grid2{grid-template-columns:1fr}.bar{width:130px}}
+  .footer{margin-top:26px;text-align:center;font-size:11px;color:var(--tx3)}
+  .ovl{position:fixed;inset:0;background:rgba(6,10,18,.72);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px}
+  .ovl.on{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;width:100%;max-width:720px;box-shadow:0 24px 60px var(--shadow)}
+  .modal>.mh{display:flex;align-items:flex-start;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line);background:var(--panel2);border-radius:16px 16px 0 0;position:sticky;top:0}
+  .modal .mh h2{font-size:16px;font-weight:700;line-height:1.3}
+  .modal .mh .x{margin-left:auto;cursor:pointer;color:var(--tx2);font-size:24px;line-height:1;padding:0 4px}
+  .modal .mh .x:hover{color:var(--tx)}
+  .modal .mb{padding:20px 22px}
+  .fieldrow{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .field{flex:1;min-width:150px}
+  .field.full{flex-basis:100%}
+  .field label{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:4px}
+  .field .val{font-size:13.5px}
+  .field input,.field select,.field textarea{width:100%}
+  .block{border-top:1px solid var(--line);margin-top:16px;padding-top:16px}
+  .block h3{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--tx2);margin-bottom:10px}
+  .editbox{background:rgba(77,163,255,.06);border:1px solid rgba(77,163,255,.3);border-radius:12px;padding:14px;margin-top:16px}
+  .editbox h3{color:var(--blue)}
+  .thread{display:flex;flex-direction:column;gap:10px;max-height:240px;overflow-y:auto;margin-bottom:12px}
+  .cmt{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+  .cmt .meta{font-size:10.5px;color:var(--tx3);margin-bottom:3px}.cmt .meta b{color:var(--blue)}
+  .cmt .txt{font-size:13px;white-space:pre-wrap}
+  .hist{font-size:12px;color:var(--tx2)}
+  .hist .h{display:flex;gap:10px;padding:5px 0;border-bottom:1px dashed var(--line)}
+  .hist .h:last-child{border-bottom:none}.hist .h .d{font-weight:700;color:var(--tx);min-width:82px}
+  .sugg{background:rgba(255,180,84,.09);border:1px solid rgba(255,180,84,.4);border-radius:10px;padding:12px;margin-bottom:10px}
+  .sugg .who{font-size:11px;color:var(--amber);font-weight:700;margin-bottom:5px}
+  .sugg .row{font-size:12.5px;margin:3px 0}.sugg .acts{display:flex;gap:8px;margin-top:10px}
+  .note{font-size:11.5px;color:var(--tx3);margin-top:6px}
+  .modalfoot{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e9e6a;color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:.25s;box-shadow:0 8px 24px var(--shadow)}
+  .toast.on{opacity:1}
+  .outbar{position:fixed;bottom:18px;right:18px;z-index:90;display:none;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--blue);border-radius:12px;padding:10px 14px;box-shadow:0 10px 30px var(--shadow)}
+  .outbar.on{display:flex}
+  .outbar .c{background:var(--blue);color:#fff;border-radius:99px;padding:1px 9px;font-weight:700;font-size:12px}
+  .helpbox{background:rgba(77,163,255,.07);border:1px solid rgba(77,163,255,.28);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--tx2);margin-bottom:16px}
+  .syncok{font-size:11px;color:var(--green);font-weight:700;white-space:nowrap}
+  .btn.warnb{color:var(--amber);border-color:var(--amber)}
+  /* ---- mobile (celular) ---- */
+  @media(max-width:760px){
+    .top{padding:10px 12px;gap:8px;flex-wrap:wrap}
+    .top .meta{display:none}
+    .logo h1{font-size:13px}
+    .wrap{padding:12px 10px 70px}
+    .kpis{grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px}
+    .kpi{padding:10px 12px}.kpi .v{font-size:22px}
+    .sec{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .sec table{min-width:640px}
+    .pcard .body{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .pcard .body table{min-width:640px}
+    .bar{width:80px}
+    .ovl{padding:12px 6px}
+    .modal .mb{padding:14px 12px}
+    .modal>.mh{padding:14px 14px}
+    input[type=text]{min-width:110px}
+    .tab{padding:8px 12px;font-size:12px}
+    .actbar{margin-left:0;flex-wrap:wrap}
+  }
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="logo">
+    <div class="mark">RM</div>
+    <div><h1>RM LATAM <span>|</span> CONTROL TOWER</h1><small id="subtitle">Revenue Management</small></div>
+  </div>
+  <div class="right">
+    <button class="themebtn" id="themebtn" onclick="toggleTheme()">🌙 Escuro</button>
+    <div class="meta" id="meta"></div>
+  </div>
+</div>
+<div class="wrap">
+  <div id="helpzone"></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="tabs" id="tabs"></div>
+  <div class="filters" id="filters">
+    <span style="font-size:11px;color:var(--tx3);text-transform:uppercase" id="lblPlat">Plataforma</span>
+    <span id="chips"></span>
+    <select id="fResp"></select><select id="fStatus"></select><select id="fMes"></select>
+    <input type="text" id="fBusca" placeholder="🔍 Buscar...">
+    <span class="spacer"></span><span class="count" id="fCount"></span>
+  </div>
+  <div id="content"></div>
+  <div class="footer" id="footer"></div>
+</div>
+
+<div class="ovl" id="ovl"><div class="modal"><div class="mh"><h2 id="mTitle"></h2><span class="x" onclick="closeModal()">×</span></div><div class="mb" id="mBody"></div></div></div>
+<div class="outbar" id="outbar"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = {"overlay":null,"fonteData":"06/07/2026 20:20","adminName":"Jonathan","lang":"es","time":[],"hoje":"2026-07-07","gerado":"07/07/2026 15:07","user":"César","rotinas":[],"mode":"view","adminEmail":"jonathan.braga@emergentcold.com","fonte":"Gestao_Rotinas_Projetos v7.xlsm","entregaveis":[{"id":"E5","tipo":"entregavel","n":"5","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Esclarecer informações de Mão de Obra direta do Mexico","deleted":false,"ref":"Pontual","limite":"2026-06-03","baseLimite":"2026-06-03","recebido":"2026-06-04","recebidoTxt":"2026-06-04","baseRecebTxt":"2026-06-04","st":"Concluído","dias":-34,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-03","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E4","tipo":"entregavel","n":"4","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Organizar handover do César com Jorge","deleted":false,"ref":"Pontual","limite":"2026-06-03","baseLimite":"2026-06-03","recebido":"2026-06-05","recebidoTxt":"2026-06-05","baseRecebTxt":"2026-06-05","st":"Concluído","dias":-34,"lateDone":true,"coment":"César: OK\r\nJorge: Pendente","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-03","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E11","tipo":"entregavel","n":"11","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revisar CP Model v02 de abril - Qualianz","deleted":false,"ref":"Pontual","limite":"2026-06-05","baseLimite":"2026-06-05","recebido":"2026-06-10","recebidoTxt":"2026-06-10","baseRecebTxt":"2026-06-10","st":"Concluído","dias":-32,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-05","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E56","tipo":"entregavel","n":"56","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue per Pallet","deleted":false,"ref":"46143","limite":"2026-06-17","baseLimite":"2026-06-17","recebido":"2026-06-17","recebidoTxt":"2026-06-17","baseRecebTxt":"2026-06-17","st":"Concluído","dias":-20,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E55","tipo":"entregavel","n":"55","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 15 clientes","deleted":false,"ref":"46143","limite":"2026-06-17","baseLimite":"2026-06-17","recebido":"2026-06-17","recebidoTxt":"2026-06-17","baseRecebTxt":"2026-06-17","st":"Concluído","dias":-20,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E54","tipo":"entregavel","n":"54","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião com Ivan/Yahaira/Adrian/Elena a apresentação do CP Model e solicitar comentários.","deleted":false,"ref":"Pontual","limite":"2026-06-17","baseLimite":"2026-06-17","recebido":"2026-06-23","recebidoTxt":"2026-06-23","baseRecebTxt":"2026-06-23","st":"Concluído","dias":-20,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E60","tipo":"entregavel","n":"60","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue per Customer - Só Receita","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-16","recebidoTxt":"2026-06-16","baseRecebTxt":"2026-06-16","st":"Concluído","dias":-18,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E59","tipo":"entregavel","n":"59","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Conciliation vs Board deck","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-30","recebidoTxt":"2026-06-30","baseRecebTxt":"2026-06-30","st":"Concluído","dias":-18,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E58","tipo":"entregavel","n":"58","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue One Offs","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-23","recebidoTxt":"2026-06-23","baseRecebTxt":"2026-06-23","st":"Concluído","dias":-18,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E67","tipo":"entregavel","n":"67","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Sign Off (BU Heads, Commercial, KAMs, Billing)","deleted":false,"ref":"46143","limite":"2026-06-22","baseLimite":"2026-06-22","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-15,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-22","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E76","tipo":"entregavel","n":"76","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model Update","deleted":false,"ref":"46143","limite":"2026-06-24","baseLimite":"2026-06-24","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-13,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"","comments":{},"dateHistory":{"date":"2026-06-24","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E75","tipo":"entregavel","n":"75","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revisar CP Model v02 de abril - Bajo Cero","deleted":false,"ref":"Pontual","limite":"2026-06-24","baseLimite":"2026-06-24","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-13,"lateDone":true,"coment":"Reunião de revisão agendado para 24/06 - 15h com equipe RM","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-24","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E85","tipo":"entregavel","n":"85","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model Update - Na versão v02","deleted":false,"ref":"46143","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-11,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E86","tipo":"entregavel","n":"86","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião com Adrian e Ivan com o time RM Corp. Escolher melhor opção sendo reunião em conjunto ou separado.","deleted":false,"ref":"Pontual","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-11,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E90","tipo":"entregavel","n":"90","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Report Publication","deleted":false,"ref":"46143","limite":"2026-06-29","baseLimite":"2026-06-29","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-8,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-29","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E92","tipo":"entregavel","n":"92","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Abertura do serviço Otras Maniobras no SAP","deleted":false,"ref":"Pontual","limite":"2026-06-30","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-7,"lateDone":false,"coment":"Revisar com Elena","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E94","tipo":"entregavel","n":"94","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revisão completa de DE-PARA de serviços KORBER vs SAP","deleted":false,"ref":"Pontual","limite":"2026-06-30","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-7,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E93","tipo":"entregavel","n":"93","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Correções de lançamentos e materiais incorretos KORBER","deleted":false,"ref":"Pontual","limite":"2026-06-30","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-7,"lateDone":false,"coment":"Revisar com Elena","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E108","tipo":"entregavel","n":"108","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião de analise de Resultados com Horácio","deleted":false,"ref":"Pontual","limite":"2026-07-01","baseLimite":"2026-07-01","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-6,"lateDone":false,"coment":"Horácio está de férias até 29/06","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-01","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E111","tipo":"entregavel","n":"111","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Uma reunião para BU Heads com explicação da metodologia","deleted":false,"ref":"Pontual","limite":"2026-07-02","baseLimite":"2026-07-02","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-5,"lateDone":false,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-02","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E110","tipo":"entregavel","n":"110","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião com MD para apresentação do CP Model v02","deleted":false,"ref":"Pontual","limite":"2026-07-02","baseLimite":"2026-07-02","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-5,"lateDone":false,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-02","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783378876177235","tipo":"entregavel","n":"220","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue per Customer","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":3,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783378775069506","tipo":"entregavel","n":"217","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Data Template (LC \u0026 USD)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":3,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379149766287","tipo":"entregavel","n":"226","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 10 clientes","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":3,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:05","by":"Jonathan","text":"validar se houve algum cliente com alteração de contrato."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":false},{"id":"NE178337901738086","tipo":"entregavel","n":"223","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Accounts Receivable (Treasury)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":3,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:03","by":"Jonathan","text":"Solicitar a tesouraria."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":false},{"id":"E128","tipo":"entregavel","n":"128","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation (Commercial + BU Heads)","deleted":false,"ref":"46174","limite":"2026-07-17","baseLimite":"2026-07-17","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":10,"lateDone":false,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379281004404","tipo":"entregavel","n":"229","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model v02 - Update e Publication","deleted":false,"ref":"Recorrente","limite":"2026-07-17","baseLimite":"2026-07-17","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":10,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E129","tipo":"entregavel","n":"129","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation (BU Heads + MD)","deleted":false,"ref":"46174","limite":"2026-07-18","baseLimite":"2026-07-18","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":11,"lateDone":false,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-18","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379411168742","tipo":"entregavel","n":"232","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\nSign Offs","deleted":false,"ref":"Recorrente","limite":"2026-07-22","baseLimite":"2026-07-22","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":15,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-22","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379513151562","tipo":"entregavel","n":"235","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation (BU Heads + MD)","deleted":false,"ref":"Recorrente","limite":"2026-07-23","baseLimite":"2026-07-23","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":16,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-23","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false}],"projetos":[]};
+const MODE = DATA.mode, LANG = DATA.lang, USER = DATA.user;
+DATA.overlay = DATA.overlay || {items:{},newItems:[]};
+DATA.overlay.items = DATA.overlay.items || {};
+function A(x){return Array.isArray(x)?x:(x==null?[]:[x]);}
+
+const T = {
+  pt:{sub:'Revenue Management · Entregáveis, Projetos & Rotinas',viewSub:'Meu painel de atividades',
+    plat:'Plataforma',resp:'Responsável: todos',status:'Status: todos',mes:'Mês: todos',busca:'Buscar entrega, comentário...',
+    tabVisao:'📊 Visão Geral',tabEnt:'📦 Entregáveis',tabProj:'🚀 Projetos',tabRot:'🔁 Rotinas',tabTime:'👥 Time',tabSug:'📥 Sugestões',
+    kAtr:'Atrasadas',kHoje:'Vencem hoje',k7:'Próximos 7 dias',kSp:'Sem prazo',kCon:'Concluídas no mês',kOn:'No prazo (mês)',kProj:'Projetos ativos',kPend:'Sugestões pendentes',
+    s1:'1 · Atividades atrasadas',s2:'2 · Vencem hoje',s3:'3 · Próximas entregas — 7 dias',s4:'4 · Itens sem prazo claro',s5:'5 · Horizonte — próximos 30 dias',
+    ok1:'✔ Nenhuma atividade atrasada.',ok2:'Nada vence hoje.',ok3:'Nenhuma entrega nos próximos 7 dias.',ok4:'Nenhum item sem prazo.',ok5:'Nada no horizonte de 30 dias.',
+    projRisco:'🚀 Projetos em atenção',cargaR:'Carga por responsável (ativos)',cargaP:'Carga por plataforma (ativos)',
+    thNum:'Nº',thResp:'Responsável',thPlat:'Plataforma',thEnt:'Entrega',thRef:'Tipo',thPrazo:'Prazo',thReceb:'Recebido',thStatus:'Status',thSit:'Situação',thMes:'Mês',thAcoes:'',
+    thProj:'Projeto',thPer:'Período',thReal:'% Real',thPrev:'% Prev.',thFase:'Fase',thAtiv:'Atividade',thMarco:'Marco',
+    allEnt:'Todos os entregáveis',allProj:'Projetos',rotHdr:'Rotinas',
+    mInfo:'Informações',mStatusOf:'Status oficial',mPrazoOf:'Prazo oficial',mResp:'Responsável',mPlat:'Plataforma',mRef:'Tipo',mMes:'Mês',mComent:'Comentário (planilha)',mTexto:'Texto da ação',
+    mHist:'Histórico de datas',mThread:'Comentários',mAddComment:'Escreva um comentário...',mSend:'Comentar',
+    mSuggest:'Sugerir alteração',mNewDate:'Nova data sugerida',mNewStatus:'Status sugerido',mNewPct:'% conclusão sugerido',mAddOut:'Adicionar à caixa de envio',
+    mAdminEdit:'Editar oficial (só você)',mSaveOf:'Salvar alteração',mPending:'Sugestões pendentes de validação',mApprove:'Validar e aplicar',mReject:'Descartar',
+    stConcluir:'Concluído',stCancel:'Cancelado',mRecvDate:'Data de recebimento',noComments:'Sem comentários ainda.',noHist:'Só a data original.',
+    outTitle:'anotação(ões) para enviar',outSend:'✉ Enviar por e-mail',outCopy:'📋 Copiar p/ enviar',outClear:'Limpar',
+    save:'💾 Salvar tudo',saveConnect:'📂 Onde salvar',importSug:'📥 Importar sugestões',showDel:'🗑 Excluídos',
+    addAction:'➕ Incluir ação',createTitle:'Incluir nova ação',fType:'Tipo de ação',tEnt:'📦 Entregável',tProj:'🚀 Atividade de projeto',
+    fProjeto:'Projeto',fFase:'Fase',fInicio:'Data início',fFim:'Data fim',fPrazo:'Prazo (data limite)',fMes:'Mês',fRef:'Tipo',fPrio:'Prioridade',fMarco:'Marco?',fCriar:'✔ Criar ação',fComentInit:'Comentário inicial (opcional)',reqMsg:'Preencha ao menos o texto e o responsável.',created:'Ação criada!',fStatusInicial:'Status inicial',
+    tRot:'🔁 Rotina',fDiaUtil:'Dia útil de entrega (do mês)',fPeriod:'Periodicidade',reqRot:'Preencha texto, responsável e o dia útil.',
+    del:'🗑 Excluir ação',restore:'♻ Restaurar ação',confirmDel:'Excluir esta ação? Ela some das listas (dá para restaurar depois com o filtro “Excluídos”).',
+    savedOk:'Salvo na base do sistema.',outAdded:'Anotação adicionada à caixa de envio.',
+    helpView:'Dê <b>dois cliques</b> em qualquer atividade para abrir a tela dela e <b>comentar, sugerir uma nova data ou apontar o status/%</b>. Suas anotações entram na caixa de envio (canto inferior direito); ao terminar, clique em <b>Enviar para validação</b> — o Jonathan valida antes de mudar o status oficial.',
+    helpAdmin:'Dê <b>dois cliques</b> numa atividade para abrir e editar <b>texto, responsável, plataforma, prazo, status (inclui Cancelado) e %</b>. O <b>botão Salvar fica dentro da tela</b>. Para <b>excluir</b>, use o 🗑 no fim da linha (ou dentro da atividade). A base oficial é <b>data\\board.overlay.json</b>; o botão “Onde salvar” só dá ao navegador a permissão (uma vez) para gravar nesse arquivo — nada a ver com o Excel, que é só a semente.',
+    byBase:'Planilha',adminAuthor:'Jonathan'},
+  es:{sub:'Revenue Management · Entregables, Proyectos y Rutinas',viewSub:'Mi panel de actividades',
+    plat:'Plataforma',resp:'Responsable: todos',status:'Estado: todos',mes:'Mes: todos',busca:'Buscar entrega, comentario...',
+    tabVisao:'📊 Visión General',tabEnt:'📦 Entregables',tabProj:'🚀 Proyectos',tabRot:'🔁 Rutinas',tabTime:'👥 Equipo',tabSug:'📥 Sugerencias',
+    kAtr:'Atrasadas',kHoje:'Vencen hoy',k7:'Próximos 7 días',kSp:'Sin fecha',kCon:'Concluidas en el mes',kOn:'A tiempo (mes)',kProj:'Proyectos activos',kPend:'Sugerencias pendientes',
+    s1:'1 · Actividades atrasadas',s2:'2 · Vencen hoy',s3:'3 · Próximas entregas — 7 días',s4:'4 · Ítems sin fecha clara',s5:'5 · Horizonte — próximos 30 días',
+    ok1:'✔ Ninguna actividad atrasada.',ok2:'Nada vence hoy.',ok3:'Ninguna entrega en los próximos 7 días.',ok4:'Ningún ítem sin fecha.',ok5:'Nada en el horizonte de 30 días.',
+    projRisco:'🚀 Proyectos en atención',cargaR:'Carga por responsable (activos)',cargaP:'Carga por plataforma (activos)',
+    thNum:'Nº',thResp:'Responsable',thPlat:'Plataforma',thEnt:'Entrega',thRef:'Tipo',thPrazo:'Fecha',thReceb:'Recibido',thStatus:'Estado',thSit:'Situación',thMes:'Mes',thAcoes:'',
+    thProj:'Proyecto',thPer:'Período',thReal:'% Real',thPrev:'% Prev.',thFase:'Fase',thAtiv:'Actividad',thMarco:'Hito',
+    allEnt:'Todos los entregables',allProj:'Proyectos',rotHdr:'Rutinas',
+    mInfo:'Información',mStatusOf:'Estado oficial',mPrazoOf:'Fecha oficial',mResp:'Responsable',mPlat:'Plataforma',mRef:'Tipo',mMes:'Mes',mComent:'Comentario (planilla)',mTexto:'Texto de la acción',
+    mHist:'Historial de fechas',mThread:'Comentarios',mAddComment:'Escribe un comentario...',mSend:'Comentar',
+    mSuggest:'Sugerir cambio',mNewDate:'Nueva fecha sugerida',mNewStatus:'Estado sugerido',mNewPct:'% avance sugerido',mAddOut:'Agregar al buzón de envío',
+    mAdminEdit:'Editar oficial',mSaveOf:'Guardar cambio',mPending:'Sugerencias pendientes',mApprove:'Validar y aplicar',mReject:'Descartar',
+    stConcluir:'Concluido',stCancel:'Cancelado',mRecvDate:'Fecha de recepción',noComments:'Sin comentarios aún.',noHist:'Solo la fecha original.',
+    outTitle:'nota(s) para enviar',outSend:'✉ Enviar por e-mail',outCopy:'📋 Copiar p/ enviar',outClear:'Limpiar',
+    save:'💾 Guardar',saveConnect:'📂 Dónde guardar',importSug:'📥 Importar',showDel:'🗑 Eliminados',
+    addAction:'➕ Agregar acción',createTitle:'Agregar nueva acción',fType:'Tipo de acción',tEnt:'📦 Entregable',tProj:'🚀 Actividad de proyecto',
+    fProjeto:'Proyecto',fFase:'Fase',fInicio:'Fecha inicio',fFim:'Fecha fin',fPrazo:'Fecha límite',fMes:'Mes',fRef:'Tipo',fPrio:'Prioridad',fMarco:'¿Hito?',fCriar:'✔ Crear acción',fComentInit:'Comentario inicial (opcional)',reqMsg:'Completa al menos el texto y el responsable.',created:'¡Acción creada!',fStatusInicial:'Estado inicial',
+    tRot:'🔁 Rutina',fDiaUtil:'Día hábil de entrega (del mes)',fPeriod:'Periodicidad',reqRot:'Completa texto, responsable y el día hábil.',
+    del:'🗑 Eliminar acción',restore:'♻ Restaurar',confirmDel:'¿Eliminar esta acción?',
+    savedOk:'Guardado.',outAdded:'Nota agregada al buzón de envío.',
+    helpView:'Haz <b>doble clic</b> en cualquier actividad para abrir su pantalla y <b>comentar, sugerir una nueva fecha o indicar el estado/avance</b>. Tus notas entran en el buzón de envío (abajo a la derecha); al terminar, haz clic en <b>Enviar para validación</b> — Jonathan valida antes de cambiar el estado oficial.',
+    helpAdmin:'',byBase:'Planilla',adminAuthor:'Jonathan'}
+};
+const t = T[LANG] || T.pt;
+const PLATS=['TODAS','ANDINA','SOUTH CONE','MEXICO & CARIBBEAN','CORP'];
+const PLATOPTS=['CORP','ANDINA','SOUTH CONE','MEXICO & CARIBBEAN'];
+const PCLS={'ANDINA':'p-ANDINA','SOUTH CONE':'p-SOUTHCONE','MEXICO & CARIBBEAN':'p-MEX','CORP':'p-CORP'};
+const AVCOLORS=['#2f6fd0','#1e9e6a','#c8862c','#7a5fc0','#d04a58','#2ba8a0','#b0553a','#5b7fd4'];
+const ST_LABEL={pt:{'Atrasado':'ATRASADO','Hoje':'VENCE HOJE','Pendente':'PENDENTE','Sem prazo':'SEM PRAZO','Concluído':'CONCLUÍDO','Em andamento':'EM ANDAMENTO','Abaixo do plano':'ABAIXO DO PLANO','Cancelado':'CANCELADO'},
+  es:{'Atrasado':'ATRASADO','Hoje':'VENCE HOY','Pendente':'PENDIENTE','Sem prazo':'SIN FECHA','Concluído':'CONCLUIDO','Em andamento':'EN CURSO','Abaixo do plano':'BAJO LO PLANIFICADO','Cancelado':'CANCELADO'}};
+function stTxt(st){return (ST_LABEL[LANG]&&ST_LABEL[LANG][st])||st;}
+const state={tab:'visao',plat:'TODAS',resp:'',status:'',mes:'',busca:'',showDeleted:false};
+let dirty=false;
+/* itens alterados NESTA sessão (para o merge seguro ao salvar) */
+const sessionTouched=new Set(),sessionNewIds=new Set();
+let baseLoaded=false;
+
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmt(iso){if(!iso)return '—';const p=String(iso).split('-');return p.length===3?p[2]+'/'+p[1]:iso;}
+function fmtY(iso){if(!iso)return '—';const p=String(iso).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:iso;}
+function nowStamp(){const d=new Date();const z=n=>('0'+n).slice(-2);return z(d.getDate())+'/'+z(d.getMonth()+1)+'/'+d.getFullYear()+' '+z(d.getHours())+':'+z(d.getMinutes());}
+function daysTo(iso){if(!iso)return null;return Math.round((new Date(iso+'T00:00:00')-new Date(DATA.hoje+'T00:00:00'))/86400000);}
+function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2600);}
+function shortNameJS(n){if(!n)return '';n=n.trim();
+  if(/^jonathan/i.test(n))return 'Jonathan';if(/^jo.o/i.test(n))return 'João';if(/^caio/i.test(n))return 'Caio';
+  if(/^jorge/i.test(n))return 'Jorge';if(/^noe/i.test(n))return 'Noé';if(/^c.sar|^cesar/i.test(n))return 'César';
+  if(/^alejandro/i.test(n))return 'Alejandro';if(/^vit.ria|^vitoria/i.test(n))return 'Vitória';return n.split(/\s+/)[0];}
+
+function applyTheme(mode){const b=document.body;if(mode==='light')b.classList.add('light');else b.classList.remove('light');
+  const btn=document.getElementById('themebtn');if(btn)btn.textContent=(mode==='light')?'☀️ Claro':'🌙 Escuro';
+  try{localStorage.setItem('rm_theme',mode);}catch(e){}}
+function toggleTheme(){applyTheme(document.body.classList.contains('light')?'dark':'light');}
+
+/* ---------- overlay ---------- */
+function ovLookup(id){return DATA.overlay.items[id]||null;}
+function ovItem(id){let it=DATA.overlay.items[id];if(!it){it={official:{},dateHistory:[],comments:[],suggestions:[]};DATA.overlay.items[id]=it;}
+  it.official=it.official||{};it.dateHistory=A(it.dateHistory);it.comments=A(it.comments);it.suggestions=A(it.suggestions);return it;}
+function ovOf(id,f){if(MODE!=='admin')return null;const ov=ovLookup(id);return (ov&&ov.official&&ov.official[f]!=null&&ov.official[f]!=='')?ov.official[f]:null;}
+function pendingCount(){let n=0;for(const k in DATA.overlay.items){n+=A(DATA.overlay.items[k].suggestions).filter(x=>!x.state||x.state==='pending').length;}return n;}
+
+/* ---------- valores efetivos (overlay > base) ---------- */
+function entMaterial(e){return ovOf(e.id,'material')||e.material;}
+function entResp(e){return ovOf(e.id,'resp')||e.resp;}
+function entCurto(e){const r=ovOf(e.id,'resp');return r?shortNameJS(r):e.curto;}
+function entPlat(e){return ovOf(e.id,'plat')||e.plat;}
+function entDeleted(e){return MODE==='admin'?!!ovOf(e.id,'deleted'):!!e.deleted;}
+function actAtiv(a){return ovOf(a.id,'ativ')||a.ativ;}
+function actResp(a){return ovOf(a.id,'resp')||a.resp;}
+function actCurto(a){const r=ovOf(a.id,'resp');return r?shortNameJS(r):a.curto;}
+function actDeleted(a){return MODE==='admin'?!!ovOf(a.id,'deleted'):!!a.deleted;}
+
+/* ---------- rotinas (editáveis no sistema) ---------- */
+function rotAtiv(r){return ovOf(r.id,'ativ')||r.ativ;}
+function rotResp(r){return ovOf(r.id,'resp')||r.resp;}
+function rotCurto(r){const x=ovOf(r.id,'resp');return x?shortNameJS(x):r.curto;}
+function rotPeriod(r){return ovOf(r.id,'period')||r.period;}
+function rotDeleted(r){return MODE==='admin'?!!ovOf(r.id,'deleted'):!!r.deleted;}
+function rotDia(r){const d=ovOf(r.id,'diaUtil');return (d!=null&&d!=='')?d:(r.diaUtil!=null?r.diaUtil:'');}
+function nthBusinessDay(y,m,n){const d=new Date(y,m,1);let c=0;for(;;){const w=d.getDay();if(w!==0&&w!==6){c++;if(c===n)return new Date(d);}d.setDate(d.getDate()+1);}}
+function isoOf(d){const z=n=>('0'+n).slice(-2);return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());}
+function nextWD(n){const h=new Date(DATA.hoje+'T00:00:00');let d=nthBusinessDay(h.getFullYear(),h.getMonth(),n);if(d<h)d=nthBusinessDay(h.getFullYear(),h.getMonth()+1,n);return isoOf(d);}
+function effRot(r){const d=rotDia(r);const n=parseInt(d,10);
+  if(!isNaN(n)&&n>=1)return {prazoPad:'WD+'+n,proxPrazo:nextWD(n)};
+  return {prazoPad:r.prazoPad,proxPrazo:r.proxPrazo};}
+function notDeletedRot(){return A(DATA.rotinas).filter(r=>!rotDeleted(r));}
+
+function effEnt(e){
+  if(MODE!=='admin')return {limite:e.limite,recebTxt:e.recebidoTxt,st:e.st,dias:e.dias};
+  const ov=ovLookup(e.id),o=ov&&ov.official?ov.official:{};
+  const limite=o.limite||e.baseLimite;
+  const recebTxt=o.recebido||e.baseRecebTxt||'';
+  const statusOv=o.status||'';
+  let dias=limite?daysTo(limite):null,st='Pendente';
+  if(/cancel/i.test(statusOv))st='Cancelado';
+  else if(!!recebTxt||/conclu/i.test(statusOv))st='Concluído';
+  else if(!limite)st='Sem prazo';else if(dias<0)st='Atrasado';else if(dias===0)st='Hoje';
+  return {limite,recebTxt,st,dias};
+}
+function effPct(a){if(MODE!=='admin')return a.pct;const ov=ovLookup(a.id);return (ov&&ov.official&&ov.official.pct!=null)?ov.official.pct:a.pct;}
+function actStatus(a){const ov=ovLookup(a.id),o=ov&&ov.official?ov.official:{};
+  if(/cancel/i.test(o.status||''))return 'Cancelado';
+  if(/conclu/i.test(o.status||''))return 'Concluído';
+  const pct=effPct(a),prev=a.prev,fim=a.fim;
+  if(pct>=0.999)return 'Concluído';if(fim&&daysTo(fim)<0)return 'Atrasado';if(pct<prev-0.001&&prev>0)return 'Abaixo do plano';if(pct>0)return 'Em andamento';return 'Pendente';}
+
+function stBadgeEnt(e){const ef=effEnt(e),st=ef.st;
+  const late=(st==='Concluído'&&ef.recebTxt&&ef.limite&&ef.recebTxt>ef.limite);
+  if(st==='Concluído')return '<span class="badge b-ok">✔ '+stTxt('Concluído')+(late?' *':'')+'</span>';
+  if(st==='Cancelado')return '<span class="badge b-canc">✕ '+stTxt('Cancelado')+'</span>';
+  if(st==='Atrasado')return '<span class="badge b-atr">⚠ '+stTxt('Atrasado')+'</span>';
+  if(st==='Hoje')return '<span class="badge b-hoje">● '+stTxt('Hoje')+'</span>';
+  if(st==='Sem prazo')return '<span class="badge b-sp">'+stTxt('Sem prazo')+'</span>';
+  return '<span class="badge b-pen">'+stTxt('Pendente')+'</span>';}
+function projBadge(st){
+  if(st==='Concluído')return '<span class="badge b-ok">✔ '+stTxt('Concluído')+'</span>';
+  if(st==='Cancelado')return '<span class="badge b-canc">✕ '+stTxt('Cancelado')+'</span>';
+  if(st==='Atrasado')return '<span class="badge b-atr">⚠ '+stTxt('Atrasado')+'</span>';
+  if(st==='Abaixo do plano')return '<span class="badge b-and">▼ '+stTxt('Abaixo do plano')+'</span>';
+  if(st==='Em andamento')return '<span class="badge b-pen">▶ '+stTxt('Em andamento')+'</span>';
+  return '<span class="badge b-sp">⏳ '+stTxt('Pendente')+'</span>';}
+function platTag(p){return '<span class="plat '+(PCLS[p]||'p-CORP')+'">'+esc(p)+'</span>';}
+function markers(item){let h='';if(item.nComments)h+='<span class="pill c" title="comentários"></span>';
+  if(MODE==='admin'){const ov=ovLookup(item.id);const p=ov?A(ov.suggestions).filter(x=>!x.state||x.state==='pending').length:0;if(p)h+='<span class="pill p" title="sugestões pendentes"></span>';}return h;}
+function diasCell(e){const ef=effEnt(e);
+  if(ef.st==='Concluído')return '<span class="okc">'+(ef.recebTxt?fmt(ef.recebTxt):'—')+'</span>';
+  if(ef.st==='Cancelado')return '<span class="muted">—</span>';
+  if(ef.dias==null)return '<span class="muted">—</span>';
+  if(ef.dias<0)return '<span class="late">'+Math.abs(ef.dias)+'d</span>';
+  if(ef.dias===0)return '<span class="soon">'+(LANG==='es'?'hoy':'hoje')+'</span>';
+  if(ef.dias<=7)return '<span class="soon">'+(LANG==='es'?'en ':'em ')+ef.dias+'d</span>';
+  return '<span class="muted">'+(LANG==='es'?'en ':'em ')+ef.dias+'d</span>';}
+
+const ENTBY={},ACTBY={},ROTBY={};
+A(DATA.entregaveis).forEach(e=>ENTBY[e.id]=e);
+A(DATA.projetos).forEach(p=>{p.atividades=A(p.atividades);p.atividades.forEach(a=>ACTBY[a.id]=a);});
+A(DATA.rotinas).forEach(r=>{if(r.id)ROTBY[r.id]=r;});
+
+/* célula de ação (excluir/restaurar) — só admin */
+function thDel(){return MODE==='admin'?'<th></th>':'';}
+function tdDel(id,kind){if(MODE!=='admin')return '';
+  const del=(kind==='ent')?entDeleted(ENTBY[id]):actDeleted(ACTBY[id]);
+  if(del)return '<td class="nowrap"><button class="rowbtn restore" title="'+t.restore+'" onclick="event.stopPropagation();restoreItem(\''+id+'\',\''+kind+'\')">♻</button></td>';
+  return '<td class="nowrap"><button class="rowbtn" title="'+t.del+'" onclick="event.stopPropagation();delItem(\''+id+'\',\''+kind+'\')">🗑</button></td>';}
+
+function notDeletedEnt(){return A(DATA.entregaveis).filter(e=>!entDeleted(e));}
+function filtered(){let base=A(DATA.entregaveis).filter(e=>state.showDeleted?true:!entDeleted(e));
+  return base.filter(e=>{const ef=effEnt(e);
+    if(state.plat!=='TODAS'&&entPlat(e)!==state.plat)return false;
+    if(state.resp&&entCurto(e)!==state.resp)return false;
+    if(state.status&&ef.st!==state.status)return false;
+    if(state.mes&&e.mes!==state.mes)return false;
+    if(state.busca){const s=(entMaterial(e)+' '+(e.coment||'')+' '+entResp(e)).toLowerCase();if(!s.includes(state.busca.toLowerCase()))return false;}
+    return true;});}
+function ativos(l){return l.filter(e=>{const s=effEnt(e).st;return s!=='Concluído'&&s!=='Cancelado';});}
+
+function rowEnt(e){const ef=effEnt(e);const del=entDeleted(e);
+  return '<tr class="clik'+(del?' del':'')+'" title="2 cliques para abrir" ondblclick="openEnt(\''+e.id+'\')" onclick="clickOpen(event,\'ent\',\''+e.id+'\')"><td class="muted">'+esc(e.n)+'</td>'
+    +'<td class="nowrap"><b>'+esc(entCurto(e))+'</b></td><td>'+platTag(entPlat(e))+'</td>'
+    +'<td>'+esc(entMaterial(e))+markers(e)+((e.coment)?'<span class="sub">💬 '+esc(e.coment)+'</span>':'')+'</td>'
+    +'<td class="nowrap">'+fmt(ef.limite)+'</td><td>'+stBadgeEnt(e)+'</td><td class="nowrap">'+diasCell(e)+'</td>'+tdDel(e.id,'ent')+'</tr>';}
+function tabela(itens,vazio){if(!itens.length)return '<div class="empty">'+(vazio||'—')+'</div>';
+  let h='<table><thead><tr><th>'+t.thNum+'</th><th>'+t.thResp+'</th><th>'+t.thPlat+'</th><th>'+t.thEnt+'</th><th>'+t.thPrazo+'</th><th>'+t.thStatus+'</th><th>'+t.thSit+'</th>'+thDel()+'</tr></thead><tbody>';
+  for(const e of itens)h+=rowEnt(e);return h+'</tbody></table>';}
+function secao(titulo,cor,itens,vazio){return '<div class="sec"><header style="--c:'+cor+'"><span class="dot" style="--c:'+cor+'"></span><h2>'+titulo+'</h2><span class="n">'+itens.length+'</span></header>'+tabela(itens,vazio)+'</div>';}
+
+function renderVisao(){
+  const f=filtered(),act=ativos(f);
+  const g=st=>act.filter(e=>effEnt(e).st===st);
+  const atr=g('Atrasado').sort((a,b)=>effEnt(a).dias-effEnt(b).dias);
+  const hj=g('Hoje');
+  const p7=act.filter(e=>{const x=effEnt(e);return x.st==='Pendente'&&x.dias>=1&&x.dias<=7;});
+  const sp=g('Sem prazo');
+  const p30=act.filter(e=>{const x=effEnt(e);return x.st==='Pendente'&&x.dias>=8&&x.dias<=30;});
+  let h='';
+  h+=secao(t.s1,'var(--red)',atr,t.ok1)+secao(t.s2,'var(--amber)',hj,t.ok2)+secao(t.s3,'var(--blue)',p7,t.ok3)+secao(t.s4,'var(--gray)',sp,t.ok4)+secao(t.s5,'var(--purple)',p30,t.ok5);
+  const pr=A(DATA.projetos).filter(p=>{const s=projConsolStatus(p);return s==='Atrasado'||s==='Abaixo do plano';});
+  if(pr.length){h+='<div class="sec"><header style="--c:var(--red)"><span class="dot" style="--c:var(--red)"></span><h2>'+t.projRisco+'</h2><span class="n">'+pr.length+'</span></header><table><thead><tr><th>'+t.thProj+'</th><th>'+t.thResp+'</th><th>'+t.thPer+'</th><th>'+t.thReal+'</th><th>'+t.thPrev+'</th><th>'+t.thStatus+'</th></tr></thead><tbody>';
+    for(const p of pr){const pc=projConsolPct(p);h+='<tr class="clik" ondblclick="setTab(\'proj\')" onclick="setTab(\'proj\')"><td><b>'+esc(p.nome)+'</b></td><td>'+esc(p.curto)+'</td><td class="nowrap">'+fmt(p.inicio)+' → '+fmt(p.fim)+'</td><td><b>'+Math.round(pc*100)+'%</b></td><td class="muted">'+Math.round(p.prev*100)+'%</td><td>'+projBadge(projConsolStatus(p))+'</td></tr>';}
+    h+='</tbody></table></div>';}
+  if(MODE==='admin'){
+    const vis=notDeletedEnt();
+    h+='<div class="grid2"><div class="sec"><header><h2>'+t.cargaR+'</h2></header><table><thead><tr><th>'+t.thResp+'</th><th>'+t.kAtr+'</th><th>'+t.kHoje+'</th><th>7d</th><th>Total</th></tr></thead><tbody>';
+    const byR={};ativos(vis).forEach(e=>{const c=entCurto(e);(byR[c]=byR[c]||[]).push(e);});
+    Object.keys(byR).sort((a,b)=>byR[b].length-byR[a].length).forEach(r=>{const L=byR[r];const na=L.filter(e=>effEnt(e).st==='Atrasado').length;h+='<tr><td><b>'+esc(r)+'</b></td><td>'+(na?'<span class="late">'+na+'</span>':'<span class="muted">0</span>')+'</td><td>'+(L.filter(e=>effEnt(e).st==='Hoje').length||'<span class="muted">0</span>')+'</td><td>'+(L.filter(e=>{const x=effEnt(e);return x.st==="Pendente"&&x.dias>=1&&x.dias<=7;}).length||'<span class="muted">0</span>')+'</td><td><b>'+L.length+'</b></td></tr>';});
+    h+='</tbody></table></div><div class="sec"><header><h2>'+t.cargaP+'</h2></header><table><thead><tr><th>'+t.thPlat+'</th><th>'+t.kAtr+'</th><th>'+t.kHoje+'</th><th>7d</th><th>Total</th></tr></thead><tbody>';
+    const byP={};ativos(vis).forEach(e=>{const pl=entPlat(e);(byP[pl]=byP[pl]||[]).push(e);});
+    ['ANDINA','SOUTH CONE','MEXICO & CARIBBEAN','CORP'].forEach(p=>{const L=byP[p]||[];const na=L.filter(e=>effEnt(e).st==='Atrasado').length;h+='<tr><td>'+platTag(p)+'</td><td>'+(na?'<span class="late">'+na+'</span>':'<span class="muted">0</span>')+'</td><td>'+(L.filter(e=>effEnt(e).st==='Hoje').length||'<span class="muted">0</span>')+'</td><td>'+(L.filter(e=>{const x=effEnt(e);return x.st==="Pendente"&&x.dias>=1&&x.dias<=7;}).length||'<span class="muted">0</span>')+'</td><td><b>'+L.length+'</b></td></tr>';});
+    h+='</tbody></table></div></div>';
+  }
+  return h;}
+
+function renderEntregaveis(){
+  const f=filtered();
+  let h='<div class="sec"><header><h2>'+t.allEnt+'</h2><span class="n">'+f.length+' / '+notDeletedEnt().length+'</span></header>';
+  if(!f.length)return h+'<div class="empty">—</div></div>';
+  h+='<table><thead><tr><th>'+t.thNum+'</th><th>'+t.thResp+'</th><th>'+t.thPlat+'</th><th>'+t.thEnt+'</th><th>'+t.thRef+'</th><th>'+t.thPrazo+'</th><th>'+t.thReceb+'</th><th>'+t.thStatus+'</th><th>'+t.thSit+'</th><th>'+t.thMes+'</th>'+thDel()+'</tr></thead><tbody>';
+  for(const e of f){const ef=effEnt(e);const del=entDeleted(e);
+    h+='<tr class="clik'+(del?' del':'')+'" title="2 cliques para abrir" ondblclick="openEnt(\''+e.id+'\')" onclick="clickOpen(event,\'ent\',\''+e.id+'\')"><td class="muted">'+esc(e.n)+'</td><td class="nowrap"><b>'+esc(entCurto(e))+'</b></td><td>'+platTag(entPlat(e))+'</td>'
+      +'<td>'+esc(entMaterial(e))+markers(e)+((e.coment)?'<span class="sub">💬 '+esc(e.coment)+'</span>':'')+'</td>'
+      +'<td class="muted nowrap">'+esc(e.ref||'')+'</td><td class="nowrap">'+fmtY(ef.limite)+'</td>'
+      +'<td class="nowrap">'+(ef.recebTxt?fmt(ef.recebTxt):'—')+'</td><td>'+stBadgeEnt(e)+'</td><td class="nowrap">'+diasCell(e)+'</td><td class="muted">'+esc(e.mes||'')+'</td>'+tdDel(e.id,'ent')+'</tr>';}
+  return h+'</tbody></table></div>';}
+
+function projConsolPct(p){const ats=A(p.atividades).filter(a=>a.ativ&&!actDeleted(a));if(!ats.length)return p.pct;return ats.reduce((s,a)=>s+effPct(a),0)/ats.length;}
+function projConsolStatus(p){const pct=projConsolPct(p),fim=p.fim;if(pct>=0.999)return 'Concluído';if(fim&&daysTo(fim)<0)return 'Atrasado';if(pct<p.prev-0.001&&p.prev>0)return 'Abaixo do plano';if(pct>0)return 'Em andamento';return 'Pendente';}
+function bar(pct,prev,st){const cls=st==='Concluído'?'good':(st==='Atrasado'||st==='Abaixo do plano'?'bad':'');return '<div class="bar"><div class="fill '+cls+'" style="width:'+Math.round(pct*100)+'%"></div><div class="mark" style="left:'+Math.round(prev*100)+'%"></div></div>';}
+function renderProjetos(){
+  let list=A(DATA.projetos);
+  if(state.busca)list=list.filter(p=>(p.nome+' '+A(p.atividades).map(a=>actAtiv(a)).join(' ')).toLowerCase().includes(state.busca.toLowerCase()));
+  if(!list.length)return '<div class="sec"><div class="empty">—</div></div>';
+  let h='';
+  list.forEach((p,i)=>{const pct=projConsolPct(p),st=projConsolStatus(p);
+    h+='<div class="pcard" id="pc'+i+'"><div class="head" onclick="document.getElementById(\'pc'+i+'\').classList.toggle(\'open\')"><span class="caret">▶</span>'
+      +'<div><div class="t">'+esc(p.nome)+'</div><div class="who">'+esc(p.curto)+' · '+fmtY(p.inicio)+' → '+fmtY(p.fim)+'</div></div>'
+      +'<div class="right">'+projBadge(st)+bar(pct,p.prev,st)+'<span class="pct">'+Math.round(pct*100)+'%</span></div></div><div class="body">';
+    const ats=A(p.atividades).filter(a=>state.showDeleted?true:!actDeleted(a));
+    if(ats.length){h+='<table><thead><tr><th>'+t.thNum+'</th><th>'+t.thFase+'</th><th>'+t.thAtiv+'</th><th>'+t.thResp+'</th><th>'+t.thPer+'</th><th>%</th><th>'+t.thPrev+'</th><th>'+t.thStatus+'</th><th>'+t.thMarco+'</th>'+thDel()+'</tr></thead><tbody>';
+      for(const a of ats){const pc=effPct(a);const del=actDeleted(a);h+='<tr class="clik'+(del?' del':'')+'" title="2 cliques para abrir" ondblclick="openAct(\''+a.id+'\')" onclick="clickOpen(event,\'act\',\''+a.id+'\')"><td class="muted">'+esc(a.num)+'</td><td class="muted nowrap">'+esc(a.fase)+'</td>'
+        +'<td>'+esc(actAtiv(a))+markers(a)+((a.coment)?'<span class="sub">💬 '+esc(a.coment)+'</span>':'')+'</td><td class="nowrap">'+esc(actCurto(a))+'</td>'
+        +'<td class="nowrap">'+fmt(a.inicio)+' → '+fmt(a.fim)+'</td><td><b>'+Math.round(pc*100)+'%</b></td><td class="muted">'+Math.round(a.prev*100)+'%</td><td>'+projBadge(actStatus(a))+'</td><td>'+(a.marco==='Sim'?'🚩':'')+'</td>'+tdDel(a.id,'act')+'</tr>';}
+      h+='</tbody></table>';}else h+='<div class="empty">—</div>';
+    h+='</div></div>';});
+  return h;}
+
+function tdDelRot(id){if(MODE!=='admin')return '';
+  const del=rotDeleted(ROTBY[id]);
+  if(del)return '<td class="nowrap"><button class="rowbtn restore" title="'+t.restore+'" onclick="event.stopPropagation();restoreItem(\''+id+'\',\'rot\')">♻</button></td>';
+  return '<td class="nowrap"><button class="rowbtn" title="'+t.del+'" onclick="event.stopPropagation();delItem(\''+id+'\',\'rot\')">🗑</button></td>';}
+function renderRotinas(){const list=A(DATA.rotinas).filter(r=>state.showDeleted?true:!rotDeleted(r));
+  let h='<div class="sec"><header><h2>'+t.rotHdr+'</h2><span class="n">'+notDeletedRot().length+'</span></header>';
+  if(!list.length)return h+'<div class="empty">—</div></div>';
+  h+='<table><thead><tr><th>'+t.thAtiv+'</th><th>Periodic.</th><th>'+t.thResp+'</th><th>'+t.fDiaUtil+'</th><th>Próx. start</th><th>Prazo</th><th>Próx. prazo</th>'+thDel()+'</tr></thead><tbody>';
+  for(const x of list){const ef=effRot(x);const del=rotDeleted(x);const d=rotDia(x);
+    h+='<tr class="clik'+(del?' del':'')+'" title="2 cliques para abrir" ondblclick="openRot(\''+x.id+'\')"><td>'+esc(rotAtiv(x))+markers(x)+((x.obs)?'<span class="sub">📝 '+esc(x.obs)+'</span>':'')+'</td><td class="nowrap">'+esc(rotPeriod(x)||'')+'</td><td class="nowrap">'+esc(rotCurto(x))+'</td><td class="nowrap">'+(d?d+'º dia útil':'—')+'</td><td class="nowrap">'+fmtY(x.proxStart)+'</td><td class="muted nowrap">'+esc(ef.prazoPad||'')+'</td><td class="nowrap"><b>'+fmtY(ef.proxPrazo)+'</b></td>'+tdDelRot(x.id)+'</tr>';}
+  return h+'</tbody></table></div>';}
+function openRot(id){const r=ROTBY[id];if(!r)return;const ef=effRot(r);
+  document.getElementById('mTitle').innerHTML='🔁 '+esc(rotAtiv(r));
+  let h='';
+  if(MODE==='admin')h+=adminEditRot(r);
+  h+='<div class="fieldrow"><div class="field"><label>'+t.mResp+'</label><div class="val">'+esc(rotResp(r))+'</div></div>'
+    +'<div class="field"><label>'+t.fPeriod+'</label><div class="val">'+esc(rotPeriod(r)||'—')+'</div></div>'
+    +'<div class="field"><label>'+t.fDiaUtil+'</label><div class="val">'+(rotDia(r)?rotDia(r)+'º':'—')+'</div></div>'
+    +'<div class="field"><label>Próx. prazo</label><div class="val"><b>'+fmtY(ef.proxPrazo)+'</b></div></div></div>';
+  if(r.obs)h+='<div class="fieldrow"><div class="field"><label>Obs</label><div class="val">'+esc(r.obs)+'</div></div></div>';
+  h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(r)+commentComposer(id)+'</div>';
+  document.getElementById('mBody').innerHTML=h;openModal();}
+function adminEditRot(r){const del=rotDeleted(r);
+  return '<div class="editbox"><h3>🛠️ '+t.mAdminEdit+'</h3>'+nameList()
+    +'<div class="fieldrow"><div class="field full"><label>'+t.mTexto+'</label><textarea id="edRAtiv">'+esc(rotAtiv(r))+'</textarea></div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.mResp+'</label><input type="text" list="dlNames" id="edRResp" value="'+esc(rotResp(r))+'"></div>'
+    +'<div class="field"><label>'+t.fPeriod+'</label><input type="text" id="edRPer" value="'+esc(rotPeriod(r)||'')+'" placeholder="ex.: Mensal"></div>'
+    +'<div class="field"><label>'+t.fDiaUtil+'</label><input type="number" id="edRDia" min="1" max="23" step="1" value="'+esc(rotDia(r)||'')+'" placeholder="ex.: 5"></div></div>'
+    +'<div class="modalfoot"><button class="btn green big" onclick="saveRot(\''+r.id+'\')">💾 '+t.mSaveOf+'</button>'
+    +(del?'<button class="btn sm" onclick="restoreItem(\''+r.id+'\',\'rot\')">'+t.restore+'</button>':'<button class="btn dangerghost sm" onclick="delItem(\''+r.id+'\',\'rot\')">'+t.del+'</button>')
+    +'</div></div>';}
+function saveRot(id){const r=ROTBY[id];const it=ovItem(id);
+  const at=(document.getElementById('edRAtiv').value||'').trim();
+  const rp=(document.getElementById('edRResp').value||'').trim();
+  const pe=(document.getElementById('edRPer').value||'').trim();
+  const di=(document.getElementById('edRDia').value||'').trim();
+  it.official.ativ=(at&&at!==r.ativ)?at:(at?at:null);
+  it.official.resp=(rp&&rp!==r.resp)?rp:(rp?rp:null);
+  it.official.period=(pe&&pe!==r.period)?pe:(pe?pe:null);
+  it.official.diaUtil=di?parseInt(di,10):null;
+  markDirty(id);refreshAll();reopen(id);saveOverlay();}
+
+function renderTime(){let h='<div class="tgrid">';A(DATA.time).forEach((tm,i)=>{const L=notDeletedEnt().filter(e=>entCurto(e)===tm.curto);const act=L.filter(e=>{const s=effEnt(e).st;return s!=='Concluído'&&s!=='Cancelado';});const atr=act.filter(e=>effEnt(e).st==='Atrasado').length;const prox=act.filter(e=>{const x=effEnt(e);return x.st==='Hoje'||(x.st==='Pendente'&&x.dias<=7);}).length;const done=L.filter(e=>effEnt(e).st==='Concluído').length;
+  h+='<div class="person"><div class="nm"><div class="av" style="background:'+AVCOLORS[i%AVCOLORS.length]+'">'+esc(tm.curto.substring(0,2).toUpperCase())+'</div><div><h3>'+esc(tm.nome)+'</h3><div class="role">'+esc(tm.cargo)+' · '+esc(tm.area)+'</div></div></div><div class="stats"><div class="stat"><div class="v" style="color:'+(atr?'var(--red)':'var(--tx3)')+'">'+atr+'</div><div class="l">'+t.kAtr+'</div></div><div class="stat"><div class="v" style="color:var(--amber)">'+prox+'</div><div class="l">7d</div></div><div class="stat"><div class="v" style="color:var(--blue)">'+act.length+'</div><div class="l">Ativas</div></div><div class="stat"><div class="v" style="color:var(--green)">'+done+'</div><div class="l">OK</div></div></div>'+(tm.email?'<div class="mail">✉ '+esc(tm.email)+'</div>':'')+'</div>';});return h+'</div>';}
+
+function renderSugestoes(){
+  let cards=[];
+  for(const id in DATA.overlay.items){A(DATA.overlay.items[id].suggestions).forEach((s,idx)=>{if(!s.state||s.state==='pending')cards.push({id,idx,s});});}
+  let h='<div class="helpbox">'+t.helpAdmin+'</div>';
+  h+='<div class="sec"><header style="--c:var(--amber)"><span class="dot" style="--c:var(--amber)"></span><h2>'+t.mPending+'</h2><span class="n">'+cards.length+'</span></header>';
+  if(!cards.length){h+='<div class="empty">—</div></div>';return h+importBox();}
+  h+='<div style="padding:14px">';for(const c of cards){const item=ENTBY[c.id]||ACTBY[c.id];h+=suggCard(c.id,c.idx,c.s,item?(entMaterial(item)||actAtiv(item)||item.material||item.ativ):c.id);}h+='</div></div>';
+  return h+importBox();}
+function importBox(){return '<div class="sec"><header><h2>'+t.importSug+'</h2></header><div style="padding:14px"><div class="note">Cole o e-mail recebido de um regional (ou só o bloco entre DADOS e FIM) e clique em Importar.</div><textarea id="impTxt" placeholder="Cole aqui..."></textarea><div style="margin-top:10px"><button class="btn primary sm" onclick="importSuggestions()">📥 Importar</button></div></div></div>';}
+function suggCard(id,idx,s,nome){
+  let h='<div class="sugg"><div class="who">👤 '+esc(s.from||'?')+' · '+esc(s.ts||'')+' — <span style="color:var(--tx2)">'+esc(nome)+'</span></div>';
+  if(s.propDate)h+='<div class="row">📅 '+t.mNewDate+': <b>'+fmtY(s.propDate)+'</b></div>';
+  if(s.propStatus)h+='<div class="row">🏷️ '+t.mNewStatus+': <b>'+esc(s.propStatus)+'</b></div>';
+  if(s.propPct!=null&&s.propPct!=='')h+='<div class="row">📊 '+t.mNewPct+': <b>'+Math.round(s.propPct*100)+'%</b></div>';
+  if(s.comment)h+='<div class="row">💬 '+esc(s.comment)+'</div>';
+  h+='<div class="acts"><button class="btn green sm" onclick="approveSugg(\''+id+'\','+idx+')">✔ '+t.mApprove+'</button><button class="btn dangerghost sm" onclick="rejectSugg(\''+id+'\','+idx+')">✕ '+t.mReject+'</button></div></div>';
+  return h;}
+
+function renderKpis(){const all=notDeletedEnt(),act=ativos(all);
+  const cnt=st=>act.filter(e=>effEnt(e).st===st).length;
+  const p7=act.filter(e=>{const x=effEnt(e);return x.st==='Pendente'&&x.dias>=1&&x.dias<=7;}).length;
+  const mesNow=new Date(DATA.hoje+'T00:00:00').toLocaleDateString('pt-BR',{month:'long'});
+  const done=all.filter(e=>effEnt(e).st==='Concluído'&&e.mes===mesNow);
+  const onT=done.filter(e=>{const ef=effEnt(e);return !(ef.recebTxt&&ef.limite&&ef.recebTxt>ef.limite);}).length;
+  const pct=done.length?Math.round(onT/done.length*100)+'%':'—';
+  const projAct=A(DATA.projetos).filter(p=>projConsolStatus(p)!=='Concluído').length;
+  const k=[[cnt('Atrasado'),t.kAtr,'var(--red)'],[cnt('Hoje'),t.kHoje,'var(--amber)'],[p7,t.k7,'var(--blue)'],[cnt('Sem prazo'),t.kSp,'var(--gray)'],[done.length,t.kCon,'var(--green)'],[pct,t.kOn,'var(--green)'],[projAct,t.kProj,'var(--purple)']];
+  if(MODE==='admin')k.push([pendingCount(),t.kPend,'var(--amber)']);
+  document.getElementById('kpis').innerHTML=k.map(x=>'<div class="kpi" style="--c:'+x[2]+'"><div class="v">'+x[0]+'</div><div class="l">'+x[1]+'</div></div>').join('');}
+function delCount(){let n=0;A(DATA.entregaveis).forEach(e=>{if(entDeleted(e))n++;});A(DATA.projetos).forEach(p=>A(p.atividades).forEach(a=>{if(actDeleted(a))n++;}));A(DATA.rotinas).forEach(r=>{if(rotDeleted(r))n++;});return n;}
+/* Botões de envio (item 13) — exclusivo do admin, via protocolo rmct:// registrado na máquina do Jonathan */
+function sendMailCmd(which){
+  const msg=which==='consolidado'
+    ?'Enviar AGORA o e-mail consolidado (Jonathan / João / Caio) pelo Outlook?'
+    :'Enviar AGORA os e-mails individuais para os REGIONAIS pelo Outlook?';
+  if(!confirm(msg))return;
+  location.href='rmct://enviar-'+which;
+  toast('▶ Disparado. O Outlook envia em instantes. (Se nada acontecer, rode "5 - Registrar Botoes de Envio.cmd" uma vez.)');}
+function renderTabs(){
+  let tabs=[['visao',t.tabVisao,null],['ent',t.tabEnt,notDeletedEnt().length],['proj',t.tabProj,A(DATA.projetos).length]];
+  if(MODE==='admin'){tabs.push(['rot',t.tabRot,notDeletedRot().length]);tabs.push(['time',t.tabTime,A(DATA.time).length]);tabs.push(['sug',t.tabSug,pendingCount()]);}
+  let h=tabs.map(x=>'<button class="tab'+(state.tab===x[0]?' on':'')+'" onclick="setTab(\''+x[0]+'\')">'+x[1]+(x[2]!=null?'<span class="b'+(x[0]==='sug'&&x[2]>0?' pend':'')+'">'+x[2]+'</span>':'')+'</button>').join('');
+  if(MODE==='admin'){const dc=delCount();h+='<span class="actbar"><span class="savehint" id="savehint"></span>'
+    +'<button class="btn primary sm" onclick="openCreate(\'entregavel\')">'+t.addAction+'</button>'
+    +'<button class="btn sm" title="Envia agora o consolidado (Jonathan/João/Caio) pelo Outlook" onclick="sendMailCmd(\'consolidado\')">✉ Consolidado</button>'
+    +'<button class="btn sm" title="Envia agora os e-mails dos regionais pelo Outlook" onclick="sendMailCmd(\'regionais\')">✉ Regionais</button>'
+    +'<button class="toggle'+(state.showDeleted?' on':'')+'" onclick="toggleDeleted()">'+t.showDel+(dc?' ('+dc+')':'')+'</button>'
+    +(('showOpenFilePicker' in window)?(baseLoaded?'<span class="syncok" title="Base lida do disco — edições de outras abas/dias preservadas">✓ base</span>':'<button class="btn sm warnb" title="Reler data\\board.overlay.json antes de editar (recomendado)" onclick="syncFromDisk(true)">🔄 Sincronizar base</button>'):'')
+    +'<button class="btn sm" onclick="connectBase()">'+t.saveConnect+'</button><button class="btn green sm" onclick="saveOverlay()">'+t.save+'</button></span>';}
+  document.getElementById('tabs').innerHTML=h;updateSaveHint();}
+function toggleDeleted(){state.showDeleted=!state.showDeleted;renderTabs();renderContent();}
+function updateSaveHint(){const el=document.getElementById('savehint');if(el)el.textContent=dirty?'● não salvo':'';}
+function setTab(x){state.tab=x;renderTabs();renderContent();}
+function renderContent(){const c=document.getElementById('content');
+  const showF=(state.tab==='visao'||state.tab==='ent'||state.tab==='proj');
+  document.getElementById('filters').style.display=showF?'flex':'none';
+  if(state.tab==='visao')c.innerHTML=renderVisao();
+  else if(state.tab==='ent')c.innerHTML=renderEntregaveis();
+  else if(state.tab==='proj')c.innerHTML=renderProjetos();
+  else if(state.tab==='rot')c.innerHTML=renderRotinas();
+  else if(state.tab==='time')c.innerHTML=renderTime();
+  else if(state.tab==='sug')c.innerHTML=renderSugestoes();
+  document.getElementById('fCount').textContent=(state.tab==='ent'||state.tab==='visao')?filtered().length+' '+(LANG==='es'?'ítem(s)':'item(ns)'):'';}
+function renderChips(){document.getElementById('chips').innerHTML=PLATS.map(p=>'<button class="chip'+(state.plat===p?' on':'')+'" data-p="'+p+'" onclick="setPlat(\''+p.replace(/'/g,"\\'")+'\')">'+p+'</button>').join(' ');}
+function setPlat(p){state.plat=p;renderChips();renderContent();}
+
+/* ---------- MODAL ---------- */
+let modalTs=0;
+function openModal(){document.getElementById('ovl').classList.add('on');modalTs=Date.now();document.querySelector('.modal').scrollTop=0;}
+function closeModal(){document.getElementById('ovl').classList.remove('on');}
+function clickOpen(ev,kind,id){if(kind==='ent')openEnt(id);else openAct(id);}
+document.getElementById('ovl').addEventListener('click',e=>{if(e.target.id==='ovl'&&Date.now()-modalTs>350)closeModal();});
+
+function threadHtml(item){let cs=A(item.comments);const ov=ovLookup(item.id);
+  if(MODE==='admin'&&ov)cs=A(ov.comments);
+  if(!cs.length)return '<div class="note">'+t.noComments+'</div>';
+  return '<div class="thread">'+cs.map(c=>'<div class="cmt"><div class="meta"><b>'+esc(c.by)+'</b> · '+esc(c.ts)+'</div><div class="txt">'+esc(c.text)+'</div></div>').join('')+'</div>';}
+function histHtml(item){let hs=A(item.dateHistory).slice();const ov=ovLookup(item.id);
+  if(MODE==='admin'&&ov&&A(ov.dateHistory).length){hs=hs.slice(0,1).concat(A(ov.dateHistory));}
+  if(hs.length<=1)return '<div class="hist"><div class="h"><span class="d">'+fmtY(hs.length?hs[0].date:null)+'</span><span>'+t.noHist+'</span></div></div>';
+  return '<div class="hist">'+hs.map(x=>'<div class="h"><span class="d">'+fmtY(x.date)+'</span><span>'+esc(x.by||'')+(x.note?' — '+esc(x.note):'')+' <span class="muted">('+esc(x.ts||'')+')</span></span></div>').join('')+'</div>';}
+
+function openEnt(id){const e=ENTBY[id];if(!e)return;const ef=effEnt(e);
+  document.getElementById('mTitle').innerHTML='📦 '+esc(entMaterial(e));
+  let h='';
+  if(MODE==='admin')h+=adminEditEnt(e);
+  h+='<div class="fieldrow"><div class="field"><label>'+t.mResp+'</label><div class="val">'+esc(entResp(e))+'</div></div>'
+    +'<div class="field"><label>'+t.mPlat+'</label><div class="val">'+platTag(entPlat(e))+'</div></div>'
+    +'<div class="field"><label>'+t.mStatusOf+'</label><div class="val">'+stBadgeEnt(e)+'</div></div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.mPrazoOf+'</label><div class="val">'+fmtY(ef.limite)+'</div></div>'
+    +'<div class="field"><label>'+t.thReceb+'</label><div class="val">'+(ef.recebTxt?fmtY(ef.recebTxt):'—')+'</div></div>'
+    +'<div class="field"><label>'+t.mRef+'</label><div class="val">'+esc(e.ref||'—')+'</div></div>'
+    +'<div class="field"><label>'+t.mMes+'</label><div class="val">'+esc(e.mes||'—')+'</div></div></div>';
+  if(e.coment)h+='<div class="fieldrow"><div class="field"><label>'+t.mComent+'</label><div class="val">'+esc(e.coment)+'</div></div></div>';
+  h+='<div class="block"><h3>🕓 '+t.mHist+'</h3>'+histHtml(e)+'</div>';
+  h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(e)+commentComposer(id)+'</div>';
+  if(MODE==='view')h+=viewSuggestBlock(e,'ent');
+  if(MODE==='admin')h+=adminPendingBlock(id);
+  document.getElementById('mBody').innerHTML=h;openModal();}
+
+function openAct(id){const a=ACTBY[id];if(!a)return;const pc=effPct(a);
+  document.getElementById('mTitle').innerHTML='🚀 '+esc(actAtiv(a));
+  let h='';
+  if(MODE==='admin')h+=adminEditAct(a);
+  h+='<div class="fieldrow"><div class="field"><label>'+t.mResp+'</label><div class="val">'+esc(actResp(a))+'</div></div>'
+    +'<div class="field"><label>'+t.thFase+'</label><div class="val">'+esc(a.fase||'—')+'</div></div>'
+    +'<div class="field"><label>'+t.mStatusOf+'</label><div class="val">'+projBadge(actStatus(a))+'</div></div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.thPer+'</label><div class="val">'+fmtY(a.inicio)+' → '+fmtY(a.fim)+'</div></div>'
+    +'<div class="field"><label>'+t.thReal+'</label><div class="val"><b>'+Math.round(pc*100)+'%</b></div></div>'
+    +'<div class="field"><label>'+t.thPrev+'</label><div class="val">'+Math.round(a.prev*100)+'%</div></div></div>';
+  if(a.coment)h+='<div class="fieldrow"><div class="field"><label>'+t.mComent+'</label><div class="val">'+esc(a.coment)+'</div></div></div>';
+  h+='<div class="block"><h3>🕓 '+t.mHist+'</h3>'+histHtml(a)+'</div>';
+  h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(a)+commentComposer(id)+'</div>';
+  if(MODE==='view')h+=viewSuggestBlock(a,'act');
+  if(MODE==='admin')h+=adminPendingBlock(id);
+  document.getElementById('mBody').innerHTML=h;openModal();}
+
+function commentComposer(id){const author=(MODE==='admin')?t.adminAuthor:USER;
+  return '<div style="margin-top:10px"><textarea id="cmtInput" placeholder="'+t.mAddComment+'"></textarea><div style="margin-top:8px"><button class="btn primary sm" onclick="addComment(\''+id+'\')">'+t.mSend+' ('+esc(author)+')</button></div></div>';}
+
+function viewSuggestBlock(item,kind){
+  let h='<div class="editbox"><h3>✍️ '+t.mSuggest+'</h3><div class="fieldrow">';
+  h+='<div class="field"><label>'+t.mNewDate+'</label><input type="date" id="sgDate"></div>';
+  if(kind==='ent'){h+='<div class="field"><label>'+t.mNewStatus+'</label><select id="sgStatus"><option value="">—</option><option value="Concluído">'+t.stConcluir+'</option><option value="Cancelado">'+t.stCancel+'</option></select></div>';
+    h+='<div class="field"><label>'+t.mRecvDate+'</label><input type="date" id="sgRecv"></div>';}
+  else {h+='<div class="field"><label>'+t.mNewPct+'</label><input type="number" id="sgPct" min="0" max="100" step="5" placeholder="0-100"></div>';
+    h+='<div class="field"><label>'+t.mNewStatus+'</label><select id="sgStatus"><option value="">—</option><option value="Concluído">'+t.stConcluir+'</option><option value="Cancelado">'+t.stCancel+'</option></select></div>';}
+  h+='</div><div class="note">'+(LANG==='es'?'Escribe también un comentario arriba si quieres. Se enviará junto.':'Se quiser, escreva também um comentário acima — vai junto.')+'</div>'
+   +'<div class="modalfoot"><button class="btn primary big" onclick="addToOutbox(\''+item.id+'\',\''+kind+'\')">＋ '+t.mAddOut+'</button></div></div>';
+  return h;}
+
+function selPlat(cur){return PLATOPTS.map(p=>'<option'+(p===cur?' selected':'')+'>'+p+'</option>').join('');}
+function adminEditEnt(e){const ov=ovLookup(e.id),o=ov&&ov.official?ov.official:{};const del=entDeleted(e);
+  return '<div class="editbox"><h3>🛠️ '+t.mAdminEdit+'</h3>'
+    +'<div class="fieldrow"><div class="field full"><label>'+t.mTexto+'</label><textarea id="edMat">'+esc(entMaterial(e))+'</textarea></div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.mResp+'</label><input type="text" id="edResp" value="'+esc(entResp(e))+'"></div>'
+    +'<div class="field"><label>'+t.mPlat+'</label><select id="edPlat">'+selPlat(entPlat(e))+'</select></div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.mPrazoOf+'</label><input type="date" id="edDate" value="'+esc(o.limite||e.baseLimite||'')+'"></div>'
+    +'<div class="field"><label>'+t.mRecvDate+'</label><input type="date" id="edRecv" value="'+esc(o.recebido||'')+'"></div>'
+    +'<div class="field"><label>'+t.mStatusOf+'</label><select id="edStatus"><option value="">(auto)</option><option value="Concluído"'+(o.status==='Concluído'?' selected':'')+'>'+t.stConcluir+'</option><option value="Cancelado"'+(o.status==='Cancelado'?' selected':'')+'>'+t.stCancel+'</option></select></div></div>'
+    +'<div class="modalfoot"><button class="btn green big" onclick="saveEnt(\''+e.id+'\')">💾 '+t.mSaveOf+'</button>'
+    +(del?'<button class="btn sm" onclick="restoreItem(\''+e.id+'\',\'ent\')">'+t.restore+'</button>':'<button class="btn dangerghost sm" onclick="delItem(\''+e.id+'\',\'ent\')">'+t.del+'</button>')
+    +'</div></div>';}
+function adminEditAct(a){const ov=ovLookup(a.id),o=ov&&ov.official?ov.official:{};const cur=(o.pct!=null?o.pct:a.pct);const del=actDeleted(a);
+  return '<div class="editbox"><h3>🛠️ '+t.mAdminEdit+'</h3>'
+    +'<div class="fieldrow"><div class="field full"><label>'+t.mTexto+'</label><textarea id="edAtiv">'+esc(actAtiv(a))+'</textarea></div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.mResp+'</label><input type="text" id="edResp" value="'+esc(actResp(a))+'"></div>'
+    +'<div class="field"><label>'+t.thReal+' (0-100)</label><input type="number" id="edPct" min="0" max="100" step="5" value="'+Math.round(cur*100)+'"></div>'
+    +'<div class="field"><label>'+t.mStatusOf+'</label><select id="edStatus"><option value="">(auto)</option><option value="Concluído"'+(o.status==='Concluído'?' selected':'')+'>'+t.stConcluir+'</option><option value="Cancelado"'+(o.status==='Cancelado'?' selected':'')+'>'+t.stCancel+'</option></select></div></div>'
+    +'<div class="modalfoot"><button class="btn green big" onclick="saveAct(\''+a.id+'\')">💾 '+t.mSaveOf+'</button>'
+    +(del?'<button class="btn sm" onclick="restoreItem(\''+a.id+'\',\'act\')">'+t.restore+'</button>':'<button class="btn dangerghost sm" onclick="delItem(\''+a.id+'\',\'act\')">'+t.del+'</button>')
+    +'</div></div>';}
+function adminPendingBlock(id){const ov=ovLookup(id);const ps=ov?A(ov.suggestions).map((s,i)=>({s,i})).filter(x=>!x.s.state||x.s.state==='pending'):[];
+  if(!ps.length)return '';const item=ENTBY[id]||ACTBY[id];let h='<div class="block"><h3>📥 '+t.mPending+'</h3>';for(const x of ps)h+=suggCard(id,x.i,x.s,item?(item.material||item.ativ):id);return h+'</div>';}
+
+/* ---------- ações ---------- */
+function addComment(id){const el=document.getElementById('cmtInput');const txt=(el.value||'').trim();if(!txt)return;
+  if(MODE==='admin'){const it=ovItem(id);it.comments.push({ts:nowStamp(),by:t.adminAuthor,text:txt});markDirty(id);
+    const item=ENTBY[id]||ACTBY[id];if(item){item.comments=it.comments.slice();item.nComments=item.comments.length;}reopen(id);toast('OK');}
+  else{outboxAdd(id,{comment:txt});reopen(id);toast(t.outAdded);}}
+function saveEnt(id){const e=ENTBY[id];const it=ovItem(id);
+  const nm=(document.getElementById('edMat').value||'').trim();
+  const rp=(document.getElementById('edResp').value||'').trim();
+  const pl=document.getElementById('edPlat').value;
+  const nd=document.getElementById('edDate').value;const nr=document.getElementById('edRecv').value;const ns=document.getElementById('edStatus').value;
+  if(nd&&nd!==(it.official.limite||e.baseLimite)){it.dateHistory.push({date:nd,ts:nowStamp(),by:t.adminAuthor,note:'Alteração no sistema'});}
+  it.official.material=(nm&&nm!==e.material)?nm:(nm?nm:null);
+  it.official.resp=(rp&&rp!==e.resp)?rp:(rp?rp:null);
+  it.official.plat=(pl&&pl!==e.plat)?pl:null;
+  it.official.limite=nd||null;it.official.recebido=nr||null;it.official.status=ns||null;
+  markDirty(id);refreshAll();reopen(id);saveOverlay();}
+function saveAct(id){const a=ACTBY[id];const it=ovItem(id);
+  const at=(document.getElementById('edAtiv').value||'').trim();
+  const rp=(document.getElementById('edResp').value||'').trim();
+  const ns=document.getElementById('edStatus').value;
+  const v=parseFloat(document.getElementById('edPct').value);
+  it.official.ativ=(at&&at!==a.ativ)?at:(at?at:null);
+  it.official.resp=(rp&&rp!==a.resp)?rp:(rp?rp:null);
+  it.official.status=ns||null;
+  if(!isNaN(v))it.official.pct=Math.max(0,Math.min(1,v/100));
+  markDirty(id);refreshAll();reopen(id);saveOverlay();}
+function delItem(id,kind){if(!confirm(t.confirmDel))return;const it=ovItem(id);it.official.deleted=true;markDirty(id);closeModal();refreshAll();saveOverlay();toast('🗑 '+(LANG==='es'?'Eliminado':'Excluído'));}
+function restoreItem(id,kind){const it=ovItem(id);it.official.deleted=false;markDirty(id);refreshAll();reopen(id);saveOverlay();toast('♻ '+(LANG==='es'?'Restaurado':'Restaurado'));}
+function approveSugg(id,idx){const it=ovItem(id);const s=it.suggestions[idx];if(!s)return;const item=ENTBY[id]||ACTBY[id];
+  if(s.propDate){it.dateHistory.push({date:s.propDate,ts:nowStamp(),by:t.adminAuthor,note:'Validado de '+(s.from||'?')});it.official.limite=s.propDate;}
+  if(s.propStatus)it.official.status=s.propStatus;
+  if(s.propRecv)it.official.recebido=s.propRecv;
+  if(s.propPct!=null&&s.propPct!=='')it.official.pct=Math.max(0,Math.min(1,parseFloat(s.propPct)));
+  if(s.comment)it.comments.push({ts:nowStamp(),by:(s.from||'?'),text:s.comment});
+  s.state='approved';s.resolvedTs=nowStamp();markDirty(id);
+  if(item){item.comments=it.comments.slice();item.nComments=item.comments.length;}
+  refreshAll();toast(t.savedOk);}
+function rejectSugg(id,idx){const it=ovItem(id);const s=it.suggestions[idx];if(!s)return;s.state='rejected';s.resolvedTs=nowStamp();markDirty(id);refreshAll();}
+function markDirty(id){if(id)sessionTouched.add(id);dirty=true;updateSaveHint();}
+function reopen(id){if(document.getElementById('ovl').classList.contains('on')){if(ENTBY[id])openEnt(id);else if(ACTBY[id])openAct(id);else if(ROTBY[id])openRot(id);}}
+function refreshAll(){renderKpis();renderTabs();renderContent();}
+
+/* ---------- caixa de envio (view) ---------- */
+const OUTKEY='rm_outbox_'+USER;
+function outboxLoad(){try{return JSON.parse(localStorage.getItem(OUTKEY)||'[]');}catch(e){return [];}}
+function outboxSave(a){try{localStorage.setItem(OUTKEY,JSON.stringify(a));}catch(e){}renderOutbar();}
+function outboxAdd(id,extra){const arr=outboxLoad();const item=ENTBY[id]||ACTBY[id];arr.push(Object.assign({id,ts:nowStamp(),from:USER,nome:item?(item.material||item.ativ):id},extra));outboxSave(arr);}
+function addToOutbox(id,kind){const d=document.getElementById('sgDate').value;const e={};if(d)e.propDate=d;
+  const ss=document.getElementById('sgStatus');if(ss&&ss.value)e.propStatus=ss.value;
+  if(kind==='ent'){const r=document.getElementById('sgRecv').value;if(r)e.propRecv=r;}
+  else{const p=document.getElementById('sgPct').value;if(p!=='')e.propPct=(parseFloat(p)/100).toFixed(4);}
+  const cin=document.getElementById('cmtInput');if(cin&&cin.value.trim())e.comment=cin.value.trim();
+  if(!e.propDate&&!e.propStatus&&e.propPct==null&&!e.comment){toast(LANG==='es'?'Nada para agregar':'Nada para adicionar');return;}
+  outboxAdd(id,e);closeModal();toast(t.outAdded);}
+function renderOutbar(){const arr=outboxLoad();const b=document.getElementById('outbar');if(MODE!=='view'||!arr.length){b.classList.remove('on');return;}
+  b.classList.add('on');b.innerHTML='<span class="c">'+arr.length+'</span> '+t.outTitle+' <button class="btn green sm" onclick="sendOutbox()">'+t.outSend+'</button><button class="btn primary sm" onclick="copyOutbox()">'+t.outCopy+'</button><button class="btn ghost sm" onclick="clearOutbox()">'+t.outClear+'</button>';}
+function clearOutbox(){if(!confirm(LANG==='es'?'¿Limpiar el buzón? (solo hazlo después de enviar/copiar)':'Limpar a caixa? (só faça isso depois de enviar/copiar)'))return;localStorage.removeItem(OUTKEY);renderOutbar();}
+function outboxText(){const arr=outboxLoad();if(!arr.length)return '';
+  const payload=btoa(unescape(encodeURIComponent(JSON.stringify({v:1,from:USER,items:arr}))));
+  const human=arr.map((a,i)=>{let s=(i+1)+') '+a.nome+' ['+a.id+']';if(a.propDate)s+='\n   -> '+t.mNewDate+': '+fmtY(a.propDate);if(a.propStatus)s+='\n   -> '+t.mNewStatus+': '+a.propStatus;if(a.propRecv)s+='\n   -> '+t.mRecvDate+': '+fmtY(a.propRecv);if(a.propPct!=null)s+='\n   -> '+t.mNewPct+': '+Math.round(a.propPct*100)+'%';if(a.comment)s+='\n   -> 💬 '+a.comment;return s;}).join('\n\n');
+  const intro=(LANG==='es'?'Hola Jonathan, envío mis sugerencias:':'Olá Jonathan, seguem minhas sugestões:');
+  return intro+'\n\n'+human+'\n\n----- DADOS (não apague) -----\n'+payload+'\n----- FIM -----\n';}
+function sendOutbox(){const arr=outboxLoad();if(!arr.length)return;
+  const subj=encodeURIComponent('[Control Tower] '+(LANG==='es'?'Sugerencias de ':'Sugestões de ')+USER+' - '+nowStamp());
+  const body=encodeURIComponent(outboxText());
+  location.href='mailto:'+(DATA.adminEmail||'jonathan.braga@emergentcold.com')+'?subject='+subj+'&body='+body;}
+function copyOutbox(){const txt=outboxText();if(!txt)return;
+  const done=()=>toast(LANG==='es'?'✔ Copiado — pégalo en Teams/WhatsApp/e-mail para Jonathan':'✔ Copiado — cole no Teams/WhatsApp/e-mail para o Jonathan');
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,()=>copyFallback(txt,done));}
+  else copyFallback(txt,done);}
+function copyFallback(txt,done){try{const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}
+  catch(e){prompt(LANG==='es'?'Copia este texto y envíalo a Jonathan:':'Copie este texto e envie ao Jonathan:',txt);}}
+
+/* ---------- import (admin) ---------- */
+function importSuggestions(){const raw=document.getElementById('impTxt').value||'';const m=raw.match(/-----\s*DADOS[^\n]*\n([\s\S]*?)\n-----\s*FIM/i);let json=null;
+  try{const b64=(m?m[1]:raw).replace(/\s+/g,'');json=JSON.parse(decodeURIComponent(escape(atob(b64))));}catch(e){toast('❌ '+(LANG==='es'?'No pude leer':'Não consegui ler'));return;}
+  if(!json||!json.items){toast('❌ formato inválido');return;}let n=0;
+  A(json.items).forEach(s=>{if(!s.id)return;const it=ovItem(s.id);it.suggestions.push({from:json.from||s.from||'?',ts:s.ts||nowStamp(),propDate:s.propDate||null,propStatus:s.propStatus||null,propRecv:s.propRecv||null,propPct:(s.propPct!=null?s.propPct:null),comment:s.comment||null,state:'pending'});markDirty(s.id);n++;});
+  document.getElementById('impTxt').value='';refreshAll();toast('✔ '+n+' '+(LANG==='es'?'importadas':'importadas'));}
+
+/* ---------- persistência (admin) ---------- */
+let fileHandle=null;
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('rmct',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
+async function idbSet(k,v){const db=await idb();return new Promise((res,rej)=>{const tx=db.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
+async function idbGet(k){const db=await idb();return new Promise((res,rej)=>{const tx=db.transaction('kv','readonly');const rq=tx.objectStore('kv').get(k);rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error);});}
+async function ensureHandle(pick){if(!('showOpenFilePicker' in window))return null;
+  if(!fileHandle){try{fileHandle=await idbGet('overlayHandle');}catch(e){}}
+  if(!fileHandle&&pick){const[h]=await window.showOpenFilePicker({types:[{description:'JSON',accept:{'application/json':['.json']}}]});fileHandle=h;await idbSet('overlayHandle',h);}
+  if(fileHandle){let p=await fileHandle.queryPermission({mode:'readwrite'});if(p!=='granted')p=await fileHandle.requestPermission({mode:'readwrite'});if(p!=='granted')return null;}
+  return fileHandle;}
+async function connectBase(){try{fileHandle=null;await idbSet('overlayHandle',null);const h=await ensureHandle(true);if(h){await syncFromDisk(true);toast('✔ base conectada — data\\board.overlay.json');}}catch(e){toast('❌ '+e.message);}}
+/* Lê o overlay do disco e mescla com o que está em memória.
+   Regra: o DISCO é a base; só vencem os itens alterados NESTA sessão.
+   Assim, uma aba antiga nunca sobrescreve edições salvas por outra aba/dia. */
+function mergeFromDisk(disk){
+  if(!disk||typeof disk!=='object')return;
+  const mem=DATA.overlay;mem.items=mem.items||{};
+  const dItems=(disk.items&&typeof disk.items==='object')?disk.items:{};
+  const items={};
+  for(const id in dItems)items[id]=dItems[id];
+  for(const id in mem.items){if(sessionTouched.has(id)||!items[id])items[id]=mem.items[id];}
+  const byId={};
+  A(disk.newItems).forEach(n=>{if(n&&n.id)byId[n.id]=n;});
+  A(mem.newItems).forEach(n=>{if(n&&n.id&&(sessionNewIds.has(n.id)||!byId[n.id]))byId[n.id]=n;});
+  mem.items=items;mem.newItems=Object.keys(byId).map(k=>byId[k]);
+  if(disk.version!=null)mem.version=disk.version;
+}
+async function readDisk(h){const f=await h.getFile();const txt=await f.text();if(!txt||!txt.trim())return null;return JSON.parse(txt);}
+/* Sincroniza a base do disco para a memória (ao abrir o painel e ao conectar). */
+async function syncFromDisk(interactive){
+  if(MODE!=='admin'||!('showOpenFilePicker' in window))return false;
+  try{
+    if(!fileHandle){try{fileHandle=await idbGet('overlayHandle');}catch(e){}}
+    if(!fileHandle)return false;
+    let p=await fileHandle.queryPermission({mode:'readwrite'});
+    if(p!=='granted'&&interactive)p=await fileHandle.requestPermission({mode:'readwrite'});
+    if(p!=='granted')return false;
+    const embUpd=DATA.overlay.updated||'';
+    const disk=await readDisk(fileHandle);
+    if(disk){mergeFromDisk(disk);injectNewItems();refreshAll();
+      if((disk.updated||'')!==embUpd)toast('🔄 Base sincronizada do disco ('+(disk.updated||'?')+')');}
+    baseLoaded=true;renderTabs();
+    return true;
+  }catch(e){return false;}
+}
+async function saveOverlay(){
+  if('showOpenFilePicker' in window){
+    try{
+      const h=await ensureHandle(true);
+      if(h){
+        try{const disk=await readDisk(h);if(disk){mergeFromDisk(disk);injectNewItems();}}catch(e){}
+        DATA.overlay.updated=nowStamp();
+        const w=await h.createWritable();await w.write(JSON.stringify(DATA.overlay,null,2));await w.close();
+        baseLoaded=true;dirty=false;updateSaveHint();refreshAll();toast('💾 '+t.savedOk);return;
+      }
+    }catch(e){}
+  }
+  DATA.overlay.updated=nowStamp();
+  const blob=new Blob([JSON.stringify(DATA.overlay,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='board.overlay.json';a.click();dirty=false;updateSaveHint();
+  alert(LANG==='es'
+    ?'⚠ ATENCIÓN: NO se guardó en data\\board.overlay.json.\nEl archivo fue DESCARGADO (carpeta Descargas). Muévelo a data\\ o haz clic en "📂 Dónde guardar" y guarda de nuevo.'
+    :'⚠ ATENÇÃO: NÃO gravei em data\\board.overlay.json.\nO arquivo foi BAIXADO (pasta Downloads). Mova-o para a pasta data\\ substituindo o existente, OU clique em "📂 Onde salvar" e salve de novo.');}
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+
+/* ---------- Incluir ação (novos itens) ---------- */
+function injectNewItems(){A(DATA.overlay.newItems).forEach(ni=>{
+  if(!ni||!ni.id)return;
+  if(ni.kind==='entregavel'){if(ENTBY[ni.id])return;const e=entFromNew(ni);DATA.entregaveis=A(DATA.entregaveis);DATA.entregaveis.push(e);ENTBY[ni.id]=e;}
+  else if(ni.kind==='rotina'){if(ROTBY[ni.id])return;const r=rotFromNew(ni);DATA.rotinas=A(DATA.rotinas);DATA.rotinas.push(r);ROTBY[ni.id]=r;}
+  else if(ni.kind==='projeto'){if(ACTBY[ni.id])return;const a=actFromNew(ni);let p=A(DATA.projetos).find(x=>x.nome===ni.projeto);
+    if(!p){p={id:'NP_'+ni.id,nome:ni.projeto||'(novo projeto)',resp:a.resp,curto:a.curto,inicio:a.inicio,fim:a.fim,pct:0,prev:0,st:'Pendente',marco:'',coment:'',obs:'',plat:'CORP',atividades:[]};DATA.projetos=A(DATA.projetos);DATA.projetos.push(p);}
+    p.atividades=A(p.atividades);p.atividades.push(a);ACTBY[ni.id]=a;}
+});}
+function rotFromNew(ni){const d=(ni.diaUtil!=null&&ni.diaUtil!=='')?parseInt(ni.diaUtil,10):null;
+  return {id:ni.id,ativ:ni.ativ||'',period:ni.period||'Mensal',resp:ni.resp||'',curto:shortNameJS(ni.resp||''),regionais:'',startPad:'',prazoPad:(d?'WD+'+d:''),proxStart:null,proxPrazo:(d?nextWD(d):null),prio:'',obs:'',deleted:false,diaUtil:d,comments:[],nComments:0,nPending:0};}
+function entFromNew(ni){return {id:ni.id,tipo:'entregavel',n:ni.n||'',resp:ni.resp||'',curto:shortNameJS(ni.resp||''),plat:ni.plat||'CORP',material:ni.material||'',deleted:false,ref:ni.ref||'',limite:ni.limite||null,baseLimite:ni.limite||null,recebido:null,recebidoTxt:'',baseRecebTxt:'',st:'Pendente',dias:null,lateDone:false,coment:'',obs:'',mes:ni.mes||'',privado:'Não',comments:[],dateHistory:ni.limite?[{date:ni.limite,ts:ni.createdTs||'',by:'Sistema',note:'Ação criada no sistema'}]:[],nComments:0,nPending:0};}
+function actFromNew(ni){const pct=ni.pct!=null?ni.pct:0;let prev=0;
+  if(ni.inicio&&ni.fim){const i=new Date(ni.inicio+'T00:00:00'),f=new Date(ni.fim+'T00:00:00'),hh=new Date(DATA.hoje+'T00:00:00');if(f>=i){prev=((hh-i)/86400000+1)/((f-i)/86400000+1);prev=Math.max(0,Math.min(1,prev));}}
+  return {id:ni.id,tipo:'projeto-ativ',num:ni.num||'',fase:ni.fase||'',ativ:ni.ativ||'',resp:ni.resp||'',curto:shortNameJS(ni.resp||''),deleted:false,inicio:ni.inicio||null,fim:ni.fim||null,baseFim:ni.fim||null,pct:pct,basePct:pct,prev:prev,st:'Pendente',marco:ni.marco||'',prio:ni.prio||'',coment:'',obs:'',comments:[],dateHistory:ni.fim?[{date:ni.fim,ts:ni.createdTs||'',by:'Sistema',note:'Ação criada no sistema'}]:[],nComments:0,nPending:0};}
+
+function nameList(){return '<datalist id="dlNames">'+A(DATA.time).map(x=>'<option value="'+esc(x.nome)+'">').join('')+A(['Jonathan Braga','João Bruno','Caio Sestari']).map(n=>'<option value="'+esc(n)+'">').join('')+'</datalist>';}
+function projList(){return '<datalist id="dlProj">'+A(DATA.projetos).map(p=>'<option value="'+esc(p.nome)+'">').join('')+'</datalist>';}
+function typeToggle(kind){return '<div class="fieldrow"><div class="field full"><label>'+t.fType+'</label>'
+  +'<button class="btn sm'+(kind==='entregavel'?' primary':'')+'" onclick="openCreate(\'entregavel\')">'+t.tEnt+'</button> '
+  +'<button class="btn sm'+(kind==='projeto'?' primary':'')+'" onclick="openCreate(\'projeto\')">'+t.tProj+'</button> '
+  +'<button class="btn sm'+(kind==='rotina'?' primary':'')+'" onclick="openCreate(\'rotina\')">'+t.tRot+'</button></div></div>';}
+function statusSel(id){return '<select id="'+id+'"><option value="">'+stTxt('Pendente')+'</option><option value="Concluído">'+t.stConcluir+'</option><option value="Cancelado">'+t.stCancel+'</option></select>';}
+function openCreate(kind){kind=kind||'entregavel';
+  document.getElementById('mTitle').innerHTML='➕ '+t.createTitle;
+  let h='<div class="editbox">'+typeToggle(kind)+nameList();
+  if(kind==='entregavel'){
+    h+='<div class="fieldrow"><div class="field full"><label>'+t.mTexto+' *</label><textarea id="nMat"></textarea></div></div>'
+      +'<div class="fieldrow"><div class="field"><label>'+t.mResp+' *</label><input type="text" list="dlNames" id="nResp"></div>'
+      +'<div class="field"><label>'+t.mPlat+'</label><select id="nPlat">'+selPlat('CORP')+'</select></div>'
+      +'<div class="field"><label>'+t.fRef+'</label><select id="nRef"><option value=""></option><option>Recorrente</option><option>Pontual</option></select></div></div>'
+      +'<div class="fieldrow"><div class="field"><label>'+t.fPrazo+'</label><input type="date" id="nDate"></div>'
+      +'<div class="field"><label>'+t.fMes+'</label><input type="text" id="nMes" placeholder="ex.: julho"></div>'
+      +'<div class="field"><label>'+t.fStatusInicial+'</label>'+statusSel('nStatus')+'</div></div>';
+  } else if(kind==='rotina'){
+    h+='<div class="fieldrow"><div class="field full"><label>'+t.thAtiv+' *</label><textarea id="nAtiv"></textarea></div></div>'
+      +'<div class="fieldrow"><div class="field"><label>'+t.mResp+' *</label><input type="text" list="dlNames" id="nResp"></div>'
+      +'<div class="field"><label>'+t.fPeriod+'</label><input type="text" id="nPer" placeholder="ex.: Mensal" value="Mensal"></div>'
+      +'<div class="field"><label>'+t.fDiaUtil+' *</label><input type="number" id="nDia" min="1" max="23" step="1" placeholder="ex.: 5"></div></div>';
+  } else {
+    h+='<div class="fieldrow"><div class="field"><label>'+t.fProjeto+' *</label><input type="text" list="dlProj" id="nProj"></div>'
+      +'<div class="field"><label>'+t.fFase+'</label><input type="text" id="nFase" placeholder="ex.: Fase 3: Execução"></div></div>'+projList()
+      +'<div class="fieldrow"><div class="field full"><label>'+t.thAtiv+' *</label><textarea id="nAtiv"></textarea></div></div>'
+      +'<div class="fieldrow"><div class="field"><label>'+t.mResp+' *</label><input type="text" list="dlNames" id="nResp"></div>'
+      +'<div class="field"><label>'+t.fInicio+'</label><input type="date" id="nIni"></div>'
+      +'<div class="field"><label>'+t.fFim+'</label><input type="date" id="nFim"></div></div>'
+      +'<div class="fieldrow"><div class="field"><label>'+t.thReal+' (0-100)</label><input type="number" id="nPct" min="0" max="100" step="5" value="0"></div>'
+      +'<div class="field"><label>'+t.fPrio+'</label><select id="nPrio"><option value=""></option><option>Alta</option><option>Média</option><option>Baixa</option></select></div>'
+      +'<div class="field"><label>'+t.fMarco+'</label><select id="nMarco"><option value="">—</option><option value="Sim">Sim</option></select></div>'
+      +'<div class="field"><label>'+t.fStatusInicial+'</label>'+statusSel('nStatus')+'</div></div>';
+  }
+  h+='<div class="fieldrow"><div class="field full"><label>'+t.fComentInit+'</label><textarea id="nComent"></textarea></div></div>'
+    +'<div class="modalfoot"><button class="btn green big" onclick="saveNew(\''+kind+'\')">'+t.fCriar+'</button></div></div>';
+  document.getElementById('mBody').innerHTML=h;openModal();}
+function newId(pfx){return pfx+Date.now()+Math.floor(Math.random()*1000);}
+function monthName(iso){if(!iso)return '';try{return new Date(iso+'T00:00:00').toLocaleDateString('pt-BR',{month:'long'});}catch(e){return '';}}
+function nextProjNum(projName){var proj=A(DATA.projetos).find(x=>x.nome===projName);
+  if(!proj)return (A(DATA.projetos).length+1)+'.1';
+  var base='',maxSub=0;A(proj.atividades).forEach(a=>{var mm=String(a.num||'').match(/^(\d+)\.(\d+)/);if(mm){base=mm[1];if(+mm[2]>maxSub)maxSub=+mm[2];}});
+  if(!base){var first=A(proj.atividades)[0];var pm=first?String(first.num||'').match(/^(\d+)/):null;base=pm?pm[1]:String(A(DATA.projetos).indexOf(proj)+1);}
+  return base+'.'+(maxSub+1);}
+function saveNew(kind){const val=id=>{const el=document.getElementById(id);return el?(el.value||'').trim():'';};
+  const resp=val('nResp');const coment=val('nComent');const status=val('nStatus');
+  let ni;
+  if(kind==='entregavel'){const material=val('nMat');if(!material||!resp){toast(t.reqMsg);return;}
+    const limite=val('nDate');
+    let maxN=0;A(DATA.entregaveis).forEach(e=>{const v=parseInt(e.n,10);if(!isNaN(v)&&v>maxN)maxN=v;});
+    ni={id:newId('NE'),kind:'entregavel',n:String(maxN+1),material,resp,plat:val('nPlat')||'CORP',ref:val('nRef'),limite:limite||null,recebido:'',status:'',mes:val('nMes')||monthName(limite),privado:'Não',createdBy:USER,createdTs:nowStamp()};
+  } else if(kind==='rotina'){const ativ=val('nAtiv');const di=parseInt(val('nDia'),10);
+    if(!ativ||!resp||isNaN(di)||di<1){toast(t.reqRot);return;}
+    ni={id:newId('NR'),kind:'rotina',ativ,resp,period:val('nPer')||'Mensal',diaUtil:di,createdBy:USER,createdTs:nowStamp()};
+  } else {const ativ=val('nAtiv');if(!ativ||!resp){toast(t.reqMsg);return;}
+    let pct=parseFloat(val('nPct'));if(isNaN(pct))pct=0;
+    const projName=val('nProj')||'(novo projeto)';
+    ni={id:newId('NP'),kind:'projeto',projeto:projName,num:nextProjNum(projName),fase:val('nFase'),ativ,resp,inicio:val('nIni')||null,fim:val('nFim')||null,pct:Math.max(0,Math.min(1,pct/100)),marco:val('nMarco'),prio:val('nPrio'),createdBy:USER,createdTs:nowStamp()};
+  }
+  DATA.overlay.newItems=A(DATA.overlay.newItems);DATA.overlay.newItems.push(ni);
+  sessionNewIds.add(ni.id);
+  const it=ovItem(ni.id);
+  if(status){it.official.status=status;}
+  if(coment){it.comments.push({ts:nowStamp(),by:t.adminAuthor,text:coment});}
+  // injeta ao vivo
+  if(ni.kind==='entregavel'){const e=entFromNew(ni);e.comments=it.comments.slice();e.nComments=e.comments.length;DATA.entregaveis=A(DATA.entregaveis);DATA.entregaveis.push(e);ENTBY[ni.id]=e;}
+  else if(ni.kind==='rotina'){const r=rotFromNew(ni);r.comments=it.comments.slice();r.nComments=r.comments.length;DATA.rotinas=A(DATA.rotinas);DATA.rotinas.push(r);ROTBY[ni.id]=r;}
+  else{const a=actFromNew(ni);a.comments=it.comments.slice();a.nComments=a.comments.length;let p=A(DATA.projetos).find(x=>x.nome===ni.projeto);if(!p){p={id:'NP_'+ni.id,nome:ni.projeto,resp:a.resp,curto:a.curto,inicio:a.inicio,fim:a.fim,pct:0,prev:0,st:'Pendente',marco:'',coment:'',obs:'',plat:'CORP',atividades:[]};DATA.projetos=A(DATA.projetos);DATA.projetos.push(p);}p.atividades=A(p.atividades);p.atividades.push(a);ACTBY[ni.id]=a;}
+  markDirty(ni.id);refreshAll();toast(t.created);saveOverlay();
+  if(ni.kind==='entregavel')openEnt(ni.id);else if(ni.kind==='rotina')openRot(ni.id);else openAct(ni.id);}
+
+/* ---------- init ---------- */
+function init(){
+  let th='dark';try{th=localStorage.getItem('rm_theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');}catch(e){}
+  applyTheme(th);
+  document.getElementById('subtitle').textContent=(MODE==='view')?t.viewSub+' — '+USER:t.sub;
+  document.title=(MODE==='view'?'Meu Painel — '+USER:'RM Control Tower — Admin');
+  const flag=(MODE==='admin')?'<span class="modeflag flag-admin">ADMIN · '+esc(USER)+'</span>':'<span class="modeflag flag-view">'+esc(USER)+(LANG==='es'?' · vista':' · visão')+'</span>';
+  document.getElementById('meta').innerHTML=flag+'<br>'+(LANG==='es'?'Planilla-semente':'Planilha-semente')+': '+esc(DATA.fonte)+'<br>'+(LANG==='es'?'Generado':'Gerado')+': <b>'+esc(DATA.gerado)+'</b>';
+  document.getElementById('helpzone').innerHTML='<div class="helpbox">'+((MODE==='admin')?t.helpAdmin:t.helpView)+'</div>';
+  document.getElementById('footer').textContent='Sistema de Mapeo · Revenue Management LatAm';
+  document.getElementById('lblPlat').textContent=t.plat;
+  document.getElementById('fBusca').placeholder='🔍 '+t.busca;
+  const resps=[...new Set(A(DATA.entregaveis).map(e=>entCurto(e)))].sort();
+  document.getElementById('fResp').innerHTML='<option value="">'+t.resp+'</option>'+resps.map(r=>'<option>'+esc(r)+'</option>').join('');
+  document.getElementById('fStatus').innerHTML='<option value="">'+t.status+'</option>'+['Atrasado','Hoje','Pendente','Sem prazo','Concluído','Cancelado'].map(s=>'<option value="'+s+'">'+stTxt(s)+'</option>').join('');
+  const meses=[...new Set(A(DATA.entregaveis).map(e=>e.mes).filter(Boolean))];
+  document.getElementById('fMes').innerHTML='<option value="">'+t.mes+'</option>'+meses.map(m=>'<option>'+esc(m)+'</option>').join('');
+  document.getElementById('fResp').onchange=e=>{state.resp=e.target.value;renderContent();};
+  document.getElementById('fStatus').onchange=e=>{state.status=e.target.value;renderContent();};
+  document.getElementById('fMes').onchange=e=>{state.mes=e.target.value;renderContent();};
+  document.getElementById('fBusca').oninput=e=>{state.busca=e.target.value;renderContent();};
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+  renderKpis();renderTabs();renderChips();renderContent();renderOutbar();
+}
+injectNewItems();
+init();
+if(MODE==='admin')syncFromDisk(false);
+</script>
+</body>
+</html>
