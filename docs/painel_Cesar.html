@@ -34,6 +34,9 @@
   .wrap{max-width:1400px;margin:0 auto;padding:20px 26px 80px}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
   .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden}
+  .kpi.clik{cursor:pointer;transition:border-color .12s,transform .12s,box-shadow .12s}
+  .kpi.clik:hover{border-color:var(--c,var(--blue));transform:translateY(-2px)}
+  .kpi.on{border-color:var(--c,var(--blue));box-shadow:inset 0 0 0 1px var(--c,var(--blue))}
   .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,var(--blue))}
   .kpi .v{font-size:30px;font-weight:800;color:var(--c,var(--blue));line-height:1.1}
   .kpi .l{font-size:10.5px;color:var(--tx2);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
@@ -74,6 +77,28 @@
   th{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
   td{padding:9px 12px;border-bottom:1px solid var(--line);font-size:12.8px;vertical-align:top}
   tr:last-child td{border-bottom:none}
+  .maptools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .maptools input[type=text]{flex:1;min-width:240px}
+  .mapcount{font-size:11px;color:var(--tx3);white-space:nowrap}
+  .mapscroll{overflow:auto;max-height:calc(100vh - 250px);border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+  .maptable{width:100%;border-collapse:collapse}
+  .maptable thead th{position:sticky;top:0;z-index:2;background:var(--panel2);text-align:left;font-size:10.5px;letter-spacing:.7px;text-transform:uppercase;color:var(--tx3);padding:11px 14px;border-bottom:1px solid var(--line)}
+  .maptable tbody td{padding:3px 10px;border-bottom:1px solid var(--line)}
+  .maptable tbody tr:last-child td{border-bottom:none}
+  .maptable tbody tr:hover td{background:rgba(77,163,255,.06)}
+  .maptable td.pbar,.maptable th.pbar{width:4px;padding:0}
+  .maptable td.pbar{border-bottom:none}
+  .minp{width:100%;min-width:110px;background:transparent;border:1px solid transparent;border-radius:8px;padding:7px 9px;color:var(--tx);font-size:12.8px;font-family:inherit;transition:background .12s,border-color .12s,opacity .12s}
+  .minp:hover{background:var(--panel2);border-color:var(--line)}
+  .minp:focus{background:var(--panel2);border-color:var(--acc,#4da3ff);outline:none}
+  .minp.dim{opacity:.3}.minp.dim:hover,.minp.dim:focus{opacity:1}
+  .platpill{border-left:3px solid var(--pc,#8b93a7);border-radius:0 8px 8px 0;font-weight:600}
+  .mcell{display:flex;align-items:center;gap:8px}
+  .rdot{flex:0 0 auto;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;letter-spacing:.3px}
+  .mapdelcell{width:1%;text-align:center}
+  .mapdelbtn{border:none;background:transparent;color:var(--tx3);cursor:pointer;font-size:14px;opacity:.45;border-radius:7px;padding:4px 8px;transition:.12s}
+  .mapdelbtn:hover{opacity:1;background:rgba(224,80,80,.14);color:var(--red)}
+  .mapempty{padding:18px;color:var(--tx3);text-align:center}
   tbody tr.clik{cursor:pointer}
   tbody tr.clik:hover td{background:rgba(77,163,255,.09)}
   tbody tr.del td{opacity:.45;text-decoration:line-through}
@@ -203,6 +228,7 @@
     <select id="fResp"></select><select id="fStatus"></select><select id="fMes"></select>
     <input type="text" id="fBusca" placeholder="🔍 Buscar...">
     <span class="spacer"></span><span class="count" id="fCount"></span>
+    <button class="btn sm" id="clearFilters" style="display:none;margin-left:8px" onclick="clearFilters()">✕ Eliminar filtros</button>
   </div>
   <div id="content"></div>
   <div class="footer" id="footer"></div>
@@ -213,7 +239,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const DATA = {"overlay":null,"fonteData":"06/07/2026 20:20","adminName":"Jonathan","lang":"es","time":[],"hoje":"2026-07-27","gerado":"27/07/2026 15:46","user":"César","rotinas":[],"mode":"view","adminEmail":"jonathan.braga@emergentcold.com","fonte":"Gestao_Rotinas_Projetos v7.xlsm","entregaveis":[{"id":"E5","tipo":"entregavel","n":"5","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Esclarecer informações de Mão de Obra direta do Mexico","deleted":false,"ref":"Pontual","limite":"2026-06-03","baseLimite":"2026-06-03","recebido":"2026-06-04","recebidoTxt":"2026-06-04","baseRecebTxt":"2026-06-04","st":"Concluído","dias":-54,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-03","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E4","tipo":"entregavel","n":"4","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Organizar handover do César com Jorge","deleted":false,"ref":"Pontual","limite":"2026-06-03","baseLimite":"2026-06-03","recebido":"2026-06-05","recebidoTxt":"2026-06-05","baseRecebTxt":"2026-06-05","st":"Concluído","dias":-54,"lateDone":true,"coment":"César: OK\r\nJorge: Pendente","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-03","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E11","tipo":"entregavel","n":"11","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revisar CP Model v02 de abril - Qualianz","deleted":false,"ref":"Pontual","limite":"2026-06-05","baseLimite":"2026-06-05","recebido":"2026-06-10","recebidoTxt":"2026-06-10","baseRecebTxt":"2026-06-10","st":"Concluído","dias":-52,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-05","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E56","tipo":"entregavel","n":"56","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue per Pallet","deleted":false,"ref":"46143","limite":"2026-06-17","baseLimite":"2026-06-17","recebido":"2026-06-17","recebidoTxt":"2026-06-17","baseRecebTxt":"2026-06-17","st":"Concluído","dias":-40,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E55","tipo":"entregavel","n":"55","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 15 clientes","deleted":false,"ref":"46143","limite":"2026-06-17","baseLimite":"2026-06-17","recebido":"2026-06-17","recebidoTxt":"2026-06-17","baseRecebTxt":"2026-06-17","st":"Concluído","dias":-40,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E54","tipo":"entregavel","n":"54","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião com Ivan/Yahaira/Adrian/Elena a apresentação do CP Model e solicitar comentários.","deleted":false,"ref":"Pontual","limite":"2026-06-17","baseLimite":"2026-06-17","recebido":"2026-06-23","recebidoTxt":"2026-06-23","baseRecebTxt":"2026-06-23","st":"Concluído","dias":-40,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E60","tipo":"entregavel","n":"60","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue per Customer - Só Receita","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-16","recebidoTxt":"2026-06-16","baseRecebTxt":"2026-06-16","st":"Concluído","dias":-38,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E59","tipo":"entregavel","n":"59","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Conciliation vs Board deck","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-30","recebidoTxt":"2026-06-30","baseRecebTxt":"2026-06-30","st":"Concluído","dias":-38,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E58","tipo":"entregavel","n":"58","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue One Offs","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-23","recebidoTxt":"2026-06-23","baseRecebTxt":"2026-06-23","st":"Concluído","dias":-38,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E67","tipo":"entregavel","n":"67","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Sign Off (BU Heads, Commercial, KAMs, Billing)","deleted":false,"ref":"46143","limite":"2026-06-22","baseLimite":"2026-06-22","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-35,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-22","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E75","tipo":"entregavel","n":"75","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revisar CP Model v02 de abril - Bajo Cero","deleted":false,"ref":"Pontual","limite":"2026-06-24","baseLimite":"2026-06-24","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-33,"lateDone":true,"coment":"Reunião de revisão agendado para 24/06 - 15h com equipe RM","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-24","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E76","tipo":"entregavel","n":"76","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model Update","deleted":false,"ref":"46143","limite":"2026-06-24","baseLimite":"2026-06-24","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-33,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"","comments":{},"dateHistory":{"date":"2026-06-24","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E86","tipo":"entregavel","n":"86","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião com Adrian e Ivan com o time RM Corp. Escolher melhor opção sendo reunião em conjunto ou separado.","deleted":false,"ref":"Pontual","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-31,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E85","tipo":"entregavel","n":"85","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model Update - Na versão v02","deleted":false,"ref":"46143","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-31,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E90","tipo":"entregavel","n":"90","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Report Publication","deleted":false,"ref":"46143","limite":"2026-06-29","baseLimite":"2026-06-29","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-28,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-29","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E110","tipo":"entregavel","n":"110","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião com MD para apresentação do CP Model v02","deleted":false,"ref":"Pontual","limite":"2026-07-02","baseLimite":"2026-07-02","recebido":"2026-07-08","recebidoTxt":"2026-07-08","baseRecebTxt":"","st":"Concluído","dias":-25,"lateDone":true,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-02","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1783378775069506","tipo":"entregavel","n":"249","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Data Template (LC \u0026 USD)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-17,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379149766287","tipo":"entregavel","n":"258","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 10 clientes","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-17,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:05","by":"Jonathan","text":"validar se houve algum cliente com alteração de contrato."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":false},{"id":"NE178337901738086","tipo":"entregavel","n":"255","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Accounts Receivable (Treasury)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-17,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:03","by":"Jonathan","text":"Solicitar a tesouraria."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":false},{"id":"NE1783378876177235","tipo":"entregavel","n":"252","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue per Customer","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-17,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E93","tipo":"entregavel","n":"93","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Correções de lançamentos e materiais incorretos KORBER","deleted":false,"ref":"Pontual","limite":"2026-07-16","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-11,"lateDone":false,"coment":"Revisar com Elena","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-07-16","ts":"08/07/2026 20:16","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"E92","tipo":"entregavel","n":"92","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Abertura do serviço Otras Maniobras no SAP","deleted":false,"ref":"Pontual","limite":"2026-07-16","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-11,"lateDone":false,"coment":"Revisar com Elena","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-07-16","ts":"08/07/2026 20:16","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"E108","tipo":"entregavel","n":"108","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião de analise de Resultados com Horácio","deleted":false,"ref":"Pontual","limite":"2026-07-17","baseLimite":"2026-07-01","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-10,"lateDone":false,"coment":"Horácio está de férias até 29/06","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-07-01","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-07-17","ts":"08/07/2026 20:22","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1783379281004404","tipo":"entregavel","n":"261","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model v02 - Update e Publication","deleted":false,"ref":"Recorrente","limite":"2026-07-17","baseLimite":"2026-07-17","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-10,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E128","tipo":"entregavel","n":"128","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation (Commercial + BU Heads)","deleted":false,"ref":"46174","limite":"2026-07-17","baseLimite":"2026-07-17","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-10,"lateDone":false,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E129","tipo":"entregavel","n":"129","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation (BU Heads + MD)","deleted":false,"ref":"46174","limite":"2026-07-18","baseLimite":"2026-07-18","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-9,"lateDone":false,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-18","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379411168742","tipo":"entregavel","n":"264","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\nSign Offs","deleted":false,"ref":"Recorrente","limite":"2026-07-22","baseLimite":"2026-07-22","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-5,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-22","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379513151562","tipo":"entregavel","n":"267","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation (BU Heads + MD)","deleted":false,"ref":"Recorrente","limite":"2026-07-23","baseLimite":"2026-07-23","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-4,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-23","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E94","tipo":"entregavel","n":"94","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revisão completa de DE-PARA de serviços KORBER vs SAP","deleted":false,"ref":"Pontual","limite":"2026-08-14","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":18,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-08-14","ts":"08/07/2026 20:14","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true}],"projetos":[]};
+const DATA = {"overlay":null,"fonteData":"06/07/2026 20:20","adminName":"Jonathan","lang":"es","time":[],"hoje":"2026-07-27","gerado":"27/07/2026 22:21","user":"César","firebase":{"apiKey":"AIzaSyC9uOKK7kFp7lJ0MGQkWkRlajw3PtF9y-A","authDomain":"rm-control-tower.firebaseapp.com","projectId":"rm-control-tower","storageBucket":"rm-control-tower.firebasestorage.app","messagingSenderId":"112343675100","appId":"1:112343675100:web:bf6cc5ba75a74d06dac419"},"rotinas":[],"mode":"view","adminEmail":"jonathan.braga@emergentcold.com","fonte":"Gestao_Rotinas_Projetos v7.xlsm","entregaveis":[{"id":"E5","tipo":"entregavel","n":"5","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Esclarecer informações de Mão de Obra direta do Mexico","deleted":false,"ref":"Pontual","limite":"2026-06-03","baseLimite":"2026-06-03","recebido":"2026-06-04","recebidoTxt":"2026-06-04","baseRecebTxt":"2026-06-04","st":"Concluído","dias":-54,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-03","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E4","tipo":"entregavel","n":"4","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Organizar handover do César com Jorge","deleted":false,"ref":"Pontual","limite":"2026-06-03","baseLimite":"2026-06-03","recebido":"2026-06-05","recebidoTxt":"2026-06-05","baseRecebTxt":"2026-06-05","st":"Concluído","dias":-54,"lateDone":true,"coment":"César: OK\r\nJorge: Pendente","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-03","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E11","tipo":"entregavel","n":"11","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revisar CP Model v02 de abril - Qualianz","deleted":false,"ref":"Pontual","limite":"2026-06-05","baseLimite":"2026-06-05","recebido":"2026-06-10","recebidoTxt":"2026-06-10","baseRecebTxt":"2026-06-10","st":"Concluído","dias":-52,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-05","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E54","tipo":"entregavel","n":"54","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião com Ivan/Yahaira/Adrian/Elena a apresentação do CP Model e solicitar comentários.","deleted":false,"ref":"Pontual","limite":"2026-06-17","baseLimite":"2026-06-17","recebido":"2026-06-23","recebidoTxt":"2026-06-23","baseRecebTxt":"2026-06-23","st":"Concluído","dias":-40,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E56","tipo":"entregavel","n":"56","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue per Pallet","deleted":false,"ref":"46143","limite":"2026-06-17","baseLimite":"2026-06-17","recebido":"2026-06-17","recebidoTxt":"2026-06-17","baseRecebTxt":"2026-06-17","st":"Concluído","dias":-40,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E55","tipo":"entregavel","n":"55","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 15 clientes","deleted":false,"ref":"46143","limite":"2026-06-17","baseLimite":"2026-06-17","recebido":"2026-06-17","recebidoTxt":"2026-06-17","baseRecebTxt":"2026-06-17","st":"Concluído","dias":-40,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E58","tipo":"entregavel","n":"58","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue One Offs","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-23","recebidoTxt":"2026-06-23","baseRecebTxt":"2026-06-23","st":"Concluído","dias":-38,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E60","tipo":"entregavel","n":"60","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue per Customer - Só Receita","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-16","recebidoTxt":"2026-06-16","baseRecebTxt":"2026-06-16","st":"Concluído","dias":-38,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E59","tipo":"entregavel","n":"59","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Conciliation vs Board deck","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-30","recebidoTxt":"2026-06-30","baseRecebTxt":"2026-06-30","st":"Concluído","dias":-38,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E67","tipo":"entregavel","n":"67","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Sign Off (BU Heads, Commercial, KAMs, Billing)","deleted":false,"ref":"46143","limite":"2026-06-22","baseLimite":"2026-06-22","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-35,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-22","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E76","tipo":"entregavel","n":"76","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model Update","deleted":false,"ref":"46143","limite":"2026-06-24","baseLimite":"2026-06-24","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-33,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"","comments":{},"dateHistory":{"date":"2026-06-24","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E75","tipo":"entregavel","n":"75","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revisar CP Model v02 de abril - Bajo Cero","deleted":false,"ref":"Pontual","limite":"2026-06-24","baseLimite":"2026-06-24","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-33,"lateDone":true,"coment":"Reunião de revisão agendado para 24/06 - 15h com equipe RM","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-24","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E86","tipo":"entregavel","n":"86","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião com Adrian e Ivan com o time RM Corp. Escolher melhor opção sendo reunião em conjunto ou separado.","deleted":false,"ref":"Pontual","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-31,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E85","tipo":"entregavel","n":"85","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model Update - Na versão v02","deleted":false,"ref":"46143","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-31,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E90","tipo":"entregavel","n":"90","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Report Publication","deleted":false,"ref":"46143","limite":"2026-06-29","baseLimite":"2026-06-29","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-28,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-29","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E110","tipo":"entregavel","n":"110","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião com MD para apresentação do CP Model v02","deleted":false,"ref":"Pontual","limite":"2026-07-02","baseLimite":"2026-07-02","recebido":"2026-07-08","recebidoTxt":"2026-07-08","baseRecebTxt":"","st":"Concluído","dias":-25,"lateDone":true,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-02","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1783378876177235","tipo":"entregavel","n":"477","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue per Customer","deleted":false,"ref":"Recorrente","limite":"2026-07-08","baseLimite":"2026-07-10","recebido":"2026-07-22","recebidoTxt":"2026-07-22","baseRecebTxt":"","st":"Concluído","dias":-19,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-07-08","ts":"08/07/2026 21:03","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1783379149766287","tipo":"entregavel","n":"483","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 10 clientes","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-17,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:05","by":"Jonathan","text":"validar se houve algum cliente com alteração de contrato."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":false},{"id":"NE178337901738086","tipo":"entregavel","n":"480","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Accounts Receivable (Treasury)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":"2026-07-24","recebidoTxt":"2026-07-24","baseRecebTxt":"","st":"Concluído","dias":-17,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:03","by":"Jonathan","text":"Solicitar a tesouraria."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":true},{"id":"NE1783378775069506","tipo":"entregavel","n":"474","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Data Template (LC \u0026 USD)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":"2026-07-27","recebidoTxt":"2026-07-27","baseRecebTxt":"","st":"Concluído","dias":-17,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"E93","tipo":"entregavel","n":"93","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Correções de lançamentos e materiais incorretos KORBER","deleted":false,"ref":"Pontual","limite":"2026-07-16","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-11,"lateDone":false,"coment":"Revisar com Elena","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-07-16","ts":"08/07/2026 20:16","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"E92","tipo":"entregavel","n":"92","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Abertura do serviço Otras Maniobras no SAP","deleted":false,"ref":"Pontual","limite":"2026-07-16","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-11,"lateDone":false,"coment":"Revisar com Elena","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-07-16","ts":"08/07/2026 20:16","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"E128","tipo":"entregavel","n":"128","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation (Commercial + BU Heads)","deleted":false,"ref":"46174","limite":"2026-07-17","baseLimite":"2026-07-17","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-10,"lateDone":false,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-17","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379281004404","tipo":"entregavel","n":"486","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model v02 - Update e Publication","deleted":false,"ref":"Recorrente","limite":"2026-07-17","baseLimite":"2026-07-17","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-10,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E108","tipo":"entregavel","n":"108","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Reunião de analise de Resultados com Horácio","deleted":false,"ref":"Pontual","limite":"2026-07-17","baseLimite":"2026-07-01","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-10,"lateDone":false,"coment":"Horácio está de férias até 29/06","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-07-01","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-07-17","ts":"08/07/2026 20:22","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"E129","tipo":"entregavel","n":"129","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation (BU Heads + MD)","deleted":false,"ref":"46174","limite":"2026-07-18","baseLimite":"2026-07-18","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-9,"lateDone":false,"coment":"","obs":"","mes":"julho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-18","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379411168742","tipo":"entregavel","n":"489","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\nSign Offs","deleted":false,"ref":"Recorrente","limite":"2026-07-22","baseLimite":"2026-07-22","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-5,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-22","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379513151562","tipo":"entregavel","n":"492","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation (BU Heads + MD)","deleted":false,"ref":"Recorrente","limite":"2026-07-23","baseLimite":"2026-07-23","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-4,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-23","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184738864114","tipo":"entregavel","n":"523","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 10 clientes — Mexico","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":14,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184738864581","tipo":"entregavel","n":"521","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 10 clientes — Dominican","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":14,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184738864885","tipo":"entregavel","n":"524","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 10 clientes — Panama","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":14,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184738864171","tipo":"entregavel","n":"522","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Contractual Rates - Top 10 clientes — Guatemala","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":14,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785177922548311","tipo":"entregavel","n":"499","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Data Template (LC \u0026 USD) — Dominican","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":14,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785177922548306","tipo":"entregavel","n":"502","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Data Template (LC \u0026 USD) — Mexico","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":14,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785177922548807","tipo":"entregavel","n":"503","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Data Template (LC \u0026 USD) — Panama","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":14,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785177922548294","tipo":"entregavel","n":"501","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revenue Data Template (LC \u0026 USD) — Guatemala","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":14,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184720767920","tipo":"entregavel","n":"510","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model v02 - Update e Publication — Dominican","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":16,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184720767603","tipo":"entregavel","n":"513","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model v02 - Update e Publication — Mexico","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":16,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184720767358","tipo":"entregavel","n":"514","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model v02 - Update e Publication — Panama","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":16,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184720767357","tipo":"entregavel","n":"512","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Model v02 - Update e Publication — Guatemala","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":16,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184792373716","tipo":"entregavel","n":"532","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\r\nVerificação de sanidade — Dominican","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":17,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184792373426","tipo":"entregavel","n":"534","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\r\nVerificação de sanidade — Guatemala","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":17,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184792373589","tipo":"entregavel","n":"535","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\r\nVerificação de sanidade — Mexico","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":17,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184792373997","tipo":"entregavel","n":"536","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\r\nVerificação de sanidade — Panama","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":17,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E94","tipo":"entregavel","n":"94","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Revisão completa de DE-PARA de serviços KORBER vs SAP","deleted":false,"ref":"Pontual","limite":"2026-08-14","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":18,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-08-14","ts":"08/07/2026 20:14","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785185043285400","tipo":"entregavel","n":"550","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Atualização no PBI — Guatemala","deleted":false,"ref":"Recorrente","limite":"2026-08-17","baseLimite":"2026-08-17","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":21,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785185043285640","tipo":"entregavel","n":"551","resp":"Cesar Manuel Tirado Leija","curto":"César","plat":"MEXICO \u0026 CARIBBEAN","material":"Atualização no PBI — Mexico","deleted":false,"ref":"Recorrente","limite":"2026-08-17","baseLimite":"2026-08-17","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":21,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false}],"projetos":[]};
 const MODE = DATA.mode, LANG = DATA.lang, USER = DATA.user;
 DATA.overlay = DATA.overlay || {items:{},newItems:[]};
 DATA.overlay.items = DATA.overlay.items || {};
@@ -222,7 +248,7 @@ function A(x){return Array.isArray(x)?x:(x==null?[]:[x]);}
 const T = {
   pt:{sub:'Revenue Management · Entregáveis, Projetos & Rotinas',viewSub:'Meu painel de atividades',consolTitle:'Visão consolidada do time',
     plat:'Plataforma',resp:'Responsável: todos',status:'Status: todos',mes:'Mês: todos',busca:'Buscar entrega, comentário...',
-    tabVisao:'📊 Visão Geral',tabEnt:'📦 Entregáveis',tabProj:'🚀 Projetos',tabRot:'🔁 Rotinas',tabTime:'👥 Time',tabSug:'📥 Sugestões',
+    tabVisao:'📊 Visão Geral',tabEnt:'📦 Entregáveis',tabProj:'🚀 Projetos',tabRot:'🔁 Rotinas',tabTime:'👥 Time',tabMapa:'🗺️ Mapa Regional',tabSug:'📥 Sugestões',
     kAtr:'Atrasadas',kHoje:'Vencem hoje',k7:'Próximos 7 dias',kSp:'Sem prazo',kCon:'Concluídas no mês',kOn:'No prazo (mês)',kProj:'Projetos ativos',kPend:'Sugestões pendentes',
     s1:'1 · Atividades atrasadas',s2:'2 · Vencem hoje',s3:'3 · Próximas entregas — 7 dias',s4:'4 · Itens sem prazo claro',s5:'5 · Horizonte — próximos 30 dias',
     ok1:'✔ Nenhuma atividade atrasada.',ok2:'Nada vence hoje.',ok3:'Nenhuma entrega nos próximos 7 dias.',ok4:'Nenhum item sem prazo.',ok5:'Nada no horizonte de 30 dias.',
@@ -242,12 +268,12 @@ const T = {
     tRot:'🔁 Rotina',fDiaUtil:'Dia útil de entrega (do mês)',fPeriod:'Periodicidade',reqRot:'Preencha texto, responsável e o dia útil.',
     del:'🗑 Excluir ação',restore:'♻ Restaurar ação',confirmDel:'Excluir esta ação? Ela some das listas (dá para restaurar depois com o filtro “Excluídos”).',
     savedOk:'Salvo na base do sistema.',outAdded:'Anotação adicionada à caixa de envio.',
-    helpView:'Dê <b>dois cliques</b> em qualquer atividade para abrir a tela dela e <b>comentar, sugerir uma nova data ou apontar o status/%</b>. Suas anotações entram na caixa de envio (canto inferior direito); ao terminar, clique em <b>Enviar para validação</b> — o Jonathan valida antes de mudar o status oficial.',
+    helpView:'📩 <b>Para solicitar alterações (datas, status, %) ou deixar comentários, envie um e-mail para avaliação</b> — o Jonathan analisa e atualiza o painel. Você também pode dar <b>dois cliques</b> numa atividade para ver os detalhes e o histórico.',
     helpAdmin:'Dê <b>dois cliques</b> numa atividade para abrir e editar <b>texto, responsável, plataforma, prazo, status (inclui Cancelado) e %</b>. O <b>botão Salvar fica dentro da tela</b>. Para <b>excluir</b>, use o 🗑 no fim da linha (ou dentro da atividade). A base oficial é <b>data\\board.overlay.json</b>; o botão “Onde salvar” só dá ao navegador a permissão (uma vez) para gravar nesse arquivo — nada a ver com o Excel, que é só a semente.',
     byBase:'Planilha',adminAuthor:'Jonathan'},
   es:{sub:'Revenue Management · Entregables, Proyectos y Rutinas',viewSub:'Mi panel de actividades',consolTitle:'Visión consolidada del equipo',
     plat:'Plataforma',resp:'Responsable: todos',status:'Estado: todos',mes:'Mes: todos',busca:'Buscar entrega, comentario...',
-    tabVisao:'📊 Visión General',tabEnt:'📦 Entregables',tabProj:'🚀 Proyectos',tabRot:'🔁 Rutinas',tabTime:'👥 Equipo',tabSug:'📥 Sugerencias',
+    tabVisao:'📊 Visión General',tabEnt:'📦 Entregables',tabProj:'🚀 Proyectos',tabRot:'🔁 Rutinas',tabTime:'👥 Equipo',tabMapa:'🗺️ Mapa Regional',tabSug:'📥 Sugerencias',
     kAtr:'Atrasadas',kHoje:'Vencen hoy',k7:'Próximos 7 días',kSp:'Sin fecha',kCon:'Concluidas en el mes',kOn:'A tiempo (mes)',kProj:'Proyectos activos',kPend:'Sugerencias pendientes',
     s1:'1 · Actividades atrasadas',s2:'2 · Vencen hoy',s3:'3 · Próximas entregas — 7 días',s4:'4 · Ítems sin fecha clara',s5:'5 · Horizonte — próximos 30 días',
     ok1:'✔ Ninguna actividad atrasada.',ok2:'Nada vence hoy.',ok3:'Ninguna entrega en los próximos 7 días.',ok4:'Ningún ítem sin fecha.',ok5:'Nada en el horizonte de 30 días.',
@@ -267,7 +293,7 @@ const T = {
     tRot:'🔁 Rutina',fDiaUtil:'Día hábil de entrega (del mes)',fPeriod:'Periodicidad',reqRot:'Completa texto, responsable y el día hábil.',
     del:'🗑 Eliminar acción',restore:'♻ Restaurar',confirmDel:'¿Eliminar esta acción?',
     savedOk:'Guardado.',outAdded:'Nota agregada al buzón de envío.',
-    helpView:'Haz <b>doble clic</b> en cualquier actividad para abrir su pantalla y <b>comentar, sugerir una nueva fecha o indicar el estado/avance</b>. Tus notas entran en el buzón de envío (abajo a la derecha); al terminar, haz clic en <b>Enviar para validación</b> — Jonathan valida antes de cambiar el estado oficial.',
+    helpView:'📩 <b>Para solicitar cambios (fechas, estado, avance) o dejar comentarios, envía un correo para evaluación</b> — Jonathan lo analiza y actualiza el panel. También puedes hacer <b>doble clic</b> en una actividad para ver los detalles y el historial.',
     helpAdmin:'',byBase:'Planilla',adminAuthor:'Jonathan'}
 };
 const t = T[LANG] || T.pt;
@@ -278,10 +304,12 @@ const AVCOLORS=['#2f6fd0','#1e9e6a','#c8862c','#7a5fc0','#d04a58','#2ba8a0','#b0
 const ST_LABEL={pt:{'Atrasado':'ATRASADO','Hoje':'VENCE HOJE','Pendente':'PENDENTE','Sem prazo':'SEM PRAZO','Concluído':'CONCLUÍDO','Em andamento':'EM ANDAMENTO','Abaixo do plano':'ABAIXO DO PLANO','Cancelado':'CANCELADO'},
   es:{'Atrasado':'ATRASADO','Hoje':'VENCE HOY','Pendente':'PENDIENTE','Sem prazo':'SIN FECHA','Concluído':'CONCLUIDO','Em andamento':'EN CURSO','Abaixo do plano':'BAJO LO PLANIFICADO','Cancelado':'CANCELADO'}};
 function stTxt(st){return (ST_LABEL[LANG]&&ST_LABEL[LANG][st])||st;}
-const state={tab:'visao',plat:'TODAS',resp:'',status:'',mes:'',busca:'',showDeleted:false};
+const state={tab:'visao',plat:'TODAS',resp:'',status:'',mes:'',busca:'',quick:'',showDeleted:false};
 let dirty=false;
 /* itens alterados NESTA sessão (para o merge seguro ao salvar) */
 const sessionTouched=new Set(),sessionNewIds=new Set();
+const mapTouched=new Set();let mapQ='';let mapSaveTimer=null;
+let onlinePending=0;let onlineSuggById={};
 let baseLoaded=false;
 
 function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -305,7 +333,7 @@ function ovLookup(id){return DATA.overlay.items[id]||null;}
 function ovItem(id){let it=DATA.overlay.items[id];if(!it){it={official:{},dateHistory:[],comments:[],suggestions:[]};DATA.overlay.items[id]=it;}
   it.official=it.official||{};it.dateHistory=A(it.dateHistory);it.comments=A(it.comments);it.suggestions=A(it.suggestions);return it;}
 function ovOf(id,f){if(MODE!=='admin')return null;const ov=ovLookup(id);return (ov&&ov.official&&ov.official[f]!=null&&ov.official[f]!=='')?ov.official[f]:null;}
-function pendingCount(){let n=0;for(const k in DATA.overlay.items){n+=A(DATA.overlay.items[k].suggestions).filter(x=>!x.state||x.state==='pending').length;}return n;}
+function pendingCount(){let n=0;for(const k in DATA.overlay.items){n+=A(DATA.overlay.items[k].suggestions).filter(x=>!x.state||x.state==='pending').length;}return n+(onlinePending||0);}
 
 /* ---------- valores efetivos (overlay > base) ---------- */
 function entMaterial(e){return ovOf(e.id,'material')||e.material;}
@@ -393,11 +421,15 @@ function tdDel(id,kind){if(MODE!=='admin')return '';
 
 function notDeletedEnt(){return A(DATA.entregaveis).filter(e=>!entDeleted(e));}
 function filtered(){let base=A(DATA.entregaveis).filter(e=>state.showDeleted?true:!entDeleted(e));
+  const mesNow=state.quick?new Date(DATA.hoje+'T00:00:00').toLocaleDateString('pt-BR',{month:'long'}):'';
   return base.filter(e=>{const ef=effEnt(e);
     if(state.plat!=='TODAS'&&entPlat(e)!==state.plat)return false;
     if(state.resp&&entCurto(e)!==state.resp)return false;
     if(state.status&&ef.st!==state.status)return false;
     if(state.mes&&e.mes!==state.mes)return false;
+    if(state.quick==='7d'&&!(ef.st==='Pendente'&&ef.dias>=1&&ef.dias<=7))return false;
+    if(state.quick==='donemonth'&&!(ef.st==='Concluído'&&e.mes===mesNow))return false;
+    if(state.quick==='ontime'&&!(ef.st==='Concluído'&&e.mes===mesNow&&!(ef.recebTxt&&ef.limite&&ef.recebTxt>ef.limite)))return false;
     if(state.busca){const s=(entMaterial(e)+' '+(e.coment||'')+' '+entResp(e)).toLowerCase();if(!s.includes(state.busca.toLowerCase()))return false;}
     return true;});}
 function ativos(l){return l.filter(e=>{const s=effEnt(e).st;return s!=='Concluído'&&s!=='Cancelado';});}
@@ -474,7 +506,90 @@ function renderProjetos(){
 function tdDelRot(id){if(MODE!=='admin')return '';
   const del=rotDeleted(ROTBY[id]);
   if(del)return '<td class="nowrap"><button class="rowbtn restore" title="'+t.restore+'" onclick="event.stopPropagation();restoreItem(\''+id+'\',\'rot\')">♻</button></td>';
-  return '<td class="nowrap"><button class="rowbtn" title="'+t.del+'" onclick="event.stopPropagation();delItem(\''+id+'\',\'rot\')">🗑</button></td>';}
+  const gs=rotGenState(ROTBY[id]);let label,cls,title;
+  if(gs.done<=0){label='📦 '+(LANG==='es'?'Generar':'Gerar');cls='color:var(--acc,#4da3ff);border-color:var(--acc,#4da3ff)';
+    title=(LANG==='es'?'Generar un entregable por país (Mapa Regional) con el plazo de esta rutina':'Gerar um entregável por país (Mapa Regional) com o prazo desta rotina');}
+  else if(gs.stale||gs.done<gs.total){label='↻ '+(LANG==='es'?'Actualizar':'Atualizar')+(gs.done<gs.total?(' '+gs.done+'/'+gs.total):'');cls='color:var(--amber);border-color:var(--amber)';
+    title=(LANG==='es'?'La rutina cambió o faltan países. Clic para actualizar los entregables de este mes (sin duplicar).':'A rotina mudou ou faltam países. Clique para atualizar os entregáveis deste mês (sem duplicar).');}
+  else{label='✓ '+(LANG==='es'?'Generado':'Gerado');cls='color:var(--green);border-color:var(--green)';
+    title=(LANG==='es'?'Al día con la rutina. Clic para revisar.':'Em dia com a rotina. Clique para revisar.');}
+  const gerar='<button class="rowbtn" style="'+cls+'" title="'+title+'" onclick="event.stopPropagation();rotExplode(\''+id+'\')">'+label+'</button> ';
+  return '<td class="nowrap">'+gerar+'<button class="rowbtn" title="'+t.del+'" onclick="event.stopPropagation();delItem(\''+id+'\',\'rot\')">🗑</button></td>';}
+/* ---------- Rotina → Entregáveis (um por país, via Mapa Regional) ---------- */
+function normPlat(p){p=(p||'').trim();const u=p.toUpperCase();
+  if(/ANDE|ANDIN/.test(u))return 'ANDINA';
+  if(/SOUTH|CONE|\bSUR\b/.test(u))return 'SOUTH CONE';
+  if(/MEXIC|CARIB/.test(u))return 'MEXICO & CARIBBEAN';
+  if(/CORP/.test(u))return 'CORP';
+  return p||'CORP';}
+function rotCountries(){const seen={},out=[];
+  activeMap().forEach(r=>{const c=(r.country||'').trim();if(!c||seen[c])return;seen[c]=1;
+    out.push({country:c,regional:(r.regional||'').trim(),platform:(r.platform||'').trim(),curto:shortNameJS(r.regional||'')});});
+  return out.sort((a,b)=>a.country.localeCompare(b.country));}
+function rotBatchItems(rotId,mesRef){const out=[];
+  A(DATA.overlay.newItems).forEach(ni=>{if(!ni||ni.kind!=='entregavel'||ni.srcRot!==rotId||ni.mesRef!==mesRef||!ni.country)return;
+    const ov=ovLookup(ni.id);if(ov&&ov.official&&ov.official.deleted)return;out.push(ni);});
+  return out;}
+function rotBatchExisting(rotId,mesRef){const s=new Set();rotBatchItems(rotId,mesRef).forEach(ni=>s.add(ni.country));return s;}
+/* Um entregável do lote está "desatualizado" se o texto/data efetivos divergem da rotina atual. */
+function rotItemStale(ni,expText,expDate){const effMat=(ovOf(ni.id,'material')||ni.material||'');const effLim=(ovOf(ni.id,'limite')||ni.limite||'');
+  if(effMat!==(expText+' — '+ni.country))return true;if(expDate&&effLim!==expDate)return true;return false;}
+function rotGenState(r){const base=effRot(r).proxPrazo||'';const mesRef=base.slice(0,7);
+  const items=mesRef?rotBatchItems(r.id,mesRef):[];const expText=rotAtiv(r);
+  let stale=false;items.forEach(ni=>{if(rotItemStale(ni,expText,base))stale=true;});
+  return {mesRef:mesRef,total:rotCountries().length,done:items.length,stale:stale};}
+function xpToggleAll(){const cbs=document.querySelectorAll('.xpChk');const anyOff=[...cbs].some(c=>!c.checked);cbs.forEach(c=>c.checked=anyOff);}
+function rotExplode(id){const r=ROTBY[id];if(!r)return;
+  const rows=rotCountries();
+  if(!rows.length){alert(LANG==='es'?'Configura primero el Mapa Regional (pestaña 🗺️ Mapa Regional).':'Configure primeiro o Mapa Regional (aba 🗺️ Mapa Regional).');return;}
+  const base=effRot(r).proxPrazo||'';const mesRef=(base||'').slice(0,7);
+  const existing=rotBatchExisting(id,mesRef);
+  document.getElementById('mTitle').innerHTML='📦 '+(LANG==='es'?'Generar entregables por país':'Gerar entregáveis por país');
+  let h='<div class="editbox">';
+  h+='<div class="fieldrow"><div class="field full"><label>'+(LANG==='es'?'Rutina':'Rotina')+'</label><div class="val"><b>'+esc(rotAtiv(r))+'</b></div></div></div>';
+  h+='<div class="sub" style="margin:-4px 0 10px">'+(LANG==='es'?'Los países ya generados se <b>actualizan</b> (fecha/nombre); los demás se <b>crean</b>. No duplica. Desmarca un país para no tocarlo.':'Países já gerados são <b>atualizados</b> (data/nome); os demais são <b>criados</b>. Não duplica. Desmarque um país para não mexer nele.')+'</div>';
+  h+='<div class="fieldrow"><div class="field"><label>'+(LANG==='es'?'Fecha base (para todos)':'Data base (para todos)')+'</label><input type="date" id="xpDate" value="'+esc(base)+'"></div>'
+    +'<div class="field"><label>&nbsp;</label><button class="btn sm" onclick="xpToggleAll()">'+(LANG==='es'?'Marcar/desmarcar todos':'Marcar/desmarcar todos')+'</button></div></div>';
+  h+='<div class="mapscroll" style="max-height:320px;overflow:auto"><table><thead><tr><th></th><th>'+(LANG==='es'?'País':'País')+'</th><th>'+(LANG==='es'?'Responsable':'Responsável')+'</th><th>Plataforma</th><th></th></tr></thead><tbody>';
+  rows.forEach(c=>{const done=existing.has(c.country);
+    h+='<tr><td><input type="checkbox" class="xpChk" data-country="'+esc(c.country)+'" checked></td>'
+      +'<td>'+esc(c.country)+'</td><td class="nowrap">'+esc(c.regional)+'</td><td class="nowrap">'+esc(normPlat(c.platform))+'</td>'
+      +'<td class="nowrap">'+(done?'<span style="font-size:11px;color:var(--amber)">↻ '+(LANG==='es'?'actualiza':'atualiza')+'</span>':'<span class="muted" style="font-size:11px">＋ '+(LANG==='es'?'nuevo':'novo')+'</span>')+'</td></tr>';});
+  h+='</tbody></table></div>';
+  h+='<div class="modalfoot"><button class="btn green big" onclick="rotDoExplode(\''+id+'\')">'+(LANG==='es'?'Crear / Actualizar':'Criar / Atualizar')+'</button></div></div>';
+  document.getElementById('mBody').innerHTML=h;openModal();}
+function rotDoExplode(id){const r=ROTBY[id];if(!r)return;
+  const base=(document.getElementById('xpDate').value||'').trim();
+  if(!base){toast(LANG==='es'?'Define la fecha base':'Defina a data base');return;}
+  const mesRef=base.slice(0,7),mes=monthName(base),firstText=rotAtiv(r);
+  const chks=[...document.querySelectorAll('.xpChk:checked')].map(c=>c.getAttribute('data-country'));
+  if(!chks.length){toast(LANG==='es'?'Selecciona al menos un país':'Selecione ao menos um país');return;}
+  const cmap={};rotCountries().forEach(c=>cmap[c.country]=c);
+  const byCountry={};rotBatchItems(id,mesRef).forEach(ni=>byCountry[ni.country]=ni);
+  let created=0,updated=0;
+  DATA.overlay.newItems=A(DATA.overlay.newItems);
+  chks.forEach(country=>{const c=cmap[country];if(!c)return;const exist=byCountry[country];
+    const newMat=firstText+' — '+country;
+    if(exist){ // ATUALIZA (sem duplicar): sobrepõe texto/data via official + histórico
+      const it=ovItem(exist.id);let changed=false;
+      if((ovOf(exist.id,'material')||exist.material||'')!==newMat){it.official.material=newMat;changed=true;}
+      if(base&&(ovOf(exist.id,'limite')||exist.limite||'')!==base){it.official.limite=base;it.official.mes=mes;
+        it.dateHistory=A(it.dateHistory);it.dateHistory.push({date:base,ts:nowStamp(),by:'Sistema (rotina)',note:(LANG==='es'?'Actualizado por la rutina':'Atualizado pela rotina')});changed=true;}
+      if(changed){markDirty(exist.id);updated++;}
+    } else { // CRIA novo
+      const ni={id:newId('NE'),kind:'entregavel',n:'',material:newMat,resp:c.regional,plat:normPlat(c.platform),ref:'Recorrente',limite:base,recebido:'',status:'',mes:mes,privado:'Não',srcRot:id,mesRef:mesRef,country:country,createdBy:USER,createdTs:nowStamp()};
+      DATA.overlay.newItems.push(ni);sessionNewIds.add(ni.id);
+      const e=entFromNew(ni);DATA.entregaveis=A(DATA.entregaveis);DATA.entregaveis.push(e);ENTBY[ni.id]=e;
+      markDirty(ni.id);created++;
+    }});
+  closeModal();
+  state.tab='ent';state.plat='TODAS';state.resp='';state.status='';state.mes='';state.busca=firstText;
+  ['fResp','fStatus','fMes'].forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
+  const bs=document.getElementById('fBusca');if(bs)bs.value=firstText;
+  renderKpis();renderTabs();renderChips();renderContent();
+  saveOverlay();
+  const parts=[];if(created)parts.push(created+(LANG==='es'?' creados':' criados'));if(updated)parts.push(updated+(LANG==='es'?' actualizados':' atualizados'));
+  toast('✅ '+(parts.length?parts.join(' · '):(LANG==='es'?'nada que cambiar':'nada a alterar')));}
 function renderRotinas(){const list=A(DATA.rotinas).filter(r=>state.showDeleted?true:!rotDeleted(r));
   let h='<div class="sec"><header><h2>'+t.rotHdr+'</h2><span class="n">'+notDeletedRot().length+'</span></header>';
   if(!list.length)return h+'<div class="empty">—</div></div>';
@@ -491,8 +606,8 @@ function openRot(id){const r=ROTBY[id];if(!r)return;const ef=effRot(r);
     +'<div class="field"><label>'+t.fDiaUtil+'</label><div class="val">'+(rotDia(r)?rotDia(r)+'º':'—')+'</div></div>'
     +'<div class="field"><label>Próx. prazo</label><div class="val"><b>'+fmtY(ef.proxPrazo)+'</b></div></div></div>';
   if(r.obs)h+='<div class="fieldrow"><div class="field"><label>Obs</label><div class="val">'+esc(r.obs)+'</div></div></div>';
-  h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(r)+commentComposer(id)+'</div>';
-  document.getElementById('mBody').innerHTML=h;openModal();}
+  h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(r)+'<div id="onlineThread"></div>'+commentComposer(id)+'</div>';
+  document.getElementById('mBody').innerHTML=h;openModal();loadOnlineComments(id);}
 function adminEditRot(r){const del=rotDeleted(r);
   return '<div class="editbox"><h3>🛠️ '+t.mAdminEdit+'</h3>'+nameList()
     +'<div class="fieldrow"><div class="field full"><label>'+t.mTexto+'</label><textarea id="edRAtiv">'+esc(rotAtiv(r))+'</textarea></div></div>'
@@ -520,7 +635,8 @@ function renderSugestoes(){
   let cards=[];
   for(const id in DATA.overlay.items){A(DATA.overlay.items[id].suggestions).forEach((s,idx)=>{if(!s.state||s.state==='pending')cards.push({id,idx,s});});}
   let h='<div class="helpbox">'+t.helpAdmin+'</div>';
-  h+='<div class="sec"><header style="--c:var(--amber)"><span class="dot" style="--c:var(--amber)"></span><h2>'+t.mPending+'</h2><span class="n">'+cards.length+'</span></header>';
+  if(fbCfg())h+='<div class="sec"><header style="--c:var(--blue)"><span class="dot" style="--c:var(--blue)"></span><h2>📡 '+(LANG==='es'?'Sugerencias en línea (panel)':'Sugestões online (painel)')+'</h2></header><div style="padding:14px" id="onlineSuggBox"><div class="note">'+(LANG==='es'?'Cargando…':'Carregando…')+'</div></div></div>';
+  h+='<div class="sec"><header style="--c:var(--amber)"><span class="dot" style="--c:var(--amber)"></span><h2>'+t.mPending+(fbCfg()?' ('+(LANG==='es'?'por correo':'por e-mail')+')':'')+'</h2><span class="n">'+cards.length+'</span></header>';
   if(!cards.length){h+='<div class="empty">—</div></div>';return h+importBox();}
   h+='<div style="padding:14px">';for(const c of cards){const item=ENTBY[c.id]||ACTBY[c.id];h+=suggCard(c.id,c.idx,c.s,item?(entMaterial(item)||actAtiv(item)||item.material||item.ativ):c.id);}h+='</div></div>';
   return h+importBox();}
@@ -542,9 +658,25 @@ function renderKpis(){const all=notDeletedEnt(),act=ativos(all);
   const onT=done.filter(e=>{const ef=effEnt(e);return !(ef.recebTxt&&ef.limite&&ef.recebTxt>ef.limite);}).length;
   const pct=done.length?Math.round(onT/done.length*100)+'%':'—';
   const projAct=A(DATA.projetos).filter(p=>projConsolStatus(p)!=='Concluído').length;
-  const k=[[cnt('Atrasado'),t.kAtr,'var(--red)'],[cnt('Hoje'),t.kHoje,'var(--amber)'],[p7,t.k7,'var(--blue)'],[cnt('Sem prazo'),t.kSp,'var(--gray)'],[done.length,t.kCon,'var(--green)'],[pct,t.kOn,'var(--green)'],[projAct,t.kProj,'var(--purple)']];
-  if(MODE==='admin')k.push([pendingCount(),t.kPend,'var(--amber)']);
-  document.getElementById('kpis').innerHTML=k.map(x=>'<div class="kpi" style="--c:'+x[2]+'"><div class="v">'+x[0]+'</div><div class="l">'+x[1]+'</div></div>').join('');}
+  const k=[[cnt('Atrasado'),t.kAtr,'var(--red)','atrasado'],[cnt('Hoje'),t.kHoje,'var(--amber)','hoje'],[p7,t.k7,'var(--blue)','7d'],[cnt('Sem prazo'),t.kSp,'var(--gray)','semprazo'],[done.length,t.kCon,'var(--green)','donemonth'],[pct,t.kOn,'var(--green)','ontime'],[projAct,t.kProj,'var(--purple)','proj']];
+  if(MODE==='admin')k.push([pendingCount(),t.kPend,'var(--amber)','sug']);
+  document.getElementById('kpis').innerHTML=k.map(x=>'<div class="kpi clik'+(activeKpi(x[3])?' on':'')+'" style="--c:'+x[2]+'" title="'+(LANG==='es'?'Ver filtrado':'Ver filtrado')+'" onclick="kpiClick(\''+x[3]+'\')"><div class="v">'+x[0]+'</div><div class="l">'+x[1]+'</div></div>').join('');}
+function activeKpi(key){if(key==='proj')return state.tab==='proj';if(key==='sug')return state.tab==='sug';
+  if(key==='7d'||key==='donemonth'||key==='ontime')return state.quick===key;
+  return state.status==={atrasado:'Atrasado',hoje:'Hoje',semprazo:'Sem prazo'}[key];}
+function syncFilterInputs(){const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
+  set('fResp',state.resp);set('fStatus',state.status);set('fMes',state.mes);set('fBusca',state.busca);}
+function kpiClick(key){state.plat='TODAS';state.resp='';state.status='';state.mes='';state.busca='';state.quick='';
+  if(key==='proj'){state.tab='proj';}
+  else if(key==='sug'){state.tab='sug';}
+  else{const sm={atrasado:'Atrasado',hoje:'Hoje',semprazo:'Sem prazo'};
+    if(sm[key]){state.status=sm[key];state.tab='visao';}
+    else if(key==='7d'){state.quick='7d';state.tab='visao';}
+    else{state.quick=key;state.tab='ent';}}
+  syncFilterInputs();refreshAll();renderChips();}
+function filtersActive(){return !!(state.quick||state.status||state.resp||state.mes||state.busca||(state.plat&&state.plat!=='TODAS'));}
+function clearFilters(){state.quick='';state.status='';state.resp='';state.mes='';state.busca='';state.plat='TODAS';
+  syncFilterInputs();refreshAll();renderChips();}
 function delCount(){let n=0;A(DATA.entregaveis).forEach(e=>{if(entDeleted(e))n++;});A(DATA.projetos).forEach(p=>A(p.atividades).forEach(a=>{if(actDeleted(a))n++;}));A(DATA.rotinas).forEach(r=>{if(rotDeleted(r))n++;});return n;}
 /* Botões de envio (item 13) — exclusivo do admin, via protocolo rmct:// registrado na máquina do Jonathan */
 function sendMailCmd(which){
@@ -554,9 +686,69 @@ function sendMailCmd(which){
   if(!confirm(msg))return;
   location.href='rmct://enviar-'+which;
   toast('▶ Disparado. O Outlook envia em instantes. (Se nada acontecer, rode "5 - Registrar Botoes de Envio.cmd" uma vez.)');}
+/* ---------- Mapa Regional (Plataforma · País · Company · Responsável) ---------- */
+function activeMap(){return A(DATA.overlay&&DATA.overlay.regionalMap).filter(r=>r&&!r.deleted);}
+function markMapDirty(id){if(id)mapTouched.add(id);dirty=true;updateSaveHint();}
+function scheduleMapSave(){if(mapSaveTimer)clearTimeout(mapSaveTimer);mapSaveTimer=setTimeout(function(){mapSaveTimer=null;saveOverlay();},700);}
+function mapEdit(id,field,val){const r=A(DATA.overlay.regionalMap).find(x=>x&&x.id===id);if(!r)return;r[field]=(val==null?'':String(val)).trim();markMapDirty(id);scheduleMapSave();}
+function mapAdd(){DATA.overlay.regionalMap=A(DATA.overlay.regionalMap);const id='M'+Date.now()+Math.floor(Math.random()*1000);
+  DATA.overlay.regionalMap.push({id:id,platform:'',country:'',company:'',regional:'',deleted:false});
+  mapQ='';markMapDirty(id);refreshAll();saveOverlay();}
+function mapDel(id){const r=A(DATA.overlay.regionalMap).find(x=>x&&x.id===id);if(!r)return;
+  if(!confirm(LANG==='es'?'¿Eliminar esta empresa del mapa?':'Excluir esta company do mapa?'))return;
+  r.deleted=true;markMapDirty(id);refreshAll();saveOverlay();}
+function mapFilter(v){mapQ=v;const b=document.getElementById('mapBody');if(b)b.innerHTML=mapRowsHtml();}
+function mapDataLists(){const rows=A(DATA.overlay.regionalMap);
+  const plats=[...new Set(rows.map(r=>r.platform).filter(Boolean))].sort();
+  const countries=[...new Set(rows.map(r=>r.country).filter(Boolean))].sort();
+  const resps=[...new Set(rows.map(r=>r.regional).filter(Boolean))];
+  A(DATA.time).forEach(tm=>{if(tm&&tm.nome&&resps.indexOf(tm.nome)<0)resps.push(tm.nome);});
+  resps.sort();
+  return '<datalist id="mapPlats">'+plats.map(p=>'<option value="'+esc(p)+'">').join('')+'</datalist>'
+    +'<datalist id="mapCountries">'+countries.map(c=>'<option value="'+esc(c)+'">').join('')+'</datalist>'
+    +'<datalist id="mapResps">'+resps.map(r=>'<option value="'+esc(r)+'">').join('')+'</datalist>';}
+function mapPlatColor(p){return {'ANDINA':'#4da3ff','MEXICO & CARIBBEAN':'#e0a640','SOUTH CONE':'#3fb56a','CORP':'#8b93a7'}[normPlat(p)]||'#8b93a7';}
+function personColor(name){return {'Jorge':'#4da3ff','Alejandro':'#7c5cff','César':'#e0a640','Noé':'#3fb56a','Jonathan':'#e2607a','João':'#2fa39a','Caio':'#c264d0'}[shortNameJS(name||'')]||'#8b93a7';}
+function initials(name){const c=shortNameJS(name||'');return c?c.slice(0,2).toUpperCase():'—';}
+/* Responsável padrão de uma plataforma (lido do Mapa Regional). Usado como sugestão editável. */
+function platDefaultResp(plat){if(!plat)return '';const np=normPlat(plat);const cnt={};
+  activeMap().forEach(r=>{if(normPlat(r.platform)===np&&r.regional)cnt[r.regional]=(cnt[r.regional]||0)+1;});
+  let best='',bn=0;for(const k in cnt){if(cnt[k]>bn){bn=cnt[k];best=k;}}return best;}
+function applyPlatResp(){const ps=document.getElementById('nPlat'),rs=document.getElementById('nResp'),hint=document.getElementById('nRespHint');
+  if(!ps||!rs)return;const def=platDefaultResp(ps.value);
+  if(def&&(!rs.value.trim()||rs.dataset.auto==='1')){rs.value=def;rs.dataset.auto='1';
+    if(hint)hint.textContent=(LANG==='es'?'↳ por defecto del Mapa Regional (editable)':'↳ padrão do Mapa Regional (editável)');}
+  else if(hint&&!rs.value.trim()){hint.textContent='';}}
+function mapRowsHtml(){const q=(mapQ||'').toLowerCase().trim();
+  const fr=activeMap().filter(r=>!q||[r.platform,r.country,r.company,r.regional].some(v=>(v||'').toLowerCase().indexOf(q)>=0));
+  if(!fr.length)return '<tr><td colspan="6" class="mapempty">'+(LANG==='es'?'Sin registros':'Sem registros')+'</td></tr>';
+  let prevP='',prevC='';
+  return fr.map(r=>{const id=esc(r.id);const pc=mapPlatColor(r.platform);
+    const dimP=(r.platform===prevP)?' dim':'';const dimC=(r.platform===prevP&&r.country===prevC)?' dim':'';
+    prevP=r.platform;prevC=r.country;const rc=personColor(r.regional);
+    return '<tr>'
+     +'<td class="pbar" style="background:'+pc+'"></td>'
+     +'<td><input class="minp platpill'+dimP+'" style="--pc:'+pc+'" list="mapPlats" value="'+esc(r.platform||'')+'" onchange="mapEdit(\''+id+'\',\'platform\',this.value)"></td>'
+     +'<td><input class="minp'+dimC+'" list="mapCountries" value="'+esc(r.country||'')+'" onchange="mapEdit(\''+id+'\',\'country\',this.value)"></td>'
+     +'<td><input class="minp" value="'+esc(r.company||'')+'" onchange="mapEdit(\''+id+'\',\'company\',this.value)"></td>'
+     +'<td><div class="mcell"><span class="rdot" style="background:'+rc+'">'+esc(initials(r.regional))+'</span><input class="minp" list="mapResps" value="'+esc(r.regional||'')+'" onchange="mapEdit(\''+id+'\',\'regional\',this.value)"></div></td>'
+     +'<td class="mapdelcell"><button class="mapdelbtn" title="'+(LANG==='es'?'Eliminar':'Excluir')+'" onclick="mapDel(\''+id+'\')">🗑</button></td>'
+     +'</tr>';}).join('');}
+function renderMapa(){DATA.overlay.regionalMap=A(DATA.overlay.regionalMap);
+  let h='<div>';
+  h+='<div class="maptools">'
+    +'<input type="text" id="mapSearch" placeholder="🔍 '+(LANG==='es'?'buscar plataforma / país / company / responsable':'buscar plataforma / país / company / responsável')+'" oninput="mapFilter(this.value)" value="'+esc(mapQ)+'">'
+    +'<span class="mapcount">'+activeMap().length+' '+(LANG==='es'?'empresas':'companies')+'</span>'
+    +'<button class="btn primary sm" onclick="mapAdd()">➕ '+(LANG==='es'?'Agregar':'Adicionar')+'</button>'
+    +'</div>';
+  h+=mapDataLists();
+  h+='<div class="mapscroll"><table class="maptable"><thead><tr>'
+    +'<th class="pbar"></th><th>Plataforma</th><th>'+(LANG==='es'?'País':'País')+'</th><th>Company</th><th>'+(LANG==='es'?'Responsable regional':'Responsável regional')+'</th><th></th>'
+    +'</tr></thead><tbody id="mapBody">'+mapRowsHtml()+'</tbody></table></div>';
+  h+='</div>';return h;}
 function renderTabs(){
   let tabs=[['visao',t.tabVisao,null],['ent',t.tabEnt,notDeletedEnt().length],['proj',t.tabProj,A(DATA.projetos).length]];
-  if(MODE==='admin'){tabs.push(['rot',t.tabRot,notDeletedRot().length]);tabs.push(['time',t.tabTime,A(DATA.time).length]);tabs.push(['sug',t.tabSug,pendingCount()]);}
+  if(MODE==='admin'){tabs.push(['rot',t.tabRot,notDeletedRot().length]);tabs.push(['time',t.tabTime,A(DATA.time).length]);tabs.push(['mapa',t.tabMapa,activeMap().length]);tabs.push(['sug',t.tabSug,pendingCount()]);}
   let h=tabs.map(x=>'<button class="tab'+(state.tab===x[0]?' on':'')+'" onclick="setTab(\''+x[0]+'\')">'+x[1]+(x[2]!=null?'<span class="b'+(x[0]==='sug'&&x[2]>0?' pend':'')+'">'+x[2]+'</span>':'')+'</button>').join('');
   if(MODE==='admin'){const dc=delCount();h+='<span class="actbar"><span class="savehint" id="savehint"></span>'
     +'<button class="btn primary sm" onclick="openCreate(\'entregavel\')">'+t.addAction+'</button>'
@@ -572,12 +764,14 @@ function setTab(x){state.tab=x;renderTabs();renderContent();}
 function renderContent(){const c=document.getElementById('content');
   const showF=(state.tab==='visao'||state.tab==='ent'||state.tab==='proj');
   document.getElementById('filters').style.display=showF?'flex':'none';
+  const cf=document.getElementById('clearFilters');if(cf)cf.style.display=(showF&&filtersActive())?'':'none';
   if(state.tab==='visao')c.innerHTML=renderVisao();
   else if(state.tab==='ent')c.innerHTML=renderEntregaveis();
   else if(state.tab==='proj')c.innerHTML=renderProjetos();
   else if(state.tab==='rot')c.innerHTML=renderRotinas();
   else if(state.tab==='time')c.innerHTML=renderTime();
-  else if(state.tab==='sug')c.innerHTML=renderSugestoes();
+  else if(state.tab==='mapa')c.innerHTML=renderMapa();
+  else if(state.tab==='sug'){c.innerHTML=renderSugestoes();loadOnlineSuggestions();}
   document.getElementById('fCount').textContent=(state.tab==='ent'||state.tab==='visao')?filtered().length+' '+(LANG==='es'?'ítem(s)':'item(ns)'):'';}
 function renderChips(){document.getElementById('chips').innerHTML=PLATS.map(p=>'<button class="chip'+(state.plat===p?' on':'')+'" data-p="'+p+'" onclick="setPlat(\''+p.replace(/'/g,"\\'")+'\')">'+p+'</button>').join(' ');}
 function setPlat(p){state.plat=p;renderChips();renderContent();}
@@ -611,10 +805,10 @@ function openEnt(id){const e=ENTBY[id];if(!e)return;const ef=effEnt(e);
     +'<div class="field"><label>'+t.mMes+'</label><div class="val">'+esc(e.mes||'—')+'</div></div></div>';
   if(e.coment)h+='<div class="fieldrow"><div class="field"><label>'+t.mComent+'</label><div class="val">'+esc(e.coment)+'</div></div></div>';
   h+='<div class="block"><h3>🕓 '+t.mHist+'</h3>'+histHtml(e)+'</div>';
-  h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(e)+commentComposer(id)+'</div>';
+  h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(e)+'<div id="onlineThread"></div>'+commentComposer(id)+'</div>';
   if(MODE==='view')h+=viewSuggestBlock(e,'ent');
   if(MODE==='admin')h+=adminPendingBlock(id);
-  document.getElementById('mBody').innerHTML=h;openModal();}
+  document.getElementById('mBody').innerHTML=h;openModal();loadOnlineComments(id);}
 
 function openAct(id){const a=ACTBY[id];if(!a)return;const pc=effPct(a);
   document.getElementById('mTitle').innerHTML='🚀 '+esc(actAtiv(a));
@@ -628,13 +822,14 @@ function openAct(id){const a=ACTBY[id];if(!a)return;const pc=effPct(a);
     +'<div class="field"><label>'+t.thPrev+'</label><div class="val">'+Math.round(a.prev*100)+'%</div></div></div>';
   if(a.coment)h+='<div class="fieldrow"><div class="field"><label>'+t.mComent+'</label><div class="val">'+esc(a.coment)+'</div></div></div>';
   h+='<div class="block"><h3>🕓 '+t.mHist+'</h3>'+histHtml(a)+'</div>';
-  h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(a)+commentComposer(id)+'</div>';
+  h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(a)+'<div id="onlineThread"></div>'+commentComposer(id)+'</div>';
   if(MODE==='view')h+=viewSuggestBlock(a,'act');
   if(MODE==='admin')h+=adminPendingBlock(id);
-  document.getElementById('mBody').innerHTML=h;openModal();}
+  document.getElementById('mBody').innerHTML=h;openModal();loadOnlineComments(id);}
 
 function commentComposer(id){const author=(MODE==='admin')?t.adminAuthor:USER;
-  return '<div style="margin-top:10px"><textarea id="cmtInput" placeholder="'+t.mAddComment+'"></textarea><div style="margin-top:8px"><button class="btn primary sm" onclick="addComment(\''+id+'\')">'+t.mSend+' ('+esc(author)+')</button></div></div>';}
+  const hint=(MODE==='view'&&fbCfg())?'<div class="note">'+(LANG==='es'?'Tu comentario se publica al instante en el panel y queda registrado.':'Seu comentário é publicado na hora no painel e fica registrado.')+'</div>':'';
+  return '<div style="margin-top:10px"><textarea id="cmtInput" placeholder="'+t.mAddComment+'"></textarea>'+hint+'<div style="margin-top:8px"><button class="btn primary sm" onclick="addComment(\''+id+'\')">'+t.mSend+' ('+esc(author)+')</button></div></div>';}
 
 function viewSuggestBlock(item,kind){
   let h='<div class="editbox"><h3>✍️ '+t.mSuggest+'</h3><div class="fieldrow">';
@@ -675,6 +870,10 @@ function adminPendingBlock(id){const ov=ovLookup(id);const ps=ov?A(ov.suggestion
 function addComment(id){const el=document.getElementById('cmtInput');const txt=(el.value||'').trim();if(!txt)return;
   if(MODE==='admin'){const it=ovItem(id);it.comments.push({ts:nowStamp(),by:t.adminAuthor,text:txt});markDirty(id);
     const item=ENTBY[id]||ACTBY[id];if(item){item.comments=it.comments.slice();item.nComments=item.comments.length;}reopen(id);toast('OK');}
+  else if(fbCfg()){const itemType=ENTBY[id]?'ent':(ACTBY[id]?'act':'rot');el.disabled=true;
+    postOnlineComment(id,itemType,txt).then(ok=>{el.disabled=false;
+      if(ok){el.value='';toast(LANG==='es'?'💬 Comentario publicado':'💬 Comentário publicado');loadOnlineComments(id,itemType);}
+      else{outboxAdd(id,{comment:txt});reopen(id);toast(t.outAdded);}});}
   else{outboxAdd(id,{comment:txt});reopen(id);toast(t.outAdded);}}
 function saveEnt(id){const e=ENTBY[id];const it=ovItem(id);
   const nm=(document.getElementById('edMat').value||'').trim();
@@ -713,6 +912,67 @@ function markDirty(id){if(id)sessionTouched.add(id);dirty=true;updateSaveHint();
 function reopen(id){if(document.getElementById('ovl').classList.contains('on')){if(ENTBY[id])openEnt(id);else if(ACTBY[id])openAct(id);else if(ROTBY[id])openRot(id);}}
 function refreshAll(){renderKpis();renderTabs();renderContent();}
 
+/* ---------- Firebase (comentários online) ---------- */
+const FB={db:null,ready:false,error:null};let _fbPromise=null;
+function fbCfg(){const f=DATA.firebase;return (f&&f.apiKey&&f.projectId)?f:null;}
+function fbLoadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('load '+src));document.head.appendChild(s);});}
+function ensureFB(){
+  if(FB.db)return Promise.resolve(FB.db);
+  if(!fbCfg())return Promise.resolve(null);
+  if(_fbPromise)return _fbPromise;
+  _fbPromise=(async()=>{try{
+    if(!window.firebase){
+      await fbLoadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
+      await fbLoadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js');
+    }
+    if(!firebase.apps.length)firebase.initializeApp(fbCfg());
+    FB.db=firebase.firestore();FB.ready=true;return FB.db;
+  }catch(e){FB.error=e.message;return null;}})();
+  return _fbPromise;}
+function fbTs(ts){try{if(ts&&ts.toDate){const d=ts.toDate();const z=n=>('0'+n).slice(-2);return z(d.getDate())+'/'+z(d.getMonth()+1)+'/'+d.getFullYear()+' '+z(d.getHours())+':'+z(d.getMinutes());}}catch(e){}return '';}
+function tsMs(ts){try{return (ts&&ts.toMillis)?ts.toMillis():0;}catch(e){return 0;}}
+async function postOnlineComment(itemId,itemType,text){const db=await ensureFB();if(!db)return false;
+  await db.collection('comments').add({itemId:String(itemId).slice(0,59),itemType:String(itemType||'').slice(0,20),from:String(USER||'?').slice(0,79),text:String(text).slice(0,1999),ts:firebase.firestore.FieldValue.serverTimestamp()});
+  return true;}
+async function loadOnlineComments(itemId,itemType){const c=document.getElementById('onlineThread');if(!c)return;
+  if(!fbCfg())return;const db=await ensureFB();if(!db)return;
+  try{const snap=await db.collection('comments').where('itemId','==',String(itemId)).get();
+    const arr=[];snap.forEach(d=>arr.push(d.data()));arr.sort((a,b)=>tsMs(a.ts)-tsMs(b.ts));
+    if(!arr.length){c.innerHTML='';return;}
+    c.innerHTML='<div class="thread">'+arr.map(x=>'<div class="cmt"><div class="meta"><b>'+esc(x.from||'?')+'</b> · '+esc(fbTs(x.ts))+' <span class="muted">· '+(LANG==='es'?'en línea':'online')+'</span></div><div class="txt">'+esc(x.text||'')+'</div></div>').join('')+'</div>';
+  }catch(e){c.innerHTML='<div class="note" style="color:var(--amber)">'+(LANG==='es'?'No se pudieron cargar los comentarios en línea.':'Não foi possível carregar os comentários online.')+'</div>';}}
+
+async function postOnlineSuggestion(itemId,itemType,fields){const db=await ensureFB();if(!db)return false;
+  await db.collection('suggestions').add({itemId:String(itemId).slice(0,59),itemType:String(itemType||'').slice(0,20),from:String(USER||'?').slice(0,79),propDate:fields.propDate||null,propStatus:fields.propStatus||null,propPct:(fields.propPct!=null?fields.propPct:null),comment:fields.comment?String(fields.comment).slice(0,1999):null,ts:firebase.firestore.FieldValue.serverTimestamp()});
+  return true;}
+function suggHandledMap(){DATA.overlay.handledSuggestions=DATA.overlay.handledSuggestions||{};return DATA.overlay.handledSuggestions;}
+function markSuggHandled(docId,outcome){suggHandledMap()[docId]={outcome:outcome,ts:nowStamp(),by:USER};dirty=true;updateSaveHint();}
+async function loadOnlineSuggestions(){
+  if(MODE!=='admin'||!fbCfg())return;const db=await ensureFB();if(!db)return;
+  try{const snap=await db.collection('suggestions').get();const handled=suggHandledMap();
+    onlineSuggById={};const pend=[];
+    snap.forEach(d=>{if(handled[d.id])return;const data=d.data();data._id=d.id;onlineSuggById[d.id]=data;pend.push(data);});
+    pend.sort((a,b)=>tsMs(a.ts)-tsMs(b.ts));onlinePending=pend.length;renderTabs();
+    const box=document.getElementById('onlineSuggBox');
+    if(box){box.innerHTML=pend.length?pend.map(s=>onlineSuggCard(s)).join(''):'<div class="empty">'+(LANG==='es'?'Sin sugerencias en línea.':'Nenhuma sugestão online.')+'</div>';}
+  }catch(e){const box=document.getElementById('onlineSuggBox');if(box)box.innerHTML='<div class="note" style="color:var(--amber)">'+(LANG==='es'?'Error al leer sugerencias en línea.':'Erro ao ler as sugestões online.')+'</div>';}}
+function onlineSuggCard(s){const item=ENTBY[s.itemId]||ACTBY[s.itemId];const nome=item?(entMaterial(item)||actAtiv(item)||item.material||item.ativ):s.itemId;const id=esc(s._id);
+  let h='<div class="sugg"><div class="who">📡 '+esc(s.from||'?')+' · '+esc(fbTs(s.ts))+' — <span style="color:var(--tx2)">'+esc(nome)+'</span></div>';
+  if(s.propDate)h+='<div class="row">📅 '+t.mNewDate+': <b>'+fmtY(s.propDate)+'</b></div>';
+  if(s.propStatus)h+='<div class="row">🏷️ '+t.mNewStatus+': <b>'+esc(s.propStatus)+'</b></div>';
+  if(s.propPct!=null&&s.propPct!=='')h+='<div class="row">📊 '+t.mNewPct+': <b>'+Math.round(parseFloat(s.propPct)*100)+'%</b></div>';
+  if(s.comment)h+='<div class="row">💬 '+esc(s.comment)+'</div>';
+  h+='<div class="acts"><button class="btn green sm" onclick="approveOnlineSugg(\''+id+'\')">✔ '+t.mApprove+'</button><button class="btn dangerghost sm" onclick="rejectOnlineSugg(\''+id+'\')">✕ '+t.mReject+'</button></div></div>';
+  return h;}
+function approveOnlineSugg(docId){const s=onlineSuggById[docId];if(!s)return;const id=s.itemId;const it=ovItem(id);const item=ENTBY[id]||ACTBY[id];
+  if(s.propDate){it.dateHistory.push({date:s.propDate,ts:nowStamp(),by:t.adminAuthor,note:'Validado de '+(s.from||'?')+' (online)'});it.official.limite=s.propDate;}
+  if(s.propStatus)it.official.status=s.propStatus;
+  if(s.propPct!=null&&s.propPct!=='')it.official.pct=Math.max(0,Math.min(1,parseFloat(s.propPct)));
+  if(s.comment)it.comments.push({ts:nowStamp(),by:(s.from||'?'),text:s.comment});
+  if(item){item.comments=it.comments.slice();item.nComments=item.comments.length;}
+  markSuggHandled(docId,'approved');markDirty(id);refreshAll();saveOverlay();toast(t.savedOk);loadOnlineSuggestions();}
+function rejectOnlineSugg(docId){if(!onlineSuggById[docId])return;markSuggHandled(docId,'rejected');saveOverlay();toast(LANG==='es'?'Sugerencia descartada':'Sugestão descartada');loadOnlineSuggestions();}
+
 /* ---------- caixa de envio (view) ---------- */
 const OUTKEY='rm_outbox_'+USER;
 function outboxLoad(){try{return JSON.parse(localStorage.getItem(OUTKEY)||'[]');}catch(e){return [];}}
@@ -720,11 +980,17 @@ function outboxSave(a){try{localStorage.setItem(OUTKEY,JSON.stringify(a));}catch
 function outboxAdd(id,extra){const arr=outboxLoad();const item=ENTBY[id]||ACTBY[id];arr.push(Object.assign({id,ts:nowStamp(),from:USER,nome:item?(item.material||item.ativ):id},extra));outboxSave(arr);}
 function addToOutbox(id,kind){const d=document.getElementById('sgDate').value;const e={};if(d)e.propDate=d;
   const ss=document.getElementById('sgStatus');if(ss&&ss.value)e.propStatus=ss.value;
-  if(kind==='ent'){const r=document.getElementById('sgRecv').value;if(r)e.propRecv=r;}
+  let recv='';
+  if(kind==='ent'){const r=document.getElementById('sgRecv').value;if(r){recv=r;e.propRecv=r;}}
   else{const p=document.getElementById('sgPct').value;if(p!=='')e.propPct=(parseFloat(p)/100).toFixed(4);}
   const cin=document.getElementById('cmtInput');if(cin&&cin.value.trim())e.comment=cin.value.trim();
   if(!e.propDate&&!e.propStatus&&e.propPct==null&&!e.comment){toast(LANG==='es'?'Nada para agregar':'Nada para adicionar');return;}
-  outboxAdd(id,e);closeModal();toast(t.outAdded);}
+  if(fbCfg()){const itemType=ENTBY[id]?'ent':(ACTBY[id]?'act':'rot');let comment=e.comment||'';
+    if(recv)comment=(comment?comment+' ':'')+'('+(LANG==='es'?'Recibido':'Recebido')+': '+fmtY(recv)+')';
+    postOnlineSuggestion(id,itemType,{propDate:e.propDate||null,propStatus:e.propStatus||null,propPct:(e.propPct!=null?parseFloat(e.propPct):null),comment:comment||null}).then(ok=>{
+      if(ok){closeModal();toast(LANG==='es'?'✅ Enviado para evaluación':'✅ Enviado para avaliação');}
+      else{outboxAdd(id,e);closeModal();toast(t.outAdded);}});
+  } else {outboxAdd(id,e);closeModal();toast(t.outAdded);}}
 function renderOutbar(){const arr=outboxLoad();const b=document.getElementById('outbar');if(MODE!=='view'||!arr.length){b.classList.remove('on');return;}
   b.classList.add('on');b.innerHTML='<span class="c">'+arr.length+'</span> '+t.outTitle+' <button class="btn green sm" onclick="sendOutbox()">'+t.outSend+'</button><button class="btn primary sm" onclick="copyOutbox()">'+t.outCopy+'</button><button class="btn ghost sm" onclick="clearOutbox()">'+t.outClear+'</button>';}
 function clearOutbox(){if(!confirm(LANG==='es'?'¿Limpiar el buzón? (solo hazlo después de enviar/copiar)':'Limpar a caixa? (só faça isso depois de enviar/copiar)'))return;localStorage.removeItem(OUTKEY);renderOutbar();}
@@ -776,6 +1042,14 @@ function mergeFromDisk(disk){
   A(disk.newItems).forEach(n=>{if(n&&n.id)byId[n.id]=n;});
   A(mem.newItems).forEach(n=>{if(n&&n.id&&(sessionNewIds.has(n.id)||!byId[n.id]))byId[n.id]=n;});
   mem.items=items;mem.newItems=Object.keys(byId).map(k=>byId[k]);
+  // Mapa Regional: mesma regra — o disco é a base; só as linhas tocadas nesta sessão vencem.
+  // Tombstones (deleted) ficam preservados por id, então uma exclusão não "ressuscita".
+  const mapById={};
+  A(disk.regionalMap).forEach(r=>{if(r&&r.id)mapById[r.id]=r;});
+  A(mem.regionalMap).forEach(r=>{if(r&&r.id&&(mapTouched.has(r.id)||!mapById[r.id]))mapById[r.id]=r;});
+  mem.regionalMap=Object.keys(mapById).map(k=>mapById[k]);
+  // Sugestões online já tratadas (aprovadas/rejeitadas): união disco + sessão (marcador monotônico)
+  mem.handledSuggestions=Object.assign({},disk.handledSuggestions||{},mem.handledSuggestions||{});
   if(disk.version!=null)mem.version=disk.version;
 }
 async function readDisk(h){const f=await h.getFile();const txt=await f.text();if(!txt||!txt.trim())return null;return JSON.parse(txt);}
@@ -851,8 +1125,8 @@ function openCreate(kind){kind=kind||'entregavel';
   let h='<div class="editbox">'+typeToggle(kind)+nameList();
   if(kind==='entregavel'){
     h+='<div class="fieldrow"><div class="field full"><label>'+t.mTexto+' *</label><textarea id="nMat"></textarea></div></div>'
-      +'<div class="fieldrow"><div class="field"><label>'+t.mResp+' *</label><input type="text" list="dlNames" id="nResp"></div>'
-      +'<div class="field"><label>'+t.mPlat+'</label><select id="nPlat">'+selPlat('CORP')+'</select></div>'
+      +'<div class="fieldrow"><div class="field"><label>'+t.mResp+' *</label><input type="text" list="dlNames" id="nResp" oninput="this.dataset.auto=\'\'"><span class="sub" id="nRespHint"></span></div>'
+      +'<div class="field"><label>'+t.mPlat+'</label><select id="nPlat" onchange="applyPlatResp()">'+selPlat('CORP')+'</select></div>'
       +'<div class="field"><label>'+t.fRef+'</label><select id="nRef"><option value=""></option><option>Recorrente</option><option>Pontual</option></select></div></div>'
       +'<div class="fieldrow"><div class="field"><label>'+t.fPrazo+'</label><input type="date" id="nDate"></div>'
       +'<div class="field"><label>'+t.fMes+'</label><input type="text" id="nMes" placeholder="ex.: julho"></div>'
@@ -929,11 +1203,13 @@ function init(){
   const meses=[...new Set(A(DATA.entregaveis).map(e=>e.mes).filter(Boolean))];
   document.getElementById('fMes').innerHTML='<option value="">'+t.mes+'</option>'+meses.map(m=>'<option>'+esc(m)+'</option>').join('');
   document.getElementById('fResp').onchange=e=>{state.resp=e.target.value;renderContent();};
-  document.getElementById('fStatus').onchange=e=>{state.status=e.target.value;renderContent();};
+  document.getElementById('fStatus').onchange=e=>{state.status=e.target.value;state.quick='';renderContent();};
+  document.getElementById('clearFilters').textContent=(LANG==='es'?'✕ Quitar filtros':'✕ Eliminar filtros');
   document.getElementById('fMes').onchange=e=>{state.mes=e.target.value;renderContent();};
   document.getElementById('fBusca').oninput=e=>{state.busca=e.target.value;renderContent();};
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
   renderKpis();renderTabs();renderChips();renderContent();renderOutbar();
+  if(MODE==='admin'&&fbCfg())loadOnlineSuggestions();
 }
 injectNewItems();
 init();
