@@ -118,8 +118,12 @@
   .b-sp{background:rgba(122,134,153,.16);color:var(--gray);border:1px solid rgba(122,134,153,.45)}
   .b-and{background:rgba(255,180,84,.16);color:var(--amber);border:1px solid rgba(255,180,84,.45)}
   .b-canc{background:rgba(122,134,153,.16);color:var(--gray);border:1px solid rgba(122,134,153,.45)}
+  .b-sb{background:rgba(180,140,255,.16);color:var(--purple);border:1px solid rgba(180,140,255,.45)}
   .b-del{background:rgba(255,92,108,.12);color:var(--red);border:1px dashed rgba(255,92,108,.5)}
   .plat{display:inline-block;padding:2px 9px;border-radius:6px;font-size:10px;font-weight:800;white-space:nowrap}
+  .ktag{display:inline-block;padding:1px 7px;border-radius:5px;font-size:9.5px;font-weight:800;white-space:nowrap;margin-right:6px;vertical-align:1px;letter-spacing:.2px}
+  .k-ent{background:rgba(47,111,208,.14);color:#2f6fd0}
+  .k-act{background:rgba(122,95,192,.16);color:#7a5fc0}
   .p-ANDINA{background:rgba(47,111,208,.2);color:#3f80d8}.p-SOUTHCONE{background:rgba(30,158,106,.18);color:#149a63}
   .p-MEX{background:rgba(200,134,44,.2);color:#b3781f}.p-CORP{background:rgba(122,95,192,.2);color:#7a5fc0}
   body:not(.light) .p-ANDINA{color:#79b0f5}body:not(.light) .p-SOUTHCONE{color:#4fd6a2}body:not(.light) .p-MEX{color:#f0b45e}body:not(.light) .p-CORP{color:#c3a8f7}
@@ -137,6 +141,35 @@
   .bar .mark{position:absolute;top:-3px;bottom:-3px;width:2px;background:#ffb454}
   .pct{font-size:15px;font-weight:800;min-width:46px;text-align:right}
   .pcard .body{display:none;border-top:1px solid var(--line)}.pcard.open .body{display:block}
+  .pcard.del{opacity:.5}
+  .pcard .right .rowbtn{white-space:nowrap}
+  .pcard .pdescr{padding:10px 18px;font-size:12px;color:var(--tx2);border-bottom:1px solid var(--line)}
+  .projtools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  /* v4 A3: fila de aprovação das importações de Excel */
+  .impb{border:1px solid var(--line);border-radius:10px;margin:0 0 14px;overflow:hidden}
+  .impb .imph{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:rgba(77,163,255,.08);border-bottom:1px solid var(--line);font-size:12.5px}
+  .impb .imph b{font-size:13px}.impb .imph .sp{flex:1}
+  .impt{width:100%;border-collapse:collapse;font-size:12px}
+  .impt th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--tx3);padding:6px 10px;border-bottom:1px solid var(--line)}
+  .impt td{padding:5px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .impt tr.imph2 td{background:rgba(255,255,255,.04);font-weight:700}
+  body.light .impt tr.imph2 td{background:rgba(0,0,0,.04)}
+  .impt tr.ok td{background:rgba(63,181,106,.12)}.impt tr.no td{background:rgba(255,92,92,.10);color:var(--tx3)}.impt tr.no td input,.impt tr.no td select{opacity:.6}
+  .impt tr.info td{color:var(--tx3);font-style:italic}
+  .impt tr.sub td{padding:2px 10px}.impt tr.sub td:first-child{padding-left:26px;color:var(--tx2)}
+  .impt input,.impt select{width:100%;min-width:90px;background:transparent;border:1px solid var(--line);border-radius:6px;color:inherit;padding:3px 6px;font:inherit}
+  .impt td.acts{white-space:nowrap;width:1%}.impt td.acts .btn{padding:2px 8px}
+  .impt .old{color:var(--tx2)}
+  /* v4: linha-cabeçalho de MARCO dentro do cartão do projeto */
+  tr.mrow td{background:rgba(77,163,255,.10);border-left:3px solid var(--blue,#4da3ff);border-top:1px solid var(--line);padding:8px 14px}
+  body.light tr.mrow td{background:rgba(47,111,208,.08)}
+  .mrow .mk{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .mrow .mkn{font-weight:700;font-size:13px}
+  .mrow .mkc{font-size:11px}
+  .mrow .mkr{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .mrow .bar{width:120px}
+  .mrow .pct{font-size:13px;min-width:40px}
+  .newprojbox{border:1px dashed var(--line);border-radius:10px;padding:12px;margin-bottom:12px;background:var(--panel)}
   .caret{color:var(--tx3);font-size:11px;transition:.2s}.pcard.open .caret{transform:rotate(90deg)}
   .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
   .person{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
@@ -212,7 +245,9 @@
     .enttbl tr.del td{opacity:.5}
     .pcard .body{overflow-x:auto;-webkit-overflow-scrolling:touch}
     .pcard .body table{min-width:640px}
+    .pcard .right{gap:8px;flex-wrap:wrap}
     .bar{width:80px}
+    .mrow .bar{width:80px}.mrow .mkr{gap:8px}
     .ovl{padding:12px 6px}
     .modal .mb{padding:14px 12px}
     .modal>.mh{padding:14px 14px}
@@ -255,7 +290,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const DATA = {"overlay":null,"fonteData":"06/07/2026 20:20","adminName":"Jonathan","lang":"es","time":[],"hoje":"2026-07-28","gerado":"28/07/2026 18:10","user":"Jorge","firebase":{"apiKey":"AIzaSyC9uOKK7kFp7lJ0MGQkWkRlajw3PtF9y-A","authDomain":"rm-control-tower.firebaseapp.com","projectId":"rm-control-tower","storageBucket":"rm-control-tower.firebasestorage.app","messagingSenderId":"112343675100","appId":"1:112343675100:web:bf6cc5ba75a74d06dac419"},"rotinas":[],"mode":"view","adminEmail":"jonathan.braga@emergentcold.com","fonte":"Gestao_Rotinas_Projetos v7.xlsm","entregaveis":[{"id":"E23","tipo":"entregavel","n":"23","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer Conciliation (Board Deck)","deleted":false,"ref":"46143","limite":"2026-06-10","baseLimite":"2026-06-10","recebido":"2026-06-16","recebidoTxt":"2026-06-16","baseRecebTxt":"2026-06-16","st":"Concluído","dias":-48,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-10","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E33","tipo":"entregavel","n":"33","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Sign Off (BU Heads, Commercial, KAMs, Billing)","deleted":false,"ref":"46143","limite":"2026-06-11","baseLimite":"2026-06-11","recebido":"2026-06-24","recebidoTxt":"2026-06-24","baseRecebTxt":"2026-06-24","st":"Concluído","dias":-47,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-11","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E30","tipo":"entregavel","n":"30","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Cobrar Revenue per Customer da Friobox","deleted":false,"ref":"46143","limite":"2026-06-11","baseLimite":"2026-06-11","recebido":"2026-06-12","recebidoTxt":"2026-06-12","baseRecebTxt":"2026-06-12","st":"Concluído","dias":-47,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-11","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E31","tipo":"entregavel","n":"31","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Data Template (LC \u0026 USD)","deleted":false,"ref":"46143","limite":"2026-06-11","baseLimite":"2026-06-11","recebido":"2026-06-24","recebidoTxt":"2026-06-24","baseRecebTxt":"2026-06-24","st":"Concluído","dias":-47,"lateDone":true,"coment":"Falta Panamá","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-11","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E32","tipo":"entregavel","n":"32","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue One Offs","deleted":false,"ref":"46143","limite":"2026-06-11","baseLimite":"2026-06-11","recebido":"2026-06-16","recebidoTxt":"2026-06-16","baseRecebTxt":"2026-06-16","st":"Concluído","dias":-47,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-11","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E42","tipo":"entregavel","n":"42","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 15 clientes","deleted":false,"ref":"46143","limite":"2026-06-15","baseLimite":"2026-06-15","recebido":"2026-06-16","recebidoTxt":"2026-06-16","baseRecebTxt":"2026-06-16","st":"Concluído","dias":-43,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-15","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E57","tipo":"entregavel","n":"57","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Reunião com Jaime/Javier a apresentação do CP Model e solicitar comentários + resultados","deleted":false,"ref":"Pontual","limite":"2026-06-18","baseLimite":"2026-06-18","recebido":"2026-06-18","recebidoTxt":"2026-06-18","baseRecebTxt":"2026-06-18","st":"Concluído","dias":-40,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-18","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E61","tipo":"entregavel","n":"61","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model Update","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-39,"lateDone":true,"coment":"Colombio está ok e para os demais países fará em conjunto com César","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E82","tipo":"entregavel","n":"82","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Report Publication","deleted":false,"ref":"46143","limite":"2026-06-25","baseLimite":"2026-06-25","recebido":"2026-06-25","recebidoTxt":"2026-06-25","baseRecebTxt":"2026-06-25","st":"Concluído","dias":-33,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-25","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E81","tipo":"entregavel","n":"81","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation (Commercial + BU Heads)","deleted":false,"ref":"46143","limite":"2026-06-25","baseLimite":"2026-06-25","recebido":"2026-06-25","recebidoTxt":"2026-06-25","baseRecebTxt":"2026-06-25","st":"Concluído","dias":-33,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-25","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E89","tipo":"entregavel","n":"89","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation (BU Heads)","deleted":false,"ref":"46143","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-32,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E88","tipo":"entregavel","n":"88","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Reunião com MD para apresentação do CP Model e solicitar comentários","deleted":false,"ref":"Pontual","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-07-01","recebidoTxt":"2026-07-01","baseRecebTxt":"2026-07-01","st":"Concluído","dias":-32,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783378828679245","tipo":"entregavel","n":"475","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer","deleted":false,"ref":"Recorrente","limite":"2026-07-08","baseLimite":"2026-07-10","recebido":"2026-07-22","recebidoTxt":"2026-07-22","baseRecebTxt":"","st":"Concluído","dias":-20,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"07/07/2026 16:39","by":"Jonathan","text":"Equador, Colombia, Chile (Friopacifico) - Estão ok."},"dateHistory":[{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-07-08","ts":"07/07/2026 16:38","by":"Jonathan","note":"Alteração no sistema"}],"nComments":1,"nPending":0,"editedByAdmin":true},{"id":"NE1783379092633916","tipo":"entregavel","n":"481","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-18,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:04","by":"Jonathan","text":"Validar se houve algum cliente com alterações de contrato."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":false},{"id":"NE1783378918921694","tipo":"entregavel","n":"478","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Accounts Receivable (Treasury)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-18,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:03","by":"Jonathan","text":"Solicitar a tesouraria."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":false},{"id":"NE1783378623870894","tipo":"entregavel","n":"472","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Data Template (LC \u0026 USD)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-18,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379228687237","tipo":"entregavel","n":"484","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication","deleted":false,"ref":"Recorrente","limite":"2026-07-17","baseLimite":"2026-07-17","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-11,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379374229329","tipo":"entregavel","n":"487","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\nSign Offs","deleted":false,"ref":"Recorrente","limite":"2026-07-22","baseLimite":"2026-07-22","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-6,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-22","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783379468890311","tipo":"entregavel","n":"490","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation (BU Heads + MD)","deleted":false,"ref":"Recorrente","limite":"2026-07-23","baseLimite":"2026-07-23","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-5,"lateDone":false,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-23","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E104","tipo":"entregavel","n":"104","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Deployments de Customer Profitability - Frialsa","deleted":false,"ref":"Pontual","limite":"2026-07-31","baseLimite":"2026-06-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":3,"lateDone":false,"coment":"Estão verificando junto com Alejandro - está como prioridade","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-07-31","ts":"07/07/2026 11:10","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184738864714","tipo":"entregavel","n":"518","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":13,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785177922548299","tipo":"entregavel","n":"505","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Data Template (LC \u0026 USD) — Peru","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":13,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785177922548426","tipo":"entregavel","n":"500","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Data Template (LC \u0026 USD) — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":13,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184738864843","tipo":"entregavel","n":"520","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":13,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184738864217","tipo":"entregavel","n":"519","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Chile","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":13,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE178517792254852","tipo":"entregavel","n":"498","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Data Template (LC \u0026 USD) — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":13,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184738864528","tipo":"entregavel","n":"526","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Peru","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":13,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785177922548997","tipo":"entregavel","n":"497","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Data Template (LC \u0026 USD) — Chile","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":13,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184720767376","tipo":"entregavel","n":"516","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Peru","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":15,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184720767304","tipo":"entregavel","n":"511","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":15,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184720767581","tipo":"entregavel","n":"508","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Chile","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":15,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184720767527","tipo":"entregavel","n":"509","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":15,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184792373850","tipo":"entregavel","n":"533","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\r\nVerificação de sanidade — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":16,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184792373774","tipo":"entregavel","n":"530","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\r\nVerificação de sanidade — Chile","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":16,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184792373422","tipo":"entregavel","n":"538","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\r\nVerificação de sanidade — Peru","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":16,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1785184792373810","tipo":"entregavel","n":"531","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\r\nVerificação de sanidade — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":16,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false}],"projetos":[]};
+const DATA = {"overlay":null,"fonteData":"06/07/2026 20:20","adminName":"Jonathan","lang":"es","time":[],"hoje":"2026-11-09","gerado":"09/11/2026 14:38","user":"Jorge","firebase":{"apiKey":"AIzaSyC9uOKK7kFp7lJ0MGQkWkRlajw3PtF9y-A","authDomain":"rm-control-tower.firebaseapp.com","projectId":"rm-control-tower","storageBucket":"rm-control-tower.firebasestorage.app","messagingSenderId":"112343675100","appId":"1:112343675100:web:bf6cc5ba75a74d06dac419"},"rotinas":[],"mode":"view","adminEmail":"jonathan.braga@emergentcold.com","fonte":"Gestao_Rotinas_Projetos v7.xlsm","entregaveis":[{"id":"E23","tipo":"entregavel","n":"23","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer Conciliation (Board Deck)","deleted":false,"ref":"46143","limite":"2026-06-10","baseLimite":"2026-06-10","recebido":"2026-06-16","recebidoTxt":"2026-06-16","baseRecebTxt":"2026-06-16","st":"Concluído","dias":-152,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-10","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E30","tipo":"entregavel","n":"30","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Cobrar Revenue per Customer da Friobox","deleted":false,"ref":"46143","limite":"2026-06-11","baseLimite":"2026-06-11","recebido":"2026-06-12","recebidoTxt":"2026-06-12","baseRecebTxt":"2026-06-12","st":"Concluído","dias":-151,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-11","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E33","tipo":"entregavel","n":"33","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Sign Off (BU Heads, Commercial, KAMs, Billing)","deleted":false,"ref":"46143","limite":"2026-06-11","baseLimite":"2026-06-11","recebido":"2026-06-24","recebidoTxt":"2026-06-24","baseRecebTxt":"2026-06-24","st":"Concluído","dias":-151,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-11","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E31","tipo":"entregavel","n":"31","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Data Template (LC \u0026 USD)","deleted":false,"ref":"46143","limite":"2026-06-11","baseLimite":"2026-06-11","recebido":"2026-06-24","recebidoTxt":"2026-06-24","baseRecebTxt":"2026-06-24","st":"Concluído","dias":-151,"lateDone":true,"coment":"Falta Panamá","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-11","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E32","tipo":"entregavel","n":"32","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue One Offs","deleted":false,"ref":"46143","limite":"2026-06-11","baseLimite":"2026-06-11","recebido":"2026-06-16","recebidoTxt":"2026-06-16","baseRecebTxt":"2026-06-16","st":"Concluído","dias":-151,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-11","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E42","tipo":"entregavel","n":"42","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 15 clientes","deleted":false,"ref":"46143","limite":"2026-06-15","baseLimite":"2026-06-15","recebido":"2026-06-16","recebidoTxt":"2026-06-16","baseRecebTxt":"2026-06-16","st":"Concluído","dias":-147,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-15","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E57","tipo":"entregavel","n":"57","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Reunião com Jaime/Javier a apresentação do CP Model e solicitar comentários + resultados","deleted":false,"ref":"Pontual","limite":"2026-06-18","baseLimite":"2026-06-18","recebido":"2026-06-18","recebidoTxt":"2026-06-18","baseRecebTxt":"2026-06-18","st":"Concluído","dias":-144,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-18","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E61","tipo":"entregavel","n":"61","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model Update","deleted":false,"ref":"46143","limite":"2026-06-19","baseLimite":"2026-06-19","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-143,"lateDone":true,"coment":"Colombio está ok e para os demais países fará em conjunto com César","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-19","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E82","tipo":"entregavel","n":"82","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Report Publication","deleted":false,"ref":"46143","limite":"2026-06-25","baseLimite":"2026-06-25","recebido":"2026-06-25","recebidoTxt":"2026-06-25","baseRecebTxt":"2026-06-25","st":"Concluído","dias":-137,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-25","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E81","tipo":"entregavel","n":"81","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation (Commercial + BU Heads)","deleted":false,"ref":"46143","limite":"2026-06-25","baseLimite":"2026-06-25","recebido":"2026-06-25","recebidoTxt":"2026-06-25","baseRecebTxt":"2026-06-25","st":"Concluído","dias":-137,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-25","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E88","tipo":"entregavel","n":"88","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Reunião com MD para apresentação do CP Model e solicitar comentários","deleted":false,"ref":"Pontual","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-07-01","recebidoTxt":"2026-07-01","baseRecebTxt":"2026-07-01","st":"Concluído","dias":-136,"lateDone":true,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"E89","tipo":"entregavel","n":"89","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation (BU Heads)","deleted":false,"ref":"46143","limite":"2026-06-26","baseLimite":"2026-06-26","recebido":"2026-06-26","recebidoTxt":"2026-06-26","baseRecebTxt":"2026-06-26","st":"Concluído","dias":-136,"lateDone":false,"coment":"","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-06-26","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1783378828679245","tipo":"entregavel","n":"1795","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer","deleted":false,"ref":"Recorrente","limite":"2026-07-08","baseLimite":"2026-07-10","recebido":"2026-07-22","recebidoTxt":"2026-07-22","baseRecebTxt":"","st":"Concluído","dias":-124,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"07/07/2026 16:39","by":"Jonathan","text":"Equador, Colombia, Chile (Friopacifico) - Estão ok."},"dateHistory":[{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-07-08","ts":"07/07/2026 16:38","by":"Jonathan","note":"Alteração no sistema"}],"nComments":1,"nPending":0,"editedByAdmin":true},{"id":"NE1783379092633916","tipo":"entregavel","n":"1801","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":"2026-08-03","recebidoTxt":"2026-08-03","baseRecebTxt":"","st":"Concluído","dias":-122,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:04","by":"Jonathan","text":"Validar se houve algum cliente com alterações de contrato."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":true},{"id":"NE1783378918921694","tipo":"entregavel","n":"1798","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Accounts Receivable (Treasury)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":"2026-08-03","recebidoTxt":"2026-08-03","baseRecebTxt":"","st":"Concluído","dias":-122,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{"ts":"06/07/2026 20:03","by":"Jonathan","text":"Solicitar a tesouraria."},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":1,"nPending":0,"editedByAdmin":true},{"id":"NE1783378623870894","tipo":"entregavel","n":"1792","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue Data Template (LC \u0026 USD)","deleted":false,"ref":"Recorrente","limite":"2026-07-10","baseLimite":"2026-07-10","recebido":"2026-08-03","recebidoTxt":"2026-08-03","baseRecebTxt":"","st":"Concluído","dias":-122,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1783379228687237","tipo":"entregavel","n":"1804","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication","deleted":false,"ref":"Recorrente","limite":"2026-07-17","baseLimite":"2026-07-17","recebido":"2026-07-31","recebidoTxt":"2026-07-31","baseRecebTxt":"","st":"Concluído","dias":-115,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1783379374229329","tipo":"entregavel","n":"1807","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\nSign Offs","deleted":false,"ref":"Recorrente","limite":"2026-07-22","baseLimite":"2026-07-22","recebido":"2026-08-03","recebidoTxt":"2026-08-03","baseRecebTxt":"","st":"Concluído","dias":-110,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-22","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1783379468890311","tipo":"entregavel","n":"1810","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation (BU Heads + MD)","deleted":false,"ref":"Recorrente","limite":"2026-07-23","baseLimite":"2026-07-23","recebido":"2026-08-03","recebidoTxt":"2026-08-03","baseRecebTxt":"","st":"Concluído","dias":-109,"lateDone":true,"coment":"","obs":"","mes":"Junho","privado":"Não","comments":{},"dateHistory":{"date":"2026-07-23","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785177922548299","tipo":"entregavel","n":"1825","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / Revenue Data (LC \u0026 USD - Somente Receita) — Peru","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":"2026-08-14","recebidoTxt":"2026-08-14","baseRecebTxt":"","st":"Concluído","dias":-91,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184738864528","tipo":"entregavel","n":"1846","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Peru","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":"2026-08-06","recebidoTxt":"2026-08-06","baseRecebTxt":"","st":"Concluído","dias":-91,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785177922548997","tipo":"entregavel","n":"1817","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / Revenue Data (LC \u0026 USD - Somente Receita) — Chile","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":"2026-08-25","recebidoTxt":"2026-08-25","baseRecebTxt":"","st":"Concluído","dias":-91,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{"ts":"16/08/2026 20:24","by":"Jonathan","text":"Falta Hook"},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":1,"nPending":0,"editedByAdmin":true},{"id":"NE1785184738864217","tipo":"entregavel","n":"1839","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Chile","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":"2026-08-11","recebidoTxt":"2026-08-11","baseRecebTxt":"","st":"Concluído","dias":-91,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184738864714","tipo":"entregavel","n":"1838","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":"2026-08-06","recebidoTxt":"2026-08-06","baseRecebTxt":"","st":"Concluído","dias":-91,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184738864843","tipo":"entregavel","n":"1840","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":"2026-08-06","recebidoTxt":"2026-08-06","baseRecebTxt":"","st":"Concluído","dias":-91,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785177922548426","tipo":"entregavel","n":"1820","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / Revenue Data (LC \u0026 USD - Somente Receita) — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":"2026-08-14","recebidoTxt":"2026-08-14","baseRecebTxt":"","st":"Concluído","dias":-91,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE178517792254852","tipo":"entregavel","n":"1818","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / Revenue Data (LC \u0026 USD - Somente Receita) — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":"2026-08-07","recebidoTxt":"2026-08-07","baseRecebTxt":"","st":"Concluído","dias":-91,"lateDone":false,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":[{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-08-11","ts":"27/07/2026 17:37","by":"Sistema (rotina)","note":"Atualizado pela rotina"},{"date":"2026-08-10","ts":"27/07/2026 17:38","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1786120624379652","tipo":"entregavel","n":"746","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revisão de Homem Hora - CPv2","deleted":false,"ref":"Pontual","limite":"2026-08-10","baseLimite":"2026-08-10","recebido":"2026-08-11","recebidoTxt":"2026-08-11","baseRecebTxt":"","st":"Concluído","dias":-91,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184720767581","tipo":"entregavel","n":"1828","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Chile","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":"2026-08-25","recebidoTxt":"2026-08-25","baseRecebTxt":"","st":"Concluído","dias":-89,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184720767527","tipo":"entregavel","n":"1829","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":"2026-08-25","recebidoTxt":"2026-08-25","baseRecebTxt":"","st":"Concluído","dias":-89,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184720767304","tipo":"entregavel","n":"1831","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":"2026-08-25","recebidoTxt":"2026-08-25","baseRecebTxt":"","st":"Concluído","dias":-89,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184720767376","tipo":"entregavel","n":"1836","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Peru","deleted":false,"ref":"Recorrente","limite":"2026-08-12","baseLimite":"2026-08-12","recebido":"2026-08-25","recebidoTxt":"2026-08-25","baseRecebTxt":"","st":"Concluído","dias":-89,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-12","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184792373850","tipo":"entregavel","n":"1853","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\nVerificação de sanidade — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":"2026-08-25","recebidoTxt":"2026-08-25","baseRecebTxt":"","st":"Concluído","dias":-88,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184792373810","tipo":"entregavel","n":"1851","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\nVerificação de sanidade — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":"2026-08-25","recebidoTxt":"2026-08-25","baseRecebTxt":"","st":"Concluído","dias":-88,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184792373422","tipo":"entregavel","n":"1858","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\nVerificação de sanidade — Peru","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":"2026-08-25","recebidoTxt":"2026-08-25","baseRecebTxt":"","st":"Concluído","dias":-88,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1785184792373774","tipo":"entregavel","n":"1850","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Presentation e Revisão (Commercial + BU Heads + Envolvidos)\nVerificação de sanidade — Chile","deleted":false,"ref":"Recorrente","limite":"2026-08-13","baseLimite":"2026-08-13","recebido":"2026-08-25","recebidoTxt":"2026-08-25","baseRecebTxt":"","st":"Concluído","dias":-88,"lateDone":true,"coment":"","obs":"","mes":"agosto","privado":"Não","comments":{},"dateHistory":{"date":"2026-08-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788982447546764","tipo":"entregavel","n":"1445","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Enviar os arquivos de CPV2 de Frialza Callao 2 e Frialza Lurín, que já estão prontos.","deleted":false,"ref":"Pontual","limite":"2026-09-09","baseLimite":"2026-09-09","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-61,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-09","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884405307901","tipo":"entregavel","n":"1896","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / Revenue Data (LC \u0026 USD - Somente Receita) — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-09-10","baseLimite":"2026-09-10","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-60,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884502657575","tipo":"entregavel","n":"1917","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Chile","deleted":false,"ref":"Recorrente","limite":"2026-09-10","baseLimite":"2026-09-08","recebido":"2026-09-29","recebidoTxt":"2026-09-29","baseRecebTxt":"","st":"Concluído","dias":-60,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":[{"date":"2026-09-08","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-09-10","ts":"08/09/2026 13:35","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884405307865","tipo":"entregavel","n":"1898","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / Revenue Data (LC \u0026 USD - Somente Receita) — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-09-10","baseLimite":"2026-09-10","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-60,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884405307711","tipo":"entregavel","n":"1903","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / Revenue Data (LC \u0026 USD - Somente Receita) — Peru","deleted":false,"ref":"Recorrente","limite":"2026-09-10","baseLimite":"2026-09-10","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-60,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884502657740","tipo":"entregavel","n":"1918","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-09-10","baseLimite":"2026-09-08","recebido":"2026-09-29","recebidoTxt":"2026-09-29","baseRecebTxt":"","st":"Concluído","dias":-60,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":[{"date":"2026-09-08","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-09-10","ts":"08/09/2026 13:35","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884502657571","tipo":"entregavel","n":"1925","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Peru","deleted":false,"ref":"Recorrente","limite":"2026-09-10","baseLimite":"2026-09-08","recebido":"2026-09-29","recebidoTxt":"2026-09-29","baseRecebTxt":"","st":"Concluído","dias":-60,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":[{"date":"2026-09-08","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-09-10","ts":"08/09/2026 13:35","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884405307849","tipo":"entregavel","n":"1895","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / Revenue Data (LC \u0026 USD - Somente Receita) — Chile","deleted":false,"ref":"Recorrente","limite":"2026-09-10","baseLimite":"2026-09-10","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-60,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-10","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884502657462","tipo":"entregavel","n":"1920","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-09-10","baseLimite":"2026-09-08","recebido":"2026-09-29","recebidoTxt":"2026-09-29","baseRecebTxt":"","st":"Concluído","dias":-60,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":[{"date":"2026-09-08","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-09-10","ts":"08/09/2026 13:35","by":"Sistema (rotina)","note":"Atualizado pela rotina"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884445232970","tipo":"entregavel","n":"1914","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Peru","deleted":false,"ref":"Recorrente","limite":"2026-09-15","baseLimite":"2026-09-15","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-55,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-15","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884445232202","tipo":"entregavel","n":"1906","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Chile","deleted":false,"ref":"Recorrente","limite":"2026-09-15","baseLimite":"2026-09-15","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-55,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-15","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884445232201","tipo":"entregavel","n":"1907","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-09-15","baseLimite":"2026-09-15","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-55,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-15","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884445232427","tipo":"entregavel","n":"1909","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-09-15","baseLimite":"2026-09-15","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-55,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-15","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884548824613","tipo":"entregavel","n":"1936","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Atualização no PBI — Peru","deleted":false,"ref":"Recorrente","limite":"2026-09-17","baseLimite":"2026-09-17","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-53,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884548824317","tipo":"entregavel","n":"1929","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Atualização no PBI — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-09-17","baseLimite":"2026-09-17","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-53,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE178888454882427","tipo":"entregavel","n":"1931","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Atualização no PBI — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-09-17","baseLimite":"2026-09-17","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-53,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788884548824747","tipo":"entregavel","n":"1928","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Atualização no PBI — Chile","deleted":false,"ref":"Recorrente","limite":"2026-09-17","baseLimite":"2026-09-17","recebido":"2026-09-28","recebidoTxt":"2026-09-28","baseRecebTxt":"","st":"Concluído","dias":-53,"lateDone":true,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":{"date":"2026-09-17","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788982481083444","tipo":"entregavel","n":"1446","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Obter o consumo de kWh detalhado por cliente de Frialza Mega Centro para fazer a distribuição correta da energia.","deleted":false,"ref":"Pontual","limite":"2026-09-29","baseLimite":"2026-09-11","recebido":"2026-09-29","recebidoTxt":"2026-09-29","baseRecebTxt":"","st":"Concluído","dias":-41,"lateDone":false,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":[{"date":"2026-09-11","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-09-29","ts":"28/09/2026 16:26","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"E104","tipo":"entregavel","n":"104","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Deployments de Customer Profitability - Frialsa","deleted":false,"ref":"Pontual","limite":"2026-09-29","baseLimite":"2026-06-30","recebido":"2026-09-29","recebidoTxt":"2026-09-29","baseRecebTxt":"","st":"Concluído","dias":-41,"lateDone":false,"coment":"Estão verificando junto com Alejandro - está como prioridade","obs":"","mes":"junho","privado":"Não","comments":{},"dateHistory":[{"date":"2026-06-30","ts":"06/07/2026 20:20","by":"Planilha","note":"Data original da planilha"},{"date":"2026-07-31","ts":"07/07/2026 11:10","by":"Jonathan","note":"Alteração no sistema"},{"date":"2026-08-31","ts":"03/08/2026 15:49","by":"Jonathan","note":"Alteração no sistema"},{"date":"2026-09-09","ts":"08/09/2026 17:06","by":"Jonathan","note":"Alteração no sistema"},{"date":"2026-09-29","ts":"28/09/2026 16:21","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788982607084625","tipo":"entregavel","n":"1447","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Polir os tempos padrão por cliente, incluindo reuniões de 30 a 40 minutos com vendas e operações para cobrir o top 5 de clientes de cada planta.","deleted":false,"ref":"Pontual","limite":"2026-09-30","baseLimite":"2026-09-15","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-40,"lateDone":false,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{"ts":"09/09/2026 16:36","by":"Jonathan","text":"É o que muda o número por cliente; o total da planta não se altera."},"dateHistory":[{"date":"2026-09-15","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-09-30","ts":"09/09/2026 16:37","by":"Jonathan","note":"Alteração no sistema"}],"nComments":1,"nPending":0,"editedByAdmin":true},{"id":"NE1790707495328560","tipo":"entregavel","n":"1943","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / NOVO MODELO — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-10-13","baseLimite":"2026-10-13","recebido":"2026-10-27","recebidoTxt":"2026-10-27","baseRecebTxt":"","st":"Concluído","dias":-27,"lateDone":true,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1790707495328278","tipo":"entregavel","n":"1941","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Customer / NOVO MODELO — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-10-13","baseLimite":"2026-10-13","recebido":"2026-10-27","recebidoTxt":"2026-10-27","baseRecebTxt":"","st":"Concluído","dias":-27,"lateDone":true,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1790707593892936","tipo":"entregavel","n":"1965","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-10-13","baseLimite":"2026-10-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-27,"lateDone":false,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1790707593892966","tipo":"entregavel","n":"1963","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Contractual Rates - Top 10 clientes — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-10-13","baseLimite":"2026-10-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-27,"lateDone":false,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1791902234974398","tipo":"entregavel","n":"1981","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Pallet — Peru","deleted":false,"ref":"Recorrente","limite":"2026-10-13","baseLimite":"2026-10-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-27,"lateDone":false,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1791902234974601","tipo":"entregavel","n":"1976","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Pallet — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-10-13","baseLimite":"2026-10-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-27,"lateDone":false,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1791902234974891","tipo":"entregavel","n":"1974","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Pallet — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-10-13","baseLimite":"2026-10-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-27,"lateDone":false,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE1791464727383435","tipo":"entregavel","n":"1788","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Marcar datas de apresentação do Dashboard RM para todos","deleted":false,"ref":"Pontual","limite":"2026-10-13","baseLimite":"2026-10-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-27,"lateDone":false,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1791902234974172","tipo":"entregavel","n":"1973","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Revenue per Pallet — Chile","deleted":false,"ref":"Recorrente","limite":"2026-10-13","baseLimite":"2026-10-13","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-27,"lateDone":false,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-13","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":false},{"id":"NE179070752499740","tipo":"entregavel","n":"1952","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Colombia","deleted":false,"ref":"Recorrente","limite":"2026-10-16","baseLimite":"2026-10-16","recebido":"2026-10-27","recebidoTxt":"2026-10-27","baseRecebTxt":"","st":"Concluído","dias":-24,"lateDone":true,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-16","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1790707524997986","tipo":"entregavel","n":"1954","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"CP Model v02 - Update e Publication — Ecuador","deleted":false,"ref":"Recorrente","limite":"2026-10-16","baseLimite":"2026-10-16","recebido":"2026-10-27","recebidoTxt":"2026-10-27","baseRecebTxt":"","st":"Concluído","dias":-24,"lateDone":true,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":{"date":"2026-10-16","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788982648082967","tipo":"entregavel","n":"1448","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Reprocessar o CPV2 retroativo de Chile e Peru com a data do SAC, com meta de chegar até maio.","deleted":false,"ref":"Pontual","limite":"2026-10-30","baseLimite":"2026-09-30","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Atrasado","dias":-10,"lateDone":false,"coment":"","obs":"","mes":"setembro","privado":"Não","comments":{},"dateHistory":[{"date":"2026-09-30","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-10-30","ts":"13/10/2026 11:30","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true},{"id":"NE1788982707085125","tipo":"entregavel","n":"1449","resp":"Jorge Leonardo Ruidiaz Parra","curto":"Jorge","plat":"ANDINA","material":"Completar o reprocessamento retroativo do CPv2 de países Andina.","deleted":false,"ref":"Recorrente","limite":"2026-11-30","baseLimite":"2026-10-15","recebido":null,"recebidoTxt":"","baseRecebTxt":"","st":"Pendente","dias":21,"lateDone":false,"coment":"","obs":"","mes":"outubro","privado":"Não","comments":{},"dateHistory":[{"date":"2026-10-15","ts":"06/07/2026 20:20","by":"Sistema","note":"Data original da planilha"},{"date":"2026-11-30","ts":"27/10/2026 11:08","by":"Jonathan","note":"Alteração no sistema"}],"nComments":0,"nPending":0,"editedByAdmin":true}],"projetos":[]};
 const MODE = DATA.mode, LANG = DATA.lang, USER = DATA.user;
 DATA.overlay = DATA.overlay || {items:{},newItems:[]};
 DATA.overlay.items = DATA.overlay.items || {};
@@ -267,16 +302,18 @@ const T = {
     tabVisao:'📊 Visão Geral',tabEnt:'📦 Entregáveis',tabProj:'🚀 Projetos',tabRot:'🔁 Rotinas',tabTime:'👥 Time',tabMapa:'🗺️ Mapa Regional',tabSug:'📥 Sugestões',
     kAtr:'Atrasadas',kHoje:'Vencem hoje',k7:'Próximos 7 dias',kSp:'Sem prazo',kCon:'Concluídas no mês',kOn:'No prazo (mês)',kProj:'Projetos ativos',kPend:'Sugestões pendentes',
     s1:'1 · Atividades atrasadas',s2:'2 · Vencem hoje',s3:'3 · Próximas entregas — 7 dias',s4:'4 · Itens sem prazo claro',s5:'5 · Horizonte — próximos 30 dias',
+    tagEnt:'ENTREGÁVEL',tagAct:'PROJETO',
     ok1:'✔ Nenhuma atividade atrasada.',ok2:'Nada vence hoje.',ok3:'Nenhuma entrega nos próximos 7 dias.',ok4:'Nenhum item sem prazo.',ok5:'Nada no horizonte de 30 dias.',
     projRisco:'🚀 Projetos em atenção',cargaR:'Carga por responsável (ativos)',cargaP:'Carga por plataforma (ativos)',
     thNum:'Nº',thResp:'Responsável',thPlat:'Plataforma',thEnt:'Entrega',thRef:'Tipo',thPrazo:'Prazo',thReceb:'Recebido',thStatus:'Status',thSit:'Situação',thMes:'Mês',thAcoes:'',
     thProj:'Projeto',thPer:'Período',thReal:'% Real',thPrev:'% Prev.',thFase:'Fase',thAtiv:'Atividade',thMarco:'Marco',
     allEnt:'Todos os entregáveis',allProj:'Projetos',rotHdr:'Rotinas',
-    mInfo:'Informações',mStatusOf:'Status oficial',mPrazoOf:'Prazo oficial',mResp:'Responsável',mPlat:'Plataforma',mRef:'Tipo',mMes:'Mês',mComent:'Comentário (planilha)',mTexto:'Texto da ação',
+    mInfo:'Informações',mStatusOf:'Status oficial',mPrazoOf:'Prazo oficial',mFimOf:'Data fim (prazo)',mResp:'Responsável',mPlat:'Plataforma',mRef:'Tipo',mMes:'Mês',mComent:'Comentário (planilha)',mTexto:'Texto da ação',
     mHist:'Histórico de datas',mThread:'Comentários',mAddComment:'Escreva um comentário...',mSend:'Comentar',
     mSuggest:'Sugerir alteração',mNewDate:'Nova data sugerida',mNewStatus:'Status sugerido',mNewPct:'% conclusão sugerido',mAddOut:'Adicionar à caixa de envio',
     mAdminEdit:'Editar oficial (só você)',mSaveOf:'Salvar alteração',mPending:'Sugestões pendentes de validação',mApprove:'Validar e aplicar',mReject:'Descartar',
-    stConcluir:'Concluído',stCancel:'Cancelado',mRecvDate:'Data de recebimento',noComments:'Sem comentários ainda.',noHist:'Só a data original.',
+    stConcluir:'Concluído',stCancel:'Cancelado',stStandBy:'Stand By',mRecvDate:'Data de recebimento',noComments:'Sem comentários ainda.',noHist:'Só a data original.',
+    editProj:'🛠 Editar projeto',delProj:'🗑 Excluir projeto',confirmDelProj:'Excluir este projeto? Ele e todas as {n} atividades saem de painéis, KPIs e e-mails (dá para restaurar depois com o filtro "🗑 Excluídos").',
     outTitle:'anotação(ões) para enviar',outSend:'✉ Enviar por e-mail',outCopy:'📋 Copiar p/ enviar',outClear:'Limpar',
     save:'💾 Salvar tudo',savePub:'💾 Salvar/Publicar',saveConnect:'📂 Onde salvar',importSug:'📥 Importar sugestões',showDel:'🗑 Excluídos',
     addAction:'➕ Incluir ação',createTitle:'Incluir nova ação',fType:'Tipo de ação',tEnt:'📦 Entregável',tProj:'🚀 Atividade de projeto',
@@ -286,22 +323,36 @@ const T = {
     savedOk:'Salvo na base do sistema.',outAdded:'Anotação adicionada à caixa de envio.',
     helpView:'📩 <b>Para solicitar alterações (datas, status, %) ou deixar comentários, envie um e-mail para avaliação</b> — o Jonathan analisa e atualiza o painel. Você também pode dar <b>dois cliques</b> numa atividade para ver os detalhes e o histórico.',
     helpAdmin:'Dê <b>dois cliques</b> numa atividade para abrir e editar <b>texto, responsável, plataforma, prazo, status (inclui Cancelado) e %</b>. O <b>botão Salvar fica dentro da tela</b>. Para <b>excluir</b>, use o 🗑 no fim da linha (ou dentro da atividade). A base oficial é <b>data\\board.overlay.json</b>; o botão “Onde salvar” só dá ao navegador a permissão (uma vez) para gravar nesse arquivo — nada a ver com o Excel, que é só a semente.',
+    fNovoProj:'➕ Novo projeto…',fNovoMarco:'➕ Novo marco…',fSemMarco:'— sem marco —',fMarcoEtapa:'Marco / Etapa',fSelProj:'— selecione o projeto —',
+    fProjNome:'Nome do projeto',fProjResp:'Responsável do projeto',fProjDescr:'Descrição',fMarcoNomeNovo:'Nome do novo marco',fAtivOpc:'(opcional ao criar projeto novo)',
+    thMarcoEtapa:'Marco / Etapa',btnMarco:'➕ Marco',btnExcel:'📤 Excel',btnModelo:'📄 Modelo Excel em branco',semMarco:'(Sem marco)',semAtiv:'— sem atividades —',
+    renMarco:'Novo nome do marco:',delMarcoBlocked:'Este marco ainda tem atividades ativas. Mova ou exclua as atividades antes de excluir o marco.',delMarcoConfirm:'Excluir este marco?',
+    promptMarco:'Nome do novo marco / etapa:',marcoDup:'Já existe um marco com esse nome neste projeto.',saveFirst:'Salve as alterações (💾) antes de exportar o Excel.',
+    reqProj:'Selecione o projeto.',reqProjNome:'Informe o nome do projeto.',reqMarcoNome:'Informe o nome do novo marco.',projCreated:'Projeto criado!',marcoCreated:'Marco criado!',
+    tipAddAtiv:'Nova atividade neste marco',tipRenMarco:'Renomear marco',tipDelMarco:'Excluir marco',nAtivs:'ativ.',fIniAtiv:'Data início',
+    impTitle:'📥 Importações de Excel',impDupPending:'Já existe um lote pendente deste projeto. Descartar o anterior e criar novo?',impBtn:'📥 Importar Excel',impNothing:'Nada mudou: o arquivo é igual ao que já está no sistema.',impApply:'▶ Aplicar aprovadas',impApproveAll:'✔ Aprovar todas',impRejectAll:'✕ Recusar todas',impDiscard:'🗑 Descartar lote',
+    impMissing:'Não veio no arquivo (só informativo)',impNew:'NOVA',impNewMarco:'Novo marco',impNewProj:'Novo projeto',impComment:'Comentário',impEmpty:'Nenhuma importação pendente. Use “📥 Importar Excel” com o arquivo devolvido.',
+    impFile:'Arquivo',impProj:'Projeto',impCol:'Campo',impCur:'Valor atual',impProp:'Proposto (editável)',impPend:'pendentes',impDone:'aplicado',impApplied:'aplicadas',impConfirm:'Aplicar {n} alteração(ões) aprovada(s) ao projeto?',impDiscConfirm:'Descartar este lote de importação?',
+    impNoneAppr:'Nenhuma alteração aprovada para aplicar.',impNeedProj:'O novo projeto foi recusado: itens dependentes não foram aplicados.',impBadHdr:'Cabeçalho inesperado na linha 7 da aba PROJETO. Esperado: ',impNoSheet:'Aba PROJETO não encontrada no arquivo.',impReadErr:'Não consegui ler o arquivo .xlsx: ',impNoProj:'Arquivo sem nome de projeto (B1) nem ID (B5).',impWarn:'Avisos da leitura:',
+    impF_ativ:'Atividade',impF_resp:'Responsável',impF_marco:'Marco / Etapa',impF_inicio:'Data início',impF_limite:'Data fim',impF_fim:'Data fim',impF_pct:'% Conclusão',impF_status:'Status',impF_comment:'Comentário',impF_nome:'Nome',impF_plat:'Plataforma',impF_descricao:'Descrição',
     byBase:'Planilha',adminAuthor:'Jonathan'},
   es:{sub:'Revenue Management · Entregables, Proyectos y Rutinas',viewSub:'Mi panel de actividades',consolTitle:'Visión consolidada del equipo',
     plat:'Plataforma',resp:'Responsable: todos',status:'Estado: todos',mes:'Mes: todos',busca:'Buscar entrega, comentario...',
     tabVisao:'📊 Visión General',tabEnt:'📦 Entregables',tabProj:'🚀 Proyectos',tabRot:'🔁 Rutinas',tabTime:'👥 Equipo',tabMapa:'🗺️ Mapa Regional',tabSug:'📥 Sugerencias',
     kAtr:'Atrasadas',kHoje:'Vencen hoy',k7:'Próximos 7 días',kSp:'Sin fecha',kCon:'Concluidas en el mes',kOn:'A tiempo (mes)',kProj:'Proyectos activos',kPend:'Sugerencias pendientes',
     s1:'1 · Actividades atrasadas',s2:'2 · Vencen hoy',s3:'3 · Próximas entregas — 7 días',s4:'4 · Ítems sin fecha clara',s5:'5 · Horizonte — próximos 30 días',
+    tagEnt:'ENTREGABLE',tagAct:'PROYECTO',
     ok1:'✔ Ninguna actividad atrasada.',ok2:'Nada vence hoy.',ok3:'Ninguna entrega en los próximos 7 días.',ok4:'Ningún ítem sin fecha.',ok5:'Nada en el horizonte de 30 días.',
     projRisco:'🚀 Proyectos en atención',cargaR:'Carga por responsable (activos)',cargaP:'Carga por plataforma (activos)',
     thNum:'Nº',thResp:'Responsable',thPlat:'Plataforma',thEnt:'Entrega',thRef:'Tipo',thPrazo:'Fecha',thReceb:'Recibido',thStatus:'Estado',thSit:'Situación',thMes:'Mes',thAcoes:'',
     thProj:'Proyecto',thPer:'Período',thReal:'% Real',thPrev:'% Prev.',thFase:'Fase',thAtiv:'Actividad',thMarco:'Hito',
     allEnt:'Todos los entregables',allProj:'Proyectos',rotHdr:'Rutinas',
-    mInfo:'Información',mStatusOf:'Estado oficial',mPrazoOf:'Fecha oficial',mResp:'Responsable',mPlat:'Plataforma',mRef:'Tipo',mMes:'Mes',mComent:'Comentario (planilla)',mTexto:'Texto de la acción',
+    mInfo:'Información',mStatusOf:'Estado oficial',mPrazoOf:'Fecha oficial',mFimOf:'Fecha fin (plazo)',mResp:'Responsable',mPlat:'Plataforma',mRef:'Tipo',mMes:'Mes',mComent:'Comentario (planilla)',mTexto:'Texto de la acción',
     mHist:'Historial de fechas',mThread:'Comentarios',mAddComment:'Escribe un comentario...',mSend:'Comentar',
     mSuggest:'Sugerir cambio',mNewDate:'Nueva fecha sugerida',mNewStatus:'Estado sugerido',mNewPct:'% avance sugerido',mAddOut:'Agregar al buzón de envío',
     mAdminEdit:'Editar oficial',mSaveOf:'Guardar cambio',mPending:'Sugerencias pendientes',mApprove:'Validar y aplicar',mReject:'Descartar',
-    stConcluir:'Concluido',stCancel:'Cancelado',mRecvDate:'Fecha de recepción',noComments:'Sin comentarios aún.',noHist:'Solo la fecha original.',
+    stConcluir:'Concluido',stCancel:'Cancelado',stStandBy:'Stand By',mRecvDate:'Fecha de recepción',noComments:'Sin comentarios aún.',noHist:'Solo la fecha original.',
+    editProj:'🛠 Editar proyecto',delProj:'🗑 Eliminar proyecto',confirmDelProj:'¿Eliminar este proyecto? Él y las {n} actividades desaparecen de paneles, KPIs y correos (se puede restaurar con el filtro "🗑 Eliminados").',
     outTitle:'nota(s) para enviar',outSend:'✉ Enviar por e-mail',outCopy:'📋 Copiar p/ enviar',outClear:'Limpiar',
     save:'💾 Guardar',savePub:'💾 Guardar/Publicar',saveConnect:'📂 Dónde guardar',importSug:'📥 Importar',showDel:'🗑 Eliminados',
     addAction:'➕ Agregar acción',createTitle:'Agregar nueva acción',fType:'Tipo de acción',tEnt:'📦 Entregable',tProj:'🚀 Actividad de proyecto',
@@ -310,20 +361,34 @@ const T = {
     del:'🗑 Eliminar acción',restore:'♻ Restaurar',confirmDel:'¿Eliminar esta acción?',
     savedOk:'Guardado.',outAdded:'Nota agregada al buzón de envío.',
     helpView:'📩 <b>Para solicitar cambios (fechas, estado, avance) o dejar comentarios, envía un correo para evaluación</b> — Jonathan lo analiza y actualiza el panel. También puedes hacer <b>doble clic</b> en una actividad para ver los detalles y el historial.',
-    helpAdmin:'',byBase:'Planilla',adminAuthor:'Jonathan'}
+    helpAdmin:'',
+    fNovoProj:'➕ Nuevo proyecto…',fNovoMarco:'➕ Nuevo hito…',fSemMarco:'— sin hito —',fMarcoEtapa:'Hito / Etapa',fSelProj:'— selecciona el proyecto —',
+    fProjNome:'Nombre del proyecto',fProjResp:'Responsable del proyecto',fProjDescr:'Descripción',fMarcoNomeNovo:'Nombre del nuevo hito',fAtivOpc:'(opcional al crear un proyecto nuevo)',
+    thMarcoEtapa:'Hito / Etapa',btnMarco:'➕ Hito',btnExcel:'📤 Excel',btnModelo:'📄 Plantilla Excel en blanco',semMarco:'(Sin hito)',semAtiv:'— sin actividades —',
+    renMarco:'Nuevo nombre del hito:',delMarcoBlocked:'Este hito aún tiene actividades activas. Mueve o elimina las actividades antes de eliminar el hito.',delMarcoConfirm:'¿Eliminar este hito?',
+    promptMarco:'Nombre del nuevo hito / etapa:',marcoDup:'Ya existe un hito con ese nombre en este proyecto.',saveFirst:'Guarda los cambios (💾) antes de exportar el Excel.',
+    reqProj:'Selecciona el proyecto.',reqProjNome:'Indica el nombre del proyecto.',reqMarcoNome:'Indica el nombre del nuevo hito.',projCreated:'¡Proyecto creado!',marcoCreated:'¡Hito creado!',
+    tipAddAtiv:'Nueva actividad en este hito',tipRenMarco:'Renombrar hito',tipDelMarco:'Eliminar hito',nAtivs:'activ.',fIniAtiv:'Fecha inicio',
+    impTitle:'📥 Importaciones de Excel',impDupPending:'Ya existe un lote pendiente de este proyecto. ¿Descartar el anterior y crear uno nuevo?',impBtn:'📥 Importar Excel',impNothing:'Nada cambió: el archivo es igual a lo que ya está en el sistema.',impApply:'▶ Aplicar aprobadas',impApproveAll:'✔ Aprobar todas',impRejectAll:'✕ Rechazar todas',impDiscard:'🗑 Descartar lote',
+    impMissing:'No vino en el archivo (solo informativo)',impNew:'NUEVA',impNewMarco:'Nuevo hito',impNewProj:'Nuevo proyecto',impComment:'Comentario',impEmpty:'Ninguna importación pendiente. Usa “📥 Importar Excel” con el archivo devuelto.',
+    impFile:'Archivo',impProj:'Proyecto',impCol:'Campo',impCur:'Valor actual',impProp:'Propuesto (editable)',impPend:'pendientes',impDone:'aplicado',impApplied:'aplicadas',impConfirm:'¿Aplicar {n} cambio(s) aprobado(s) al proyecto?',impDiscConfirm:'¿Descartar este lote de importación?',
+    impNoneAppr:'Ningún cambio aprobado para aplicar.',impNeedProj:'El proyecto nuevo fue rechazado: los ítems dependientes no se aplicaron.',impBadHdr:'Encabezado inesperado en la fila 7 de la hoja PROJETO. Esperado: ',impNoSheet:'Hoja PROJETO no encontrada en el archivo.',impReadErr:'No pude leer el archivo .xlsx: ',impNoProj:'Archivo sin nombre de proyecto (B1) ni ID (B5).',impWarn:'Avisos de la lectura:',
+    impF_ativ:'Actividad',impF_resp:'Responsable',impF_marco:'Hito / Etapa',impF_inicio:'Fecha inicio',impF_limite:'Fecha fin',impF_fim:'Fecha fin',impF_pct:'% Avance',impF_status:'Estado',impF_comment:'Comentario',impF_nome:'Nombre',impF_plat:'Plataforma',impF_descricao:'Descripción',
+    byBase:'Planilla',adminAuthor:'Jonathan'}
 };
 const t = T[LANG] || T.pt;
 const PLATS=['TODAS','ANDINA','SOUTH CONE','MEXICO & CARIBBEAN','CORP'];
 const PLATOPTS=['CORP','ANDINA','SOUTH CONE','MEXICO & CARIBBEAN'];
 const PCLS={'ANDINA':'p-ANDINA','SOUTH CONE':'p-SOUTHCONE','MEXICO & CARIBBEAN':'p-MEX','CORP':'p-CORP'};
 const AVCOLORS=['#2f6fd0','#1e9e6a','#c8862c','#7a5fc0','#d04a58','#2ba8a0','#b0553a','#5b7fd4'];
-const ST_LABEL={pt:{'Atrasado':'ATRASADO','Hoje':'VENCE HOJE','Pendente':'PENDENTE','Sem prazo':'SEM PRAZO','Concluído':'CONCLUÍDO','Em andamento':'EM ANDAMENTO','Abaixo do plano':'ABAIXO DO PLANO','Cancelado':'CANCELADO'},
-  es:{'Atrasado':'ATRASADO','Hoje':'VENCE HOY','Pendente':'PENDIENTE','Sem prazo':'SIN FECHA','Concluído':'CONCLUIDO','Em andamento':'EN CURSO','Abaixo do plano':'BAJO LO PLANIFICADO','Cancelado':'CANCELADO'}};
+const ST_LABEL={pt:{'Atrasado':'ATRASADO','Hoje':'VENCE HOJE','Pendente':'PENDENTE','Sem prazo':'SEM PRAZO','Concluído':'CONCLUÍDO','Em andamento':'EM ANDAMENTO','Abaixo do plano':'ABAIXO DO PLANO','Cancelado':'CANCELADO','Stand By':'STAND BY'},
+  es:{'Atrasado':'ATRASADO','Hoje':'VENCE HOY','Pendente':'PENDIENTE','Sem prazo':'SIN FECHA','Concluído':'CONCLUIDO','Em andamento':'EN CURSO','Abaixo do plano':'BAJO LO PLANIFICADO','Cancelado':'CANCELADO','Stand By':'EN PAUSA'}};
 function stTxt(st){return (ST_LABEL[LANG]&&ST_LABEL[LANG][st])||st;}
 const state={tab:'visao',plat:'TODAS',resp:'',status:'',mes:'',busca:'',quick:'',showDeleted:false};
 let dirty=false;
 /* itens alterados NESTA sessão (para o merge seguro ao salvar) */
 const sessionTouched=new Set(),sessionNewIds=new Set();
+const importTouched=new Set(); /* ids de lotes de importação Excel alterados nesta sessão (A3 chama importTouched.add(id)) */
 const mapTouched=new Set();let mapQ='';let mapSaveTimer=null;
 let onlinePending=0;let onlineSuggById={};let _reconToast=false;
 let baseLoaded=false;
@@ -349,7 +414,7 @@ function ovLookup(id){return DATA.overlay.items[id]||null;}
 function ovItem(id){let it=DATA.overlay.items[id];if(!it){it={official:{},dateHistory:[],comments:[],suggestions:[]};DATA.overlay.items[id]=it;}
   it.official=it.official||{};it.dateHistory=A(it.dateHistory);it.comments=A(it.comments);it.suggestions=A(it.suggestions);return it;}
 function ovOf(id,f){if(MODE!=='admin')return null;const ov=ovLookup(id);return (ov&&ov.official&&ov.official[f]!=null&&ov.official[f]!=='')?ov.official[f]:null;}
-function pendingCount(){let n=0;for(const k in DATA.overlay.items){n+=A(DATA.overlay.items[k].suggestions).filter(x=>!x.state||x.state==='pending').length;}return n+(onlinePending||0);}
+function pendingCount(){let n=0;for(const k in DATA.overlay.items){n+=A(DATA.overlay.items[k].suggestions).filter(x=>!x.state||x.state==='pending').length;}return n+(onlinePending||0)+impPendingN();}
 
 /* ---------- valores efetivos (overlay > base) ---------- */
 function entMaterial(e){return ovOf(e.id,'material')||e.material;}
@@ -360,7 +425,71 @@ function entDeleted(e){return MODE==='admin'?!!ovOf(e.id,'deleted'):!!e.deleted;
 function actAtiv(a){return ovOf(a.id,'ativ')||a.ativ;}
 function actResp(a){return ovOf(a.id,'resp')||a.resp;}
 function actCurto(a){const r=ovOf(a.id,'resp');return r?shortNameJS(r):a.curto;}
-function actDeleted(a){return MODE==='admin'?!!ovOf(a.id,'deleted'):!!a.deleted;}
+function actDeleted(a){
+  if(MODE!=='admin')return !!a.deleted;
+  if(!!ovOf(a.id,'deleted'))return true;
+  const p=PROJOF[a.id];
+  return (p&&projDeleted(p)&&actStatus(a)!=='Concluído')?true:false;
+}
+function actFim(a){if(MODE!=='admin')return a.fim;const ov=ovLookup(a.id),o=ov&&ov.official?ov.official:{};return o.limite||a.baseFim||a.fim||null;}
+function actIni(a){if(MODE!=='admin')return a.inicio||null;return ovOf(a.id,'inicio')||a.inicio||null;}
+function actPrev(a){if(MODE!=='admin')return a.prev;const ini=actIni(a),fim=actFim(a);if(!ini||!fim)return a.prev||0;
+  const i=new Date(ini+'T00:00:00'),f=new Date(fim+'T00:00:00'),hh=new Date(DATA.hoje+'T00:00:00');
+  if(f<i)return a.prev||0;const p=((hh-i)/86400000+1)/((f-i)/86400000+1);return Math.max(0,Math.min(1,p));}
+
+/* ---------- v4.0 Projeto → Marco → Atividade ----------
+   Marcos de um projeto (qualquer id: P…, NP_…, NPJ…) vivem em overlay.items[projId].official.marcos
+   [{id:'MK…',nome,ordem,deleted}]. A atividade liga ao marco por official.marcoId (ou ni.marcoId) e
+   official.fase guarda o NOME do marco (compatível com e-mail/painéis view). '__none__' em marcoId = "sem marco"
+   explícito (para sobrepor um marcoId que veio da base). Em view os acessores devolvem o dado do gerador. */
+const SEMK='(Sem marco)',SEM_ID='__sem__';
+function nk(s){return String(s==null?'':s).trim().toLowerCase();}
+function escA(s){return esc(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function jq(s){return encodeURIComponent(String(s==null?'':s)).replace(/'/g,'%27');}
+function actFase(a){return (MODE==='admin'?(ovOf(a.id,'fase')||a.fase):a.fase)||'';}
+function actMarcoId(a){const v=(MODE==='admin')?(ovOf(a.id,'marcoId')||a.marcoId):a.marcoId;return (v&&v!=='__none__')?v:null;}
+function marcosRaw(p){let src;if(MODE==='admin'){const o=ovOf(p.id,'marcos');src=(o!=null)?A(o):A(p.marcos);}else src=A(p.marcos);
+  return src.filter(m=>m&&m.id&&!m.deleted).slice().sort((x,y)=>(+x.ordem||0)-(+y.ordem||0));}
+function marcosArr(pid){const it=ovItem(pid);if(!Array.isArray(it.official.marcos))it.official.marcos=A(it.official.marcos);return it.official.marcos;}
+function projNome(p){return (MODE==='admin'?ovOf(p.id,'nome'):null)||p.nome||'';}
+function projResp(p){return (MODE==='admin'?ovOf(p.id,'resp'):null)||p.resp||'';}
+function projCurto(p){const r=(MODE==='admin')?ovOf(p.id,'resp'):null;return r?shortNameJS(r):(p.curto||'');}
+function projPlat(p){return (MODE==='admin'?ovOf(p.id,'plat'):null)||p.plat||'CORP';}
+function projDescr(p){return (MODE==='admin'?ovOf(p.id,'descricao'):null)||p.descricao||'';}
+function projIni(p){return (MODE==='admin'?ovOf(p.id,'inicio'):null)||p.inicio||null;}
+/* Grupos (marcos) do projeto: explícitos por ordem + implícitos pelo nome da fase + "(Sem marco)" no fim.
+   g = {id,nome,ordem,explicit,acts[]} — acts inclui as excluídas (os rollups filtram). */
+function projMarcos(p){
+  const ex=marcosRaw(p).map(m=>({id:m.id,nome:m.nome||'',ordem:+m.ordem||0,explicit:true,acts:[]}));
+  const byId={},byName={};ex.forEach(g=>{byId[g.id]=g;if(!byName[nk(g.nome)])byName[nk(g.nome)]=g;});
+  const imp=[],impBy={};let sem=null;
+  A(p.atividades).forEach(a=>{
+    const mid=actMarcoId(a);let g=mid?byId[mid]:null;
+    if(!g){const fs=String(actFase(a)||'').trim();
+      if(!fs||nk(fs)===nk(SEMK)){g=sem||(sem={id:SEM_ID,nome:SEMK,ordem:99999,explicit:false,acts:[]});}
+      else if(byName[nk(fs)])g=byName[nk(fs)];
+      else{g=impBy[nk(fs)];if(!g){g={id:'fase:'+fs,nome:fs,ordem:50000+imp.length,explicit:false,acts:[]};impBy[nk(fs)]=g;imp.push(g);}}}
+    g.acts.push(a);});
+  return (MODE==='admin'?ex:ex.filter(g=>g.acts.length)).concat(imp,sem?[sem]:[]);}
+function actMarcoNome(a){const p=PROJOF[a.id];
+  const mid=actMarcoId(a);
+  if(mid&&p){const m=marcosRaw(p).find(x=>x.id===mid);if(m&&m.nome)return m.nome;}
+  return actFase(a)||SEMK;}
+/* v4.0 C1: cancelada nunca entra no %; atividade com status efetivo Concluído conta 1.0 (rollPct) — mesma regra do gerador.
+   Em view actStatus não vê a overlay: usa o status já calculado pelo gerador (a.st). */
+function actCancel(a){return actStatus(a)==='Cancelado'||(MODE!=='admin'&&a.st==='Cancelado');}
+function rollPct(a){if(MODE==='admin'){if(actStatus(a)==='Concluído')return 1;}else if(a.st==='Concluído')return 1;return effPct(a);}
+function marcoActs(m){return m.acts.filter(a=>a.ativ&&!actDeleted(a)&&!actCancel(a));}
+function marcoPct(m){const L=marcoActs(m);if(!L.length)return 0;return L.reduce((s,a)=>s+rollPct(a),0)/L.length;}
+function marcoIni(m){let mn=null;marcoActs(m).forEach(a=>{const i=actIni(a);if(i&&(!mn||i<mn))mn=i;});return mn;}
+function marcoFim(m){let mx=null;marcoActs(m).forEach(a=>{const f=actFim(a);if(f&&(!mx||f>mx))mx=f;});return mx;}
+function marcoPrev(m){const ini=marcoIni(m),fim=marcoFim(m);if(!ini||!fim)return 0;
+  const i=new Date(ini+'T00:00:00'),f=new Date(fim+'T00:00:00'),hh=new Date(DATA.hoje+'T00:00:00');
+  if(f<i)return 0;const x=((hh-i)/86400000+1)/((f-i)/86400000+1);return Math.max(0,Math.min(1,x));}
+function marcoStatus(m){const L=marcoActs(m);
+  if(!L.length)return (m.acts.some(a=>a.ativ&&!actDeleted(a)))?'Cancelado':'Pendente';
+  const pct=marcoPct(m),fim=marcoFim(m),prev=marcoPrev(m);
+  if(pct>=0.999)return 'Concluído';if(fim&&daysTo(fim)<0)return 'Atrasado';if(pct<prev-0.001&&prev>0)return 'Abaixo do plano';if(pct>0)return 'Em andamento';return 'Pendente';}
 
 /* ---------- rotinas (editáveis no sistema) ---------- */
 function rotAtiv(r){return ovOf(r.id,'ativ')||r.ativ;}
@@ -393,8 +522,34 @@ function effPct(a){if(MODE!=='admin')return a.pct;const ov=ovLookup(a.id);return
 function actStatus(a){const ov=ovLookup(a.id),o=ov&&ov.official?ov.official:{};
   if(/cancel/i.test(o.status||''))return 'Cancelado';
   if(/conclu/i.test(o.status||''))return 'Concluído';
-  const pct=effPct(a),prev=a.prev,fim=a.fim;
+  const pct=effPct(a),prev=actPrev(a),fim=actFim(a);
   if(pct>=0.999)return 'Concluído';if(fim&&daysTo(fim)<0)return 'Atrasado';if(pct<prev-0.001&&prev>0)return 'Abaixo do plano';if(pct>0)return 'Em andamento';return 'Pendente';}
+
+/* ---------- atividade de projeto vista como "ação com prazo" (Visão Geral) ----------
+   actStatus() mistura data e progresso (Em andamento / Abaixo do plano) e não tem
+   Hoje / Sem prazo. Para cair nos mesmos grupos do entregável, classificamos pela
+   DATA (actFim), mantendo o progresso em .prog para exibir junto. */
+function allActs(){const out=[];A(DATA.projetos).forEach(p=>{A(p.atividades).forEach(a=>{if(a&&a.id)out.push(a);});});return out;}
+function notDeletedAct(){return allActs().filter(a=>!actDeleted(a));}
+function actPlat(a){const p=PROJOF[a.id];return p?projPlat(p):'CORP';}
+function actProjNome(a){const p=PROJOF[a.id];return p?projNome(p):'';}
+function actMes(a){const f=actFim(a);if(!f)return '';return new Date(f+'T00:00:00').toLocaleDateString('pt-BR',{month:'long'});}
+function effAct(a){
+  const prog=actStatus(a),fim=actFim(a);
+  const dias=fim?daysTo(fim):null;
+  /* projeto pai em Stand By/Cancelado vence a classificação da filha, desde que ela
+     mesma não esteja concluída (actStatus, o "próprio status" da aba Projetos, não muda). */
+  const p=PROJOF[a.id],pOv=p?projStatusOv(p):null;
+  if((pOv==='Stand By'||pOv==='Cancelado')&&prog!=='Concluído')return {limite:fim,st:pOv,dias:dias,prog:prog};
+  let st='Pendente';
+  if(prog==='Cancelado')st='Cancelado';
+  else if(prog==='Concluído')st='Concluído';
+  else if(!fim)st='Sem prazo';
+  else if(dias<0)st='Atrasado';
+  else if(dias===0)st='Hoje';
+  return {limite:fim,st:st,dias:dias,prog:prog};
+}
+function ativosAct(l){return l.filter(a=>{const s=effAct(a).st;return s!=='Concluído'&&s!=='Cancelado'&&s!=='Stand By';});}
 
 function stBadgeEnt(e){const ef=effEnt(e),st=ef.st;
   const late=(st==='Concluído'&&ef.recebTxt&&ef.limite&&ef.recebTxt>ef.limite);
@@ -404,9 +559,18 @@ function stBadgeEnt(e){const ef=effEnt(e),st=ef.st;
   if(st==='Hoje')return '<span class="badge b-hoje">● '+stTxt('Hoje')+'</span>';
   if(st==='Sem prazo')return '<span class="badge b-sp">'+stTxt('Sem prazo')+'</span>';
   return '<span class="badge b-pen">'+stTxt('Pendente')+'</span>';}
+function stBadgeSt(st){
+  if(st==='Concluído')return '<span class="badge b-ok">✔ '+stTxt('Concluído')+'</span>';
+  if(st==='Cancelado')return '<span class="badge b-canc">✕ '+stTxt('Cancelado')+'</span>';
+  if(st==='Stand By')return '<span class="badge b-sb">⏸ '+stTxt('Stand By')+'</span>';
+  if(st==='Atrasado')return '<span class="badge b-atr">⚠ '+stTxt('Atrasado')+'</span>';
+  if(st==='Hoje')return '<span class="badge b-hoje">● '+stTxt('Hoje')+'</span>';
+  if(st==='Sem prazo')return '<span class="badge b-sp">'+stTxt('Sem prazo')+'</span>';
+  return '<span class="badge b-pen">'+stTxt('Pendente')+'</span>';}
 function projBadge(st){
   if(st==='Concluído')return '<span class="badge b-ok">✔ '+stTxt('Concluído')+'</span>';
   if(st==='Cancelado')return '<span class="badge b-canc">✕ '+stTxt('Cancelado')+'</span>';
+  if(st==='Stand By')return '<span class="badge b-sb">⏸ '+stTxt('Stand By')+'</span>';
   if(st==='Atrasado')return '<span class="badge b-atr">⚠ '+stTxt('Atrasado')+'</span>';
   if(st==='Abaixo do plano')return '<span class="badge b-and">▼ '+stTxt('Abaixo do plano')+'</span>';
   if(st==='Em andamento')return '<span class="badge b-pen">▶ '+stTxt('Em andamento')+'</span>';
@@ -414,18 +578,19 @@ function projBadge(st){
 function platTag(p){return '<span class="plat '+(PCLS[p]||'p-CORP')+'">'+esc(p)+'</span>';}
 function markers(item){let h='';if(item.nComments)h+='<span class="pill c" title="comentários"></span>';
   if(MODE==='admin'){const ov=ovLookup(item.id);const p=ov?A(ov.suggestions).filter(x=>!x.state||x.state==='pending').length:0;if(p)h+='<span class="pill p" title="sugestões pendentes"></span>';}return h;}
-function diasCell(e){const ef=effEnt(e);
-  if(ef.st==='Concluído')return '<span class="okc">'+(ef.recebTxt?fmt(ef.recebTxt):'—')+'</span>';
+function diasCellEf(ef,doneTxt){
+  if(ef.st==='Concluído')return '<span class="okc">'+(doneTxt?fmt(doneTxt):'—')+'</span>';
   if(ef.st==='Cancelado')return '<span class="muted">—</span>';
   if(ef.dias==null)return '<span class="muted">—</span>';
   if(ef.dias<0)return '<span class="late">'+Math.abs(ef.dias)+'d</span>';
   if(ef.dias===0)return '<span class="soon">'+(LANG==='es'?'hoy':'hoje')+'</span>';
   if(ef.dias<=7)return '<span class="soon">'+(LANG==='es'?'en ':'em ')+ef.dias+'d</span>';
   return '<span class="muted">'+(LANG==='es'?'en ':'em ')+ef.dias+'d</span>';}
+function diasCell(e){const ef=effEnt(e);return diasCellEf(ef,ef.recebTxt);}
 
-const ENTBY={},ACTBY={},ROTBY={};
+const ENTBY={},ACTBY={},ROTBY={},PROJOF={},PROJBY={};
 A(DATA.entregaveis).forEach(e=>ENTBY[e.id]=e);
-A(DATA.projetos).forEach(p=>{p.atividades=A(p.atividades);p.atividades.forEach(a=>ACTBY[a.id]=a);});
+A(DATA.projetos).forEach(p=>{PROJBY[p.id]=p;p.atividades=A(p.atividades);p.atividades.forEach(a=>{ACTBY[a.id]=a;PROJOF[a.id]=p;});});
 A(DATA.rotinas).forEach(r=>{if(r.id)ROTBY[r.id]=r;});
 
 /* célula de ação (excluir/restaurar) — só admin */
@@ -449,39 +614,68 @@ function filtered(){let base=A(DATA.entregaveis).filter(e=>state.showDeleted?tru
     if(state.busca){const s=(entMaterial(e)+' '+(e.coment||'')+' '+entResp(e)).toLowerCase();if(!s.includes(state.busca.toLowerCase()))return false;}
     return true;});}
 function ativos(l){return l.filter(e=>{const s=effEnt(e).st;return s!=='Concluído'&&s!=='Cancelado';});}
+/* mesmo conjunto de filtros do entregável, aplicado à atividade de projeto.
+   plataforma vem do projeto pai (atividade não tem campo plat); mês vem do prazo. */
+function filteredActs(){let base=allActs().filter(a=>state.showDeleted?true:!actDeleted(a));
+  return base.filter(a=>{const ef=effAct(a);
+    if(state.plat!=='TODAS'&&actPlat(a)!==state.plat)return false;
+    if(state.resp&&actCurto(a)!==state.resp)return false;
+    if(state.status&&ef.st!==state.status)return false;
+    if(state.mes&&actMes(a)!==state.mes)return false;
+    if(state.quick==='7d'&&!(ef.st==='Pendente'&&ef.dias>=1&&ef.dias<=7))return false;
+    if(state.quick==='donemonth'||state.quick==='ontime')return false; /* KPIs só de entregáveis */
+    if(state.busca){const s=(actAtiv(a)+' '+(a.coment||'')+' '+actResp(a)+' '+actProjNome(a)).toLowerCase();if(!s.includes(state.busca.toLowerCase()))return false;}
+    return true;});}
 
 function rowEnt(e){const ef=effEnt(e);const del=entDeleted(e);
   return '<tr class="clik'+(del?' del':'')+'" title="2 cliques para abrir" ondblclick="openEnt(\''+e.id+'\')" onclick="clickOpen(event,\'ent\',\''+e.id+'\')"><td class="muted numc" data-label="'+t.thNum+'">'+esc(e.n)+'</td>'
     +'<td class="nowrap" data-label="'+t.thResp+'"><b>'+esc(entCurto(e))+'</b></td><td data-label="'+t.thPlat+'">'+platTag(entPlat(e))+'</td>'
-    +'<td class="entcell" data-label="'+t.thEnt+'">'+esc(entMaterial(e))+markers(e)+((e.coment)?'<span class="sub">💬 '+esc(e.coment)+'</span>':'')+'</td>'
+    +'<td class="entcell" data-label="'+t.thEnt+'"><span class="ktag k-ent">'+t.tagEnt+'</span>'+esc(entMaterial(e))+markers(e)+((e.coment)?'<span class="sub">💬 '+esc(e.coment)+'</span>':'')+'</td>'
     +'<td class="nowrap" data-label="'+t.thPrazo+'">'+fmt(ef.limite)+'</td><td data-label="'+t.thStatus+'">'+stBadgeEnt(e)+'</td><td class="nowrap" data-label="'+t.thSit+'">'+diasCell(e)+'</td>'+tdDel(e.id,'ent')+'</tr>';}
+/* atividade de projeto renderizada nas MESMAS colunas do entregável */
+function rowAct(a){const ef=effAct(a);const del=actDeleted(a);const pc=Math.round(effPct(a)*100);
+  return '<tr class="clik'+(del?' del':'')+'" title="2 cliques para abrir" ondblclick="openAct(\''+a.id+'\')" onclick="clickOpen(event,\'act\',\''+a.id+'\')"><td class="muted numc" data-label="'+t.thNum+'">'+esc(a.num)+'</td>'
+    +'<td class="nowrap" data-label="'+t.thResp+'"><b>'+esc(actCurto(a))+'</b></td><td data-label="'+t.thPlat+'">'+platTag(actPlat(a))+'</td>'
+    +'<td class="entcell" data-label="'+t.thEnt+'"><span class="ktag k-act">'+t.tagAct+'</span>'+esc(actAtiv(a))+markers(a)
+    +'<span class="sub">🚀 '+esc(actProjNome(a))+' · '+pc+'%'+((a.coment)?' · 💬 '+esc(a.coment):'')+'</span></td>'
+    +'<td class="nowrap" data-label="'+t.thPrazo+'">'+fmt(ef.limite)+'</td><td data-label="'+t.thStatus+'">'+stBadgeSt(ef.st)+'</td><td class="nowrap" data-label="'+t.thSit+'">'+diasCellEf(ef)+'</td>'+tdDel(a.id,'act')+'</tr>';}
+/* itens = wrappers {k:'ent'|'act', o:item, ef:efetivo} — tabela única dos dois tipos */
 function tabela(itens,vazio){if(!itens.length)return '<div class="empty">'+(vazio||'—')+'</div>';
   let h='<table class="enttbl"><thead><tr><th>'+t.thNum+'</th><th>'+t.thResp+'</th><th>'+t.thPlat+'</th><th>'+t.thEnt+'</th><th>'+t.thPrazo+'</th><th>'+t.thStatus+'</th><th>'+t.thSit+'</th>'+thDel()+'</tr></thead><tbody>';
-  for(const e of itens)h+=rowEnt(e);return h+'</tbody></table>';}
+  for(const x of itens)h+=(x&&x.k)?(x.k==='act'?rowAct(x.o):rowEnt(x.o)):rowEnt(x);
+  return h+'</tbody></table>';}
 function secao(titulo,cor,itens,vazio){return '<div class="sec"><header style="--c:'+cor+'"><span class="dot" style="--c:'+cor+'"></span><h2>'+titulo+'</h2><span class="n">'+itens.length+'</span></header>'+tabela(itens,vazio)+'</div>';}
 
 function renderVisao(){
-  const f=filtered(),act=ativos(f);
-  const g=st=>act.filter(e=>effEnt(e).st===st);
-  const atr=g('Atrasado').sort((a,b)=>effEnt(a).dias-effEnt(b).dias);
+  /* entregáveis + atividades de projeto na MESMA lista, agrupados por prazo */
+  const wE=ativos(filtered()).map(e=>({k:'ent',o:e,ef:effEnt(e)}));
+  const wA=ativosAct(filteredActs()).map(a=>({k:'act',o:a,ef:effAct(a)}));
+  const act=wE.concat(wA);
+  const srt=(a,b)=>{const x=a.ef.dias,y=b.ef.dias;if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return x-y;};
+  const g=st=>act.filter(x=>x.ef.st===st).sort(srt);
+  const atr=g('Atrasado');
   const hj=g('Hoje');
-  const p7=act.filter(e=>{const x=effEnt(e);return x.st==='Pendente'&&x.dias>=1&&x.dias<=7;});
+  const p7=act.filter(x=>x.ef.st==='Pendente'&&x.ef.dias>=1&&x.ef.dias<=7).sort(srt);
   const sp=g('Sem prazo');
-  const p30=act.filter(e=>{const x=effEnt(e);return x.st==='Pendente'&&x.dias>=8&&x.dias<=30;});
+  const p30=act.filter(x=>x.ef.st==='Pendente'&&x.ef.dias>=8&&x.ef.dias<=30).sort(srt);
   let h='';
   h+=secao(t.s1,'var(--red)',atr,t.ok1)+secao(t.s2,'var(--amber)',hj,t.ok2)+secao(t.s3,'var(--blue)',p7,t.ok3)+secao(t.s4,'var(--gray)',sp,t.ok4)+secao(t.s5,'var(--purple)',p30,t.ok5);
-  const pr=A(DATA.projetos).filter(p=>{const s=projConsolStatus(p);return s==='Atrasado'||s==='Abaixo do plano';});
+  const pr=A(DATA.projetos).filter(p=>{if(projDeleted(p))return false;const s=projConsolStatus(p);return s==='Atrasado'||s==='Abaixo do plano';});
   if(pr.length){h+='<div class="sec"><header style="--c:var(--red)"><span class="dot" style="--c:var(--red)"></span><h2>'+t.projRisco+'</h2><span class="n">'+pr.length+'</span></header><table><thead><tr><th>'+t.thProj+'</th><th>'+t.thResp+'</th><th>'+t.thPer+'</th><th>'+t.thReal+'</th><th>'+t.thPrev+'</th><th>'+t.thStatus+'</th></tr></thead><tbody>';
-    for(const p of pr){const pc=projConsolPct(p);h+='<tr class="clik" ondblclick="setTab(\'proj\')" onclick="setTab(\'proj\')"><td><b>'+esc(p.nome)+'</b></td><td>'+esc(p.curto)+'</td><td class="nowrap">'+fmt(p.inicio)+' → '+fmt(p.fim)+'</td><td><b>'+Math.round(pc*100)+'%</b></td><td class="muted">'+Math.round(p.prev*100)+'%</td><td>'+projBadge(projConsolStatus(p))+'</td></tr>';}
+    for(const p of pr){const pc=projConsolPct(p);h+='<tr class="clik" ondblclick="setTab(\'proj\')" onclick="setTab(\'proj\')"><td><b>'+esc(projNome(p))+'</b></td><td>'+esc(projCurto(p))+'</td><td class="nowrap">'+fmt(projConsolIni(p))+' → '+fmt(projConsolFim(p))+'</td><td><b>'+Math.round(pc*100)+'%</b></td><td class="muted">'+Math.round(projConsolPrev(p)*100)+'%</td><td>'+projBadge(projConsolStatus(p))+'</td></tr>';}
     h+='</tbody></table></div>';}
   if(MODE==='admin'){
-    const vis=notDeletedEnt();
+    /* carga = entregáveis + atividades (mesma base da lista acima, sem filtros) */
+    const vis=ativos(notDeletedEnt()).map(e=>({curto:entCurto(e),plat:entPlat(e),ef:effEnt(e)}))
+      .concat(ativosAct(notDeletedAct()).map(a=>({curto:actCurto(a),plat:actPlat(a),ef:effAct(a)})));
+    const cel=(L,st)=>L.filter(x=>x.ef.st===st).length;
+    const cel7=L=>L.filter(x=>x.ef.st==='Pendente'&&x.ef.dias>=1&&x.ef.dias<=7).length;
     h+='<div class="grid2"><div class="sec"><header><h2>'+t.cargaR+'</h2></header><table><thead><tr><th>'+t.thResp+'</th><th>'+t.kAtr+'</th><th>'+t.kHoje+'</th><th>7d</th><th>Total</th></tr></thead><tbody>';
-    const byR={};ativos(vis).forEach(e=>{const c=entCurto(e);(byR[c]=byR[c]||[]).push(e);});
-    Object.keys(byR).sort((a,b)=>byR[b].length-byR[a].length).forEach(r=>{const L=byR[r];const na=L.filter(e=>effEnt(e).st==='Atrasado').length;h+='<tr><td><b>'+esc(r)+'</b></td><td>'+(na?'<span class="late">'+na+'</span>':'<span class="muted">0</span>')+'</td><td>'+(L.filter(e=>effEnt(e).st==='Hoje').length||'<span class="muted">0</span>')+'</td><td>'+(L.filter(e=>{const x=effEnt(e);return x.st==="Pendente"&&x.dias>=1&&x.dias<=7;}).length||'<span class="muted">0</span>')+'</td><td><b>'+L.length+'</b></td></tr>';});
+    const byR={};vis.forEach(x=>{(byR[x.curto]=byR[x.curto]||[]).push(x);});
+    Object.keys(byR).sort((a,b)=>byR[b].length-byR[a].length).forEach(r=>{const L=byR[r];const na=cel(L,'Atrasado');h+='<tr><td><b>'+esc(r)+'</b></td><td>'+(na?'<span class="late">'+na+'</span>':'<span class="muted">0</span>')+'</td><td>'+(cel(L,'Hoje')||'<span class="muted">0</span>')+'</td><td>'+(cel7(L)||'<span class="muted">0</span>')+'</td><td><b>'+L.length+'</b></td></tr>';});
     h+='</tbody></table></div><div class="sec"><header><h2>'+t.cargaP+'</h2></header><table><thead><tr><th>'+t.thPlat+'</th><th>'+t.kAtr+'</th><th>'+t.kHoje+'</th><th>7d</th><th>Total</th></tr></thead><tbody>';
-    const byP={};ativos(vis).forEach(e=>{const pl=entPlat(e);(byP[pl]=byP[pl]||[]).push(e);});
-    ['ANDINA','SOUTH CONE','MEXICO & CARIBBEAN','CORP'].forEach(p=>{const L=byP[p]||[];const na=L.filter(e=>effEnt(e).st==='Atrasado').length;h+='<tr><td>'+platTag(p)+'</td><td>'+(na?'<span class="late">'+na+'</span>':'<span class="muted">0</span>')+'</td><td>'+(L.filter(e=>effEnt(e).st==='Hoje').length||'<span class="muted">0</span>')+'</td><td>'+(L.filter(e=>{const x=effEnt(e);return x.st==="Pendente"&&x.dias>=1&&x.dias<=7;}).length||'<span class="muted">0</span>')+'</td><td><b>'+L.length+'</b></td></tr>';});
+    const byP={};vis.forEach(x=>{(byP[x.plat]=byP[x.plat]||[]).push(x);});
+    ['ANDINA','SOUTH CONE','MEXICO & CARIBBEAN','CORP'].forEach(p=>{const L=byP[p]||[];const na=cel(L,'Atrasado');h+='<tr><td>'+platTag(p)+'</td><td>'+(na?'<span class="late">'+na+'</span>':'<span class="muted">0</span>')+'</td><td>'+(cel(L,'Hoje')||'<span class="muted">0</span>')+'</td><td>'+(cel7(L)||'<span class="muted">0</span>')+'</td><td><b>'+L.length+'</b></td></tr>';});
     h+='</tbody></table></div></div>';
   }
   return h;}
@@ -498,26 +692,89 @@ function renderEntregaveis(){
       +'<td class="nowrap">'+(ef.recebTxt?fmt(ef.recebTxt):'—')+'</td><td>'+stBadgeEnt(e)+'</td><td class="nowrap">'+diasCell(e)+'</td><td class="muted">'+esc(e.mes||'')+'</td>'+tdDel(e.id,'ent')+'</tr>';}
   return h+'</tbody></table></div>';}
 
-function projConsolPct(p){const ats=A(p.atividades).filter(a=>a.ativ&&!actDeleted(a));if(!ats.length)return p.pct;return ats.reduce((s,a)=>s+effPct(a),0)/ats.length;}
-function projConsolStatus(p){const pct=projConsolPct(p),fim=p.fim;if(pct>=0.999)return 'Concluído';if(fim&&daysTo(fim)<0)return 'Atrasado';if(pct<p.prev-0.001&&p.prev>0)return 'Abaixo do plano';if(pct>0)return 'Em andamento';return 'Pendente';}
+function projConsolPct(p){const ats=A(p.atividades).filter(a=>a.ativ&&!actDeleted(a)&&!actCancel(a));if(!ats.length)return p.pct;return ats.reduce((s,a)=>s+rollPct(a),0)/ats.length;}
+function projConsolFim(p){if(MODE!=='admin')return p.fim;
+  const ats=A(p.atividades).filter(a=>a.ativ&&!actDeleted(a)&&actStatus(a)!=='Cancelado');
+  let mx=null;for(const a of ats){const f=actFim(a);if(f&&(!mx||f>mx))mx=f;}return mx||p.fim;}
+function projConsolIni(p){if(MODE!=='admin')return projIni(p);
+  const o=ovOf(p.id,'inicio');if(o)return o;
+  let mn=null;A(p.atividades).filter(a=>a.ativ&&!actDeleted(a)&&actStatus(a)!=='Cancelado').forEach(a=>{const i=actIni(a);if(i&&(!mn||i<mn))mn=i;});return mn||projIni(p);}
+function projConsolPrev(p){if(MODE!=='admin')return p.prev;const ini=projConsolIni(p),fim=projConsolFim(p);if(!ini||!fim)return p.prev||0;
+  const i=new Date(ini+'T00:00:00'),f=new Date(fim+'T00:00:00'),hh=new Date(DATA.hoje+'T00:00:00');
+  if(f<i)return p.prev||0;const x=((hh-i)/86400000+1)/((f-i)/86400000+1);return Math.max(0,Math.min(1,x));}
+/* status/exclusão manuais do PROJETO (cartão pai) — override vence o cálculo automático.
+   Admin lê ao vivo da overlay (ovOf); nos painéis view/nuvem o gerador já baixou p.stOv/p.deleted. */
+function projStatusOv(p){return MODE!=='admin'?(p.stOv||null):ovOf(p.id,'status');}
+function projDeleted(p){return MODE!=='admin'?!!p.deleted:!!ovOf(p.id,'deleted');}
+function notDeletedProj(){return A(DATA.projetos).filter(p=>!projDeleted(p));}
+function projConsolStatus(p){const so=projStatusOv(p);if(so==='Stand By'||so==='Cancelado')return so;
+  const pct=projConsolPct(p),fim=projConsolFim(p),prev=projConsolPrev(p);if(pct>=0.999)return 'Concluído';if(fim&&daysTo(fim)<0)return 'Atrasado';if(pct<prev-0.001&&prev>0)return 'Abaixo do plano';if(pct>0)return 'Em andamento';return 'Pendente';}
 function bar(pct,prev,st){const cls=st==='Concluído'?'good':(st==='Atrasado'||st==='Abaixo do plano'?'bad':'');return '<div class="bar"><div class="fill '+cls+'" style="width:'+Math.round(pct*100)+'%"></div><div class="mark" style="left:'+Math.round(prev*100)+'%"></div></div>';}
+const openProj=new Set();
+function toggleProj(i,pe){const id=decodeURIComponent(pe);const el=document.getElementById('pc'+i);if(!el)return;
+  el.classList.toggle('open');if(el.classList.contains('open'))openProj.add(id);else openProj.delete(id);}
+function mkLabel(n){return nk(n)===nk(SEMK)?t.semMarco:n;}
+/* linha-cabeçalho de um marco (grupo) dentro da tabela do cartão do projeto */
+function mrowHtml(p,g,ncols){
+  const isSem=(g.id===SEM_ID);const nv=g.acts.filter(a=>state.showDeleted?true:!actDeleted(a)).length;
+  const pct=marcoPct(g),st=marcoStatus(g);let b='';
+  if(MODE==='admin'){const pj=jq(p.id),gj=jq(isSem?'':g.id);
+    b='<button class="rowbtn" title="'+t.tipAddAtiv+'" onclick="event.stopPropagation();mkAdd(\''+pj+'\',\''+gj+'\')">➕</button>';
+    if(!isSem){b+='<button class="rowbtn" title="'+t.tipRenMarco+'" onclick="event.stopPropagation();mkRen(\''+pj+'\',\''+gj+'\')">✎</button>';
+      if(g.explicit)b+='<button class="rowbtn" title="'+t.tipDelMarco+'" onclick="event.stopPropagation();mkDel(\''+pj+'\',\''+gj+'\')">🗑</button>';}}
+  return '<tr class="mrow"><td colspan="'+ncols+'"><div class="mk"><span class="mkn">🏁 '+esc(mkLabel(g.nome))+'</span><span class="muted mkc">'+nv+' '+t.nAtivs+'</span>'
+    +'<span class="mkr">'+bar(pct,marcoPrev(g),st)+'<span class="pct">'+Math.round(pct*100)+'%</span>'+projBadge(st)+b+'</span></div></td></tr>';}
 function renderProjetos(){
-  let list=A(DATA.projetos);
-  if(state.busca)list=list.filter(p=>(p.nome+' '+A(p.atividades).map(a=>actAtiv(a)).join(' ')).toLowerCase().includes(state.busca.toLowerCase()));
-  if(!list.length)return '<div class="sec"><div class="empty">—</div></div>';
+  let list=A(DATA.projetos).filter(p=>state.showDeleted?true:!projDeleted(p));
+  if(state.busca){const q=state.busca.toLowerCase();list=list.filter(p=>(projNome(p)+' '+projCurto(p)+' '+A(p.atividades).map(a=>actAtiv(a)+' '+actMarcoNome(a)).join(' ')).toLowerCase().includes(q));}
   let h='';
-  list.forEach((p,i)=>{const pct=projConsolPct(p),st=projConsolStatus(p);
-    h+='<div class="pcard" id="pc'+i+'"><div class="head" onclick="document.getElementById(\'pc'+i+'\').classList.toggle(\'open\')"><span class="caret">▶</span>'
-      +'<div><div class="t">'+esc(p.nome)+'</div><div class="who">'+esc(p.curto)+' · '+fmtY(p.inicio)+' → '+fmtY(p.fim)+'</div></div>'
-      +'<div class="right">'+projBadge(st)+bar(pct,p.prev,st)+'<span class="pct">'+Math.round(pct*100)+'%</span></div></div><div class="body">';
-    const ats=A(p.atividades).filter(a=>state.showDeleted?true:!actDeleted(a));
-    if(ats.length){h+='<table><thead><tr><th>'+t.thNum+'</th><th>'+t.thFase+'</th><th>'+t.thAtiv+'</th><th>'+t.thResp+'</th><th>'+t.thPer+'</th><th>%</th><th>'+t.thPrev+'</th><th>'+t.thStatus+'</th><th>'+t.thMarco+'</th>'+thDel()+'</tr></thead><tbody>';
-      for(const a of ats){const pc=effPct(a);const del=actDeleted(a);h+='<tr class="clik'+(del?' del':'')+'" title="2 cliques para abrir" ondblclick="openAct(\''+a.id+'\')" onclick="clickOpen(event,\'act\',\''+a.id+'\')"><td class="muted">'+esc(a.num)+'</td><td class="muted nowrap">'+esc(a.fase)+'</td>'
-        +'<td>'+esc(actAtiv(a))+markers(a)+((a.coment)?'<span class="sub">💬 '+esc(a.coment)+'</span>':'')+'</td><td class="nowrap">'+esc(actCurto(a))+'</td>'
-        +'<td class="nowrap">'+fmt(a.inicio)+' → '+fmt(a.fim)+'</td><td><b>'+Math.round(pc*100)+'%</b></td><td class="muted">'+Math.round(a.prev*100)+'%</td><td>'+projBadge(actStatus(a))+'</td><td>'+(a.marco==='Sim'?'🚩':'')+'</td>'+tdDel(a.id,'act')+'</tr>';}
-      h+='</tbody></table>';}else h+='<div class="empty">—</div>';
+  if(MODE==='admin')h+='<div class="projtools"><button class="btn sm" onclick="exportProj(\'novo\')">'+t.btnModelo+'</button><span id="projImportSlot">'+impBtnHtml()+'</span></div>';
+  if(!list.length)return h+'<div class="sec"><div class="empty">—</div></div>';
+  const vis=a=>state.showDeleted?true:!actDeleted(a);
+  const ncols=9+(MODE==='admin'?1:0);
+  list.forEach((p,i)=>{const pct=projConsolPct(p),st=projConsolStatus(p),pdel=projDeleted(p);const pj=jq(p.id);
+    const btns=(MODE==='admin')?('<button class="rowbtn" title="'+t.editProj+'" onclick="event.stopPropagation();openEditProj(\''+p.id+'\')">🛠</button>'
+      +'<button class="rowbtn" title="'+t.btnMarco+'" onclick="event.stopPropagation();addMarco(\''+pj+'\')">'+t.btnMarco+'</button>'
+      +'<button class="rowbtn" title="Excel" onclick="event.stopPropagation();exportProj(\''+pj+'\')">'+t.btnExcel+'</button>'):'';
+    h+='<div class="pcard'+(pdel?' del':'')+(openProj.has(p.id)?' open':'')+'" id="pc'+i+'"><div class="head" onclick="toggleProj('+i+',\''+pj+'\')"><span class="caret">▶</span>'
+      +'<div><div class="t">'+esc(projNome(p))+'</div><div class="who">'+esc(projCurto(p))+' · '+fmtY(projConsolIni(p))+' → '+fmtY(projConsolFim(p))+'</div></div>'
+      +'<div class="right">'+btns+projBadge(st)+bar(pct,projConsolPrev(p),st)+'<span class="pct">'+Math.round(pct*100)+'%</span></div></div><div class="body">';
+    const descr=projDescr(p);if(descr)h+='<div class="pdescr">'+esc(descr)+'</div>';
+    const gs=projMarcos(p).filter(g=>g.explicit||g.acts.some(vis));
+    if(!A(p.atividades).some(vis))h+='<div class="empty">'+t.semAtiv+'</div>';
+    if(gs.length){h+='<table><thead><tr><th>'+t.thNum+'</th><th>'+t.thMarcoEtapa+'</th><th>'+t.thAtiv+'</th><th>'+t.thResp+'</th><th>'+t.thPer+'</th><th>%</th><th>'+t.thPrev+'</th><th>'+t.thStatus+'</th><th>'+t.thMarco+'</th>'+thDel()+'</tr></thead><tbody>';
+      for(const g of gs){h+=mrowHtml(p,g,ncols);
+        for(const a of g.acts.filter(vis)){const pc=effPct(a);const del=actDeleted(a);h+='<tr class="clik'+(del?' del':'')+'" title="2 cliques para abrir" ondblclick="openAct(\''+a.id+'\')" onclick="clickOpen(event,\'act\',\''+a.id+'\')"><td class="muted">'+esc(a.num)+'</td><td class="muted nowrap">'+esc(mkLabel(actMarcoNome(a)))+'</td>'
+          +'<td>'+esc(actAtiv(a))+markers(a)+((a.coment)?'<span class="sub">💬 '+esc(a.coment)+'</span>':'')+'</td><td class="nowrap">'+esc(actCurto(a))+'</td>'
+          +'<td class="nowrap">'+fmt(actIni(a))+' → '+fmt(actFim(a))+'</td><td><b>'+Math.round(pc*100)+'%</b></td><td class="muted">'+Math.round(actPrev(a)*100)+'%</td><td>'+projBadge(actStatus(a))+'</td><td>'+(a.marco==='Sim'?'🚩':'')+'</td>'+tdDel(a.id,'act')+'</tr>';}}
+      h+='</tbody></table>';}
     h+='</div></div>';});
   return h;}
+/* ---- ações de marco / exportação (só admin) ---- */
+function exportProj(pe){const id=decodeURIComponent(pe);
+  if(id!=='novo'&&dirty){toast(t.saveFirst);return;}
+  location.href='rmct://exportar-projeto/'+encodeURIComponent(id);}
+function mkDupName(p,nome,exceptId){return projMarcos(p).some(g=>g.id!==exceptId&&g.id!==SEM_ID&&nk(g.nome)===nk(nome));}
+function addMarco(pe){const pid=decodeURIComponent(pe);const p=PROJBY[pid];if(!p)return;
+  const nm=(prompt(t.promptMarco,'')||'').trim();if(!nm)return;
+  if(mkDupName(p,nm,null)){alert(t.marcoDup);return;}
+  const arr=marcosArr(pid);const mx=arr.reduce((s,m)=>Math.max(s,+m.ordem||0),0);
+  arr.push({id:newId('MK'),nome:nm,ordem:mx+1,deleted:false});
+  openProj.add(pid);markDirty(pid);refreshAll();saveOverlay();toast(t.marcoCreated);}
+function mkAdd(pe,ge){const pid=decodeURIComponent(pe),gid=decodeURIComponent(ge);openProj.add(pid);openCreate('projeto',{projId:pid,marcoId:gid});}
+function mkRen(pe,ge){const pid=decodeURIComponent(pe),gid=decodeURIComponent(ge);const p=PROJBY[pid];if(!p)return;
+  const g=projMarcos(p).find(x=>x.id===gid);if(!g)return;
+  const nn=(prompt(t.renMarco,g.nome)||'').trim();if(!nn||nn===g.nome)return;
+  if(mkDupName(p,nn,g.id)){alert(t.marcoDup);return;}
+  if(g.explicit){const m=marcosArr(pid).find(x=>x.id===gid);if(m)m.nome=nn;}
+  g.acts.forEach(a=>{const it=ovItem(a.id);it.official.fase=nn;markDirty(a.id);});
+  openProj.add(pid);markDirty(pid);refreshAll();saveOverlay();}
+function mkDel(pe,ge){const pid=decodeURIComponent(pe),gid=decodeURIComponent(ge);const p=PROJBY[pid];if(!p)return;
+  const g=projMarcos(p).find(x=>x.id===gid);if(!g||!g.explicit)return;
+  if(g.acts.some(a=>!actDeleted(a))){alert(t.delMarcoBlocked);return;}
+  if(!confirm(t.delMarcoConfirm))return;
+  const m=marcosArr(pid).find(x=>x.id===gid);if(m)m.deleted=true;
+  openProj.add(pid);markDirty(pid);refreshAll();saveOverlay();}
 
 function tdDelRot(id){if(MODE!=='admin')return '';
   const del=rotDeleted(ROTBY[id]);
@@ -651,6 +908,7 @@ function renderSugestoes(){
   let cards=[];
   for(const id in DATA.overlay.items){A(DATA.overlay.items[id].suggestions).forEach((s,idx)=>{if(!s.state||s.state==='pending')cards.push({id,idx,s});});}
   let h='<div class="helpbox">'+t.helpAdmin+'</div>';
+  h+=impSection();
   if(fbCfg())h+='<div class="sec"><header style="--c:var(--blue)"><span class="dot" style="--c:var(--blue)"></span><h2>📡 '+(LANG==='es'?'Sugerencias en línea (panel)':'Sugestões online (painel)')+'</h2></header><div style="padding:14px" id="onlineSuggBox"><div class="note">'+(LANG==='es'?'Cargando…':'Carregando…')+'</div></div></div>';
   h+='<div class="sec"><header style="--c:var(--amber)"><span class="dot" style="--c:var(--amber)"></span><h2>'+t.mPending+(fbCfg()?' ('+(LANG==='es'?'por correo':'por e-mail')+')':'')+'</h2><span class="n">'+cards.length+'</span></header>';
   if(!cards.length){h+='<div class="empty">—</div></div>';return h+importBox();}
@@ -667,13 +925,18 @@ function suggCard(id,idx,s,nome){
   return h;}
 
 function renderKpis(){const all=notDeletedEnt(),act=ativos(all);
-  const cnt=st=>act.filter(e=>effEnt(e).st===st).length;
-  const p7=act.filter(e=>{const x=effEnt(e);return x.st==='Pendente'&&x.dias>=1&&x.dias<=7;}).length;
+  /* Atrasadas / Vencem hoje / 7 dias / Sem prazo contam entregáveis + atividades de projeto
+     (mesma base da Visão Geral). Concluídas no mês e No prazo seguem só de entregáveis:
+     dependem da data de recebimento, que a atividade não tem. */
+  const actA=ativosAct(notDeletedAct());
+  const cnt=st=>act.filter(e=>effEnt(e).st===st).length+actA.filter(a=>effAct(a).st===st).length;
+  const p7=act.filter(e=>{const x=effEnt(e);return x.st==='Pendente'&&x.dias>=1&&x.dias<=7;}).length
+          +actA.filter(a=>{const x=effAct(a);return x.st==='Pendente'&&x.dias>=1&&x.dias<=7;}).length;
   const mesNow=new Date(DATA.hoje+'T00:00:00').toLocaleDateString('pt-BR',{month:'long'});
   const done=all.filter(e=>effEnt(e).st==='Concluído'&&e.mes===mesNow);
   const onT=done.filter(e=>{const ef=effEnt(e);return !(ef.recebTxt&&ef.limite&&ef.recebTxt>ef.limite);}).length;
   const pct=done.length?Math.round(onT/done.length*100)+'%':'—';
-  const projAct=A(DATA.projetos).filter(p=>projConsolStatus(p)!=='Concluído').length;
+  const projAct=A(DATA.projetos).filter(p=>{if(projDeleted(p))return false;const s=projConsolStatus(p);return s!=='Concluído'&&s!=='Cancelado'&&s!=='Stand By';}).length;
   const k=[[cnt('Atrasado'),t.kAtr,'var(--red)','atrasado'],[cnt('Hoje'),t.kHoje,'var(--amber)','hoje'],[p7,t.k7,'var(--blue)','7d'],[cnt('Sem prazo'),t.kSp,'var(--gray)','semprazo'],[done.length,t.kCon,'var(--green)','donemonth'],[pct,t.kOn,'var(--green)','ontime'],[projAct,t.kProj,'var(--purple)','proj']];
   if(MODE==='admin')k.push([pendingCount(),t.kPend,'var(--amber)','sug']);
   document.getElementById('kpis').innerHTML=k.map(x=>'<div class="kpi clik'+(activeKpi(x[3])?' on':'')+'" style="--c:'+x[2]+'" title="'+(LANG==='es'?'Ver filtrado':'Ver filtrado')+'" onclick="kpiClick(\''+x[3]+'\')"><div class="v">'+x[0]+'</div><div class="l">'+x[1]+'</div></div>').join('');}
@@ -693,7 +956,7 @@ function kpiClick(key){state.plat='TODAS';state.resp='';state.status='';state.me
 function filtersActive(){return !!(state.quick||state.status||state.resp||state.mes||state.busca||(state.plat&&state.plat!=='TODAS'));}
 function clearFilters(){state.quick='';state.status='';state.resp='';state.mes='';state.busca='';state.plat='TODAS';
   syncFilterInputs();refreshAll();renderChips();}
-function delCount(){let n=0;A(DATA.entregaveis).forEach(e=>{if(entDeleted(e))n++;});A(DATA.projetos).forEach(p=>A(p.atividades).forEach(a=>{if(actDeleted(a))n++;}));A(DATA.rotinas).forEach(r=>{if(rotDeleted(r))n++;});return n;}
+function delCount(){let n=0;A(DATA.entregaveis).forEach(e=>{if(entDeleted(e))n++;});A(DATA.projetos).forEach(p=>{if(projDeleted(p))n++;A(p.atividades).forEach(a=>{if(actDeleted(a))n++;});});A(DATA.rotinas).forEach(r=>{if(rotDeleted(r))n++;});return n;}
 /* Botões de envio (item 13) — exclusivo do admin, via protocolo rmct:// registrado na máquina do Jonathan */
 function sendMailCmd(which){
   const msg=which==='consolidado'
@@ -763,7 +1026,7 @@ function renderMapa(){DATA.overlay.regionalMap=A(DATA.overlay.regionalMap);
     +'</tr></thead><tbody id="mapBody">'+mapRowsHtml()+'</tbody></table></div>';
   h+='</div>';return h;}
 function renderTabs(){
-  let tabs=[['visao',t.tabVisao,null],['ent',t.tabEnt,notDeletedEnt().length],['proj',t.tabProj,A(DATA.projetos).length]];
+  let tabs=[['visao',t.tabVisao,null],['ent',t.tabEnt,notDeletedEnt().length],['proj',t.tabProj,notDeletedProj().length]];
   if(MODE==='admin'){tabs.push(['rot',t.tabRot,notDeletedRot().length]);tabs.push(['time',t.tabTime,A(DATA.time).length]);tabs.push(['mapa',t.tabMapa,activeMap().length]);tabs.push(['sug',t.tabSug,pendingCount()]);}
   if(aoOn()&&AO.isAdmin){tabs.push(['aprovar',(LANG==='es'?'✅ Aprobar':'✅ Aprovar'),AO.loaded?AO.pending.length:null]);}
   let h=tabs.map(x=>'<button class="tab'+(state.tab===x[0]?' on':'')+'" onclick="setTab(\''+x[0]+'\')">'+x[1]+(x[2]!=null?'<span class="b'+(x[0]==='sug'&&x[2]>0?' pend':'')+'">'+x[2]+'</span>':'')+'</button>').join('');
@@ -833,11 +1096,11 @@ function openAct(id){const a=ACTBY[id];if(!a)return;const pc=effPct(a);
   let h='';
   if(MODE==='admin')h+=adminEditAct(a);
   h+='<div class="fieldrow"><div class="field"><label>'+t.mResp+'</label><div class="val">'+esc(actResp(a))+'</div></div>'
-    +'<div class="field"><label>'+t.thFase+'</label><div class="val">'+esc(a.fase||'—')+'</div></div>'
+    +'<div class="field"><label>'+t.thMarcoEtapa+'</label><div class="val">'+esc(mkLabel(actMarcoNome(a)))+'</div></div>'
     +'<div class="field"><label>'+t.mStatusOf+'</label><div class="val">'+projBadge(actStatus(a))+'</div></div></div>'
-    +'<div class="fieldrow"><div class="field"><label>'+t.thPer+'</label><div class="val">'+fmtY(a.inicio)+' → '+fmtY(a.fim)+'</div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.thPer+'</label><div class="val">'+fmtY(actIni(a))+' → '+fmtY(actFim(a))+'</div></div>'
     +'<div class="field"><label>'+t.thReal+'</label><div class="val"><b>'+Math.round(pc*100)+'%</b></div></div>'
-    +'<div class="field"><label>'+t.thPrev+'</label><div class="val">'+Math.round(a.prev*100)+'%</div></div></div>';
+    +'<div class="field"><label>'+t.thPrev+'</label><div class="val">'+Math.round(actPrev(a)*100)+'%</div></div></div>';
   if(a.coment)h+='<div class="fieldrow"><div class="field"><label>'+t.mComent+'</label><div class="val">'+esc(a.coment)+'</div></div></div>';
   h+='<div class="block"><h3>🕓 '+t.mHist+'</h3>'+histHtml(a)+'</div>';
   h+='<div class="block"><h3>💬 '+t.mThread+'</h3>'+threadHtml(a)+'<div id="onlineThread"></div>'+commentComposer(id)+'</div>';
@@ -876,11 +1139,27 @@ function adminEditAct(a){const ov=ovLookup(a.id),o=ov&&ov.official?ov.official:{
   return '<div class="editbox"><h3>🛠️ '+t.mAdminEdit+'</h3>'
     +'<div class="fieldrow"><div class="field full"><label>'+t.mTexto+'</label><textarea id="edAtiv">'+esc(actAtiv(a))+'</textarea></div></div>'
     +'<div class="fieldrow"><div class="field"><label>'+t.mResp+'</label><input type="text" id="edResp" value="'+esc(actResp(a))+'"></div>'
+    +'<div class="field"><label>'+t.fIniAtiv+'</label><input type="date" id="edIni" value="'+esc(actIni(a)||'')+'"></div>'
+    +'<div class="field"><label>'+t.mFimOf+'</label><input type="date" id="edFim" value="'+esc(actFim(a)||'')+'"></div>'
     +'<div class="field"><label>'+t.thReal+' (0-100)</label><input type="number" id="edPct" min="0" max="100" step="5" value="'+Math.round(cur*100)+'"></div>'
     +'<div class="field"><label>'+t.mStatusOf+'</label><select id="edStatus"><option value="">(auto)</option><option value="Concluído"'+(o.status==='Concluído'?' selected':'')+'>'+t.stConcluir+'</option><option value="Cancelado"'+(o.status==='Cancelado'?' selected':'')+'>'+t.stCancel+'</option></select></div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.fMarcoEtapa+'</label>'+marcoSelHtml(a)+'</div></div>'
     +'<div class="modalfoot"><button class="btn green big" onclick="saveAct(\''+a.id+'\')">💾 '+t.mSaveOf+'</button>'
     +(del?'<button class="btn sm" onclick="restoreItem(\''+a.id+'\',\'act\')">'+t.restore+'</button>':'<button class="btn dangerghost sm" onclick="delItem(\''+a.id+'\',\'act\')">'+t.del+'</button>')
     +'</div></div>';}
+/* valor atual do select de marco da atividade: id do marco explícito, 'fase:<nome>' (implícito) ou '' (sem marco) */
+function actMarcoSelVal(a){const p=PROJOF[a.id];if(!p)return '';
+  const g=projMarcos(p).find(x=>x.acts.indexOf(a)>=0);return (!g||g.id===SEM_ID)?'':g.id;}
+function marcoSelHtml(a){const p=PROJOF[a.id];const cur=actMarcoSelVal(a);
+  let o='<option value="">'+t.fSemMarco+'</option>';
+  if(p)projMarcos(p).forEach(g=>{if(g.id===SEM_ID)return;o+='<option value="'+escA(g.id)+'"'+(g.id===cur?' selected':'')+'>'+esc(g.nome)+'</option>';});
+  return '<select id="edMarco">'+o+'</select>';}
+/* grava o vínculo atividade → marco (marcoId + fase=nome do marco) */
+function applyActMarco(a,it,val){const o=it.official;const baseMk=a.marcoId||null;
+  if(!val){o.marcoId=baseMk?'__none__':null;o.fase=(a.fase||baseMk)?SEMK:null;return;}
+  if(val.indexOf('fase:')===0){o.marcoId=baseMk?'__none__':null;o.fase=val.slice(5);return;}
+  const p=PROJOF[a.id];const g=p?projMarcos(p).find(x=>x.id===val):null;
+  if(g){o.marcoId=g.id;o.fase=g.nome;}}
 function adminPendingBlock(id){const ov=ovLookup(id);const ps=ov?A(ov.suggestions).map((s,i)=>({s,i})).filter(x=>!x.s.state||x.s.state==='pending'):[];
   if(!ps.length)return '';const item=ENTBY[id]||ACTBY[id];let h='<div class="block"><h3>📥 '+t.mPending+'</h3>';for(const x of ps)h+=suggCard(id,x.i,x.s,item?(item.material||item.ativ):id);return h+'</div>';}
 
@@ -909,6 +1188,14 @@ function saveAct(id){const a=ACTBY[id];const it=ovItem(id);
   const rp=(document.getElementById('edResp').value||'').trim();
   const ns=document.getElementById('edStatus').value;
   const v=parseFloat(document.getElementById('edPct').value);
+  const fEl=document.getElementById('edFim');const nf=fEl?(fEl.value||''):'';
+  if(fEl){const cur=it.official.limite||a.baseFim||a.fim||'';
+    if(nf&&nf!==cur){it.dateHistory.push({date:nf,ts:nowStamp(),by:t.adminAuthor,note:'Alteração no sistema'});}
+    it.official.limite=nf||null;}
+  const iEl=document.getElementById('edIni');
+  if(iEl){const ni=iEl.value||'';it.official.inicio=(ni&&ni!==(a.baseInicio||''))?ni:null;}   /* C1: compara com a BASE (a.inicio já é o efetivo) */
+  const mEl=document.getElementById('edMarco');
+  if(mEl&&mEl.value!==actMarcoSelVal(a))applyActMarco(a,it,mEl.value);
   it.official.ativ=(at&&at!==a.ativ)?at:(at?at:null);
   it.official.resp=(rp&&rp!==a.resp)?rp:(rp?rp:null);
   it.official.status=ns||null;
@@ -916,6 +1203,44 @@ function saveAct(id){const a=ACTBY[id];const it=ovItem(id);
   markDirty(id);refreshAll();reopen(id);saveOverlay();}
 function delItem(id,kind){if(!confirm(t.confirmDel))return;const it=ovItem(id);it.official.deleted=true;markDirty(id);closeModal();refreshAll();saveOverlay();toast('🗑 '+(LANG==='es'?'Eliminado':'Excluído'));}
 function restoreItem(id,kind){const it=ovItem(id);it.official.deleted=false;markDirty(id);refreshAll();reopen(id);saveOverlay();toast('♻ '+(LANG==='es'?'Restaurado':'Restaurado'));}
+
+/* ---------- editar/excluir PROJETO (cartão pai) — só admin ---------- */
+function openEditProj(id){const p=PROJBY[id];if(!p)return;
+  const so=ovOf(id,'status')||'';const del=projDeleted(p);const nAts=A(p.atividades).length;
+  document.getElementById('mTitle').innerHTML='🛠️ '+esc(projNome(p));
+  let h='<div class="editbox">'+nameList()+'<h3>'+t.editProj+'</h3>'
+    +'<div class="fieldrow"><div class="field full"><label>'+t.fProjNome+'</label><input type="text" id="edProjNome" value="'+escA(projNome(p))+'"></div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.mResp+'</label><input type="text" list="dlNames" id="edProjResp" value="'+escA(projResp(p))+'"></div>'
+    +'<div class="field"><label>'+t.mPlat+'</label><select id="edProjPlat">'+selPlat(projPlat(p))+'</select></div>'
+    +'<div class="field"><label>'+t.fInicio+'</label><input type="date" id="edProjIni" value="'+escA(projIni(p)||'')+'"></div></div>'
+    +'<div class="fieldrow"><div class="field full"><label>'+t.fProjDescr+'</label><textarea id="edProjDescr">'+esc(projDescr(p))+'</textarea></div></div>'
+    +'<div class="fieldrow"><div class="field"><label>'+t.mStatusOf+'</label><select id="edProjStatus">'
+    +'<option value=""'+(so===''?' selected':'')+'>(auto)</option>'
+    +'<option value="Stand By"'+(so==='Stand By'?' selected':'')+'>⏸ '+t.stStandBy+'</option>'
+    +'<option value="Cancelado"'+(so==='Cancelado'?' selected':'')+'>✕ '+t.stCancel+'</option>'
+    +'</select></div></div>'
+    +'<div class="modalfoot"><button class="btn green big" onclick="saveProj(\''+id+'\')">💾 '+t.mSaveOf+'</button>'
+    +(del?'<button class="btn sm" onclick="restoreProj(\''+id+'\')">'+t.restore+'</button>':'<button class="btn dangerghost sm" onclick="delProj(\''+id+'\','+nAts+')">'+t.delProj+'</button>')
+    +'</div></div>';
+  document.getElementById('mBody').innerHTML=h;openModal();}
+function saveProj(id){const p=PROJBY[id];const it=ovItem(id);const g=x=>{const el=document.getElementById(x);return el?(el.value||'').trim():'';};
+  const v=g('edProjStatus');
+  const nm=g('edProjNome'),rp=g('edProjResp'),pl=g('edProjPlat'),ini=g('edProjIni'),ds=g('edProjDescr');
+  /* override só quando difere da base (null = herda a base) */
+  /* C1: p.nome/resp/... já vêm com override aplicado → comparar com p.base* (valor da planilha/projdef) */
+  const bs=(k,fb)=>{const x=p?p['base'+k]:null;return x!=null?x:fb;};
+  it.official.nome=(nm&&p&&nm!==bs('Nome',p.nome))?nm:null;
+  it.official.resp=(rp&&p&&rp!==(bs('Resp',p.resp)||''))?rp:null;
+  it.official.plat=(pl&&p&&pl!==(bs('Plat',p.plat)||'CORP'))?pl:null;
+  it.official.inicio=(ini&&p&&ini!==(bs('Inicio',p.inicio)||''))?ini:null;
+  it.official.descricao=(ds&&p&&ds!==(bs('Descricao',p.descricao)||''))?ds:null;
+  it.official.status=v||null;markDirty(id);closeModal();refreshAll();saveOverlay();}
+function saveProjStatus(id){return saveProj(id);} /* alias (nome antigo) */
+function delProj(id,n){const msg=t.confirmDelProj.replace('{n}',n);if(!confirm(msg))return;
+  const it=ovItem(id);it.official.deleted=true;markDirty(id);closeModal();refreshAll();saveOverlay();
+  toast('🗑 '+(LANG==='es'?'Eliminado':'Excluído'));}
+function restoreProj(id){const it=ovItem(id);it.official.deleted=false;markDirty(id);closeModal();refreshAll();saveOverlay();
+  toast('♻ '+(LANG==='es'?'Restaurado':'Restaurado'));}
 function approveSugg(id,idx){const it=ovItem(id);const s=it.suggestions[idx];if(!s)return;const item=ENTBY[id]||ACTBY[id];
   if(s.propDate){it.dateHistory.push({date:s.propDate,ts:nowStamp(),by:t.adminAuthor,note:'Validado de '+(s.from||'?')});it.official.limite=s.propDate;}
   if(s.propStatus)it.official.status=s.propStatus;
@@ -1142,7 +1467,18 @@ function mergeFromDisk(disk){
   const dItems=(disk.items&&typeof disk.items==='object')?disk.items:{};
   const items={};
   for(const id in dItems)items[id]=dItems[id];
-  for(const id in mem.items){if(sessionTouched.has(id)||!items[id])items[id]=mem.items[id];}
+  for(const id in mem.items){
+    if(!items[id]){items[id]=mem.items[id];continue;}
+    if(sessionTouched.has(id)){
+      /* C1: marcos = união por id (memória vence por id; ids só do disco são mantidos) */
+      const dM=A(items[id]&&items[id].official&&items[id].official.marcos);
+      const mi=mem.items[id];mi.official=mi.official||{};
+      if(dM.length||Array.isArray(mi.official.marcos)){
+        const mm=A(mi.official.marcos),seen={};
+        const un=mm.filter(m=>m&&m.id).map(m=>{seen[m.id]=1;return m;});
+        dM.forEach(m=>{if(m&&m.id&&!seen[m.id])un.push(m);});
+        mi.official.marcos=un;}
+      items[id]=mi;}}
   const byId={};
   A(disk.newItems).forEach(n=>{if(n&&n.id)byId[n.id]=n;});
   A(mem.newItems).forEach(n=>{if(n&&n.id&&(sessionNewIds.has(n.id)||!byId[n.id]))byId[n.id]=n;});
@@ -1153,6 +1489,11 @@ function mergeFromDisk(disk){
   A(disk.regionalMap).forEach(r=>{if(r&&r.id)mapById[r.id]=r;});
   A(mem.regionalMap).forEach(r=>{if(r&&r.id&&(mapTouched.has(r.id)||!mapById[r.id]))mapById[r.id]=r;});
   mem.regionalMap=Object.keys(mapById).map(k=>mapById[k]);
+  // Fila de importação Excel (v4): união por id do lote; o lote tocado nesta sessão (importTouched) vence.
+  const ibById={};
+  A(disk.importBatches).forEach(b=>{if(b&&b.id)ibById[b.id]=b;});
+  A(mem.importBatches).forEach(b=>{if(b&&b.id&&(importTouched.has(b.id)||!ibById[b.id]))ibById[b.id]=b;});
+  if(Object.keys(ibById).length||mem.importBatches!==undefined)mem.importBatches=Object.keys(ibById).map(k=>ibById[k]);
   // Sugestões online já tratadas (aprovadas/rejeitadas): união disco + sessão (marcador monotônico)
   mem.handledSuggestions=Object.assign({},disk.handledSuggestions||{},mem.handledSuggestions||{});
   if(disk.version!=null)mem.version=disk.version;
@@ -1203,29 +1544,52 @@ async function saveAndPublish(){
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 
 /* ---------- Incluir ação (novos itens) ---------- */
-function injectNewItems(){A(DATA.overlay.newItems).forEach(ni=>{
+function projFromDef(ni){return {id:ni.id,nome:ni.nome||'(novo projeto)',resp:ni.resp||'',curto:shortNameJS(ni.resp||''),plat:ni.plat||'CORP',descricao:ni.descricao||'',inicio:ni.inicio||null,fim:ni.fim||null,pct:0,prev:0,st:'Pendente',marco:'',coment:'',obs:'',atividades:[],
+  baseNome:ni.nome||'(novo projeto)',baseResp:ni.resp||'',basePlat:ni.plat||'CORP',baseDescricao:ni.descricao||'',baseInicio:ni.inicio||null};}
+function addProjData(p){p.atividades=A(p.atividades);DATA.projetos=A(DATA.projetos);DATA.projetos.push(p);PROJBY[p.id]=p;}
+/* acha o projeto pai de uma atividade nova: projId primeiro, nome depois (compatibilidade) */
+function projForNew(ni){return (ni.projId&&PROJBY[ni.projId])||A(DATA.projetos).find(x=>projNome(x)===ni.projeto||x.nome===ni.projeto)||null;}
+function linkAct(p,a){p.atividades=A(p.atividades);p.atividades.push(a);ACTBY[a.id]=a;PROJOF[a.id]=p;}
+function injectNewItems(){
+  /* 1ª passada: projetos definidos no sistema (kind 'projdef'), para que as atividades achem o pai por projId */
+  A(DATA.overlay.newItems).forEach(ni=>{if(!ni||!ni.id||ni.kind!=='projdef')return;if(PROJBY[ni.id])return;addProjData(projFromDef(ni));});
+  A(DATA.overlay.newItems).forEach(ni=>{
   if(!ni||!ni.id)return;
   if(ni.kind==='entregavel'){if(ENTBY[ni.id])return;const e=entFromNew(ni);DATA.entregaveis=A(DATA.entregaveis);DATA.entregaveis.push(e);ENTBY[ni.id]=e;}
   else if(ni.kind==='rotina'){if(ROTBY[ni.id])return;const r=rotFromNew(ni);DATA.rotinas=A(DATA.rotinas);DATA.rotinas.push(r);ROTBY[ni.id]=r;}
-  else if(ni.kind==='projeto'){if(ACTBY[ni.id])return;const a=actFromNew(ni);let p=A(DATA.projetos).find(x=>x.nome===ni.projeto);
-    if(!p){p={id:'NP_'+ni.id,nome:ni.projeto||'(novo projeto)',resp:a.resp,curto:a.curto,inicio:a.inicio,fim:a.fim,pct:0,prev:0,st:'Pendente',marco:'',coment:'',obs:'',plat:'CORP',atividades:[]};DATA.projetos=A(DATA.projetos);DATA.projetos.push(p);}
-    p.atividades=A(p.atividades);p.atividades.push(a);ACTBY[ni.id]=a;}
+  else if(ni.kind==='projeto'){if(ACTBY[ni.id])return;const a=actFromNew(ni);let p=projForNew(ni);
+    if(!p){p={id:'NP_'+ni.id,nome:ni.projeto||'(novo projeto)',resp:a.resp,curto:a.curto,inicio:a.inicio,fim:a.fim,pct:0,prev:0,st:'Pendente',marco:'',coment:'',obs:'',plat:'CORP',atividades:[],
+      baseNome:ni.projeto||'(novo projeto)',baseResp:a.resp,basePlat:'CORP',baseDescricao:'',baseInicio:a.inicio};addProjData(p);}
+    linkAct(p,a);}
 });}
 function rotFromNew(ni){const d=(ni.diaUtil!=null&&ni.diaUtil!=='')?parseInt(ni.diaUtil,10):null;
   return {id:ni.id,ativ:ni.ativ||'',period:ni.period||'Mensal',resp:ni.resp||'',curto:shortNameJS(ni.resp||''),regionais:'',startPad:'',prazoPad:(d?'WD+'+d:''),proxStart:null,proxPrazo:(d?nextWD(d):null),prio:'',obs:'',deleted:false,diaUtil:d,comments:[],nComments:0,nPending:0};}
 function entFromNew(ni){return {id:ni.id,tipo:'entregavel',n:ni.n||'',resp:ni.resp||'',curto:shortNameJS(ni.resp||''),plat:ni.plat||'CORP',material:ni.material||'',deleted:false,ref:ni.ref||'',limite:ni.limite||null,baseLimite:ni.limite||null,recebido:null,recebidoTxt:'',baseRecebTxt:'',st:'Pendente',dias:null,lateDone:false,coment:'',obs:'',mes:ni.mes||'',privado:'Não',comments:[],dateHistory:ni.limite?[{date:ni.limite,ts:ni.createdTs||'',by:'Sistema',note:'Ação criada no sistema'}]:[],nComments:0,nPending:0};}
 function actFromNew(ni){const pct=ni.pct!=null?ni.pct:0;let prev=0;
   if(ni.inicio&&ni.fim){const i=new Date(ni.inicio+'T00:00:00'),f=new Date(ni.fim+'T00:00:00'),hh=new Date(DATA.hoje+'T00:00:00');if(f>=i){prev=((hh-i)/86400000+1)/((f-i)/86400000+1);prev=Math.max(0,Math.min(1,prev));}}
-  return {id:ni.id,tipo:'projeto-ativ',num:ni.num||'',fase:ni.fase||'',ativ:ni.ativ||'',resp:ni.resp||'',curto:shortNameJS(ni.resp||''),deleted:false,inicio:ni.inicio||null,fim:ni.fim||null,baseFim:ni.fim||null,pct:pct,basePct:pct,prev:prev,st:'Pendente',marco:ni.marco||'',prio:ni.prio||'',coment:'',obs:'',comments:[],dateHistory:ni.fim?[{date:ni.fim,ts:ni.createdTs||'',by:'Sistema',note:'Ação criada no sistema'}]:[],nComments:0,nPending:0};}
+  return {id:ni.id,tipo:'projeto-ativ',projId:ni.projId||null,marcoId:ni.marcoId||null,num:ni.num||'',fase:ni.fase||'',ativ:ni.ativ||'',resp:ni.resp||'',curto:shortNameJS(ni.resp||''),deleted:false,inicio:ni.inicio||null,baseInicio:ni.inicio||null,fim:ni.fim||null,baseFim:ni.fim||null,pct:pct,basePct:pct,prev:prev,st:'Pendente',marco:ni.marco||'',prio:ni.prio||'',coment:'',obs:'',comments:[],dateHistory:ni.fim?[{date:ni.fim,ts:ni.createdTs||'',by:'Sistema',note:'Ação criada no sistema'}]:[],nComments:0,nPending:0};}
 
 function nameList(){return '<datalist id="dlNames">'+A(DATA.time).map(x=>'<option value="'+esc(x.nome)+'">').join('')+A(['Jonathan Braga','João Bruno','Caio Sestari']).map(n=>'<option value="'+esc(n)+'">').join('')+'</datalist>';}
-function projList(){return '<datalist id="dlProj">'+A(DATA.projetos).map(p=>'<option value="'+esc(p.nome)+'">').join('')+'</datalist>';}
+function projList(){return '<datalist id="dlProj">'+A(DATA.projetos).map(p=>'<option value="'+escA(projNome(p))+'">').join('')+'</datalist>';}
 function typeToggle(kind){return '<div class="fieldrow"><div class="field full"><label>'+t.fType+'</label>'
   +'<button class="btn sm'+(kind==='entregavel'?' primary':'')+'" onclick="openCreate(\'entregavel\')">'+t.tEnt+'</button> '
   +'<button class="btn sm'+(kind==='projeto'?' primary':'')+'" onclick="openCreate(\'projeto\')">'+t.tProj+'</button> '
   +'<button class="btn sm'+(kind==='rotina'?' primary':'')+'" onclick="openCreate(\'rotina\')">'+t.tRot+'</button></div></div>';}
 function statusSel(id){return '<select id="'+id+'"><option value="">'+stTxt('Pendente')+'</option><option value="Concluído">'+t.stConcluir+'</option><option value="Cancelado">'+t.stCancel+'</option></select>';}
-function openCreate(kind){kind=kind||'entregavel';
+/* selects de projeto/marco do formulário "Incluir ação → Projeto" */
+function projSelHtml(cur){let o='<option value="">'+t.fSelProj+'</option>';
+  A(DATA.projetos).filter(p=>!projDeleted(p)).forEach(p=>{o+='<option value="'+escA(p.id)+'"'+(p.id===cur?' selected':'')+'>'+esc(projNome(p))+'</option>';});
+  return '<select id="nProjSel" onchange="nProjChange()">'+o+'<option value="__new__">'+t.fNovoProj+'</option></select>';}
+function fillMarcoSel(pid,pre){const el=document.getElementById('nMarcoSel');if(!el)return;
+  let o='<option value="">'+t.fSemMarco+'</option>';
+  const p=(pid&&pid!=='__new__')?PROJBY[pid]:null;
+  if(p)projMarcos(p).forEach(g=>{if(g.id===SEM_ID)return;o+='<option value="'+escA(g.id)+'"'+(g.id===pre?' selected':'')+'>'+esc(g.nome)+'</option>';});
+  el.innerHTML=o+'<option value="__new__">'+t.fNovoMarco+'</option>';nMarcoChange();}
+function nMarcoChange(){const el=document.getElementById('nMarcoSel'),ip=document.getElementById('nMarcoNovo');if(ip)ip.style.display=(el&&el.value==='__new__')?'':'none';}
+function nProjChange(){const el=document.getElementById('nProjSel');const s=el?el.value:'';
+  const box=document.getElementById('nProjNewBox');if(box)box.style.display=(s==='__new__')?'':'none';
+  fillMarcoSel(s,'');}
+function openCreate(kind,pre){kind=kind||'entregavel';pre=pre||{};
   document.getElementById('mTitle').innerHTML='➕ '+t.createTitle;
   let h='<div class="editbox">'+typeToggle(kind)+nameList();
   if(kind==='entregavel'){
@@ -1242,9 +1606,17 @@ function openCreate(kind){kind=kind||'entregavel';
       +'<div class="field"><label>'+t.fPeriod+'</label><input type="text" id="nPer" placeholder="ex.: Mensal" value="Mensal"></div>'
       +'<div class="field"><label>'+t.fDiaUtil+' *</label><input type="number" id="nDia" min="1" max="23" step="1" placeholder="ex.: 5"></div></div>';
   } else {
-    h+='<div class="fieldrow"><div class="field"><label>'+t.fProjeto+' *</label><input type="text" list="dlProj" id="nProj"></div>'
-      +'<div class="field"><label>'+t.fFase+'</label><input type="text" id="nFase" placeholder="ex.: Fase 3: Execução"></div></div>'+projList()
-      +'<div class="fieldrow"><div class="field full"><label>'+t.thAtiv+' *</label><textarea id="nAtiv"></textarea></div></div>'
+    h+='<div class="fieldrow"><div class="field"><label>'+t.fProjeto+' *</label>'+projSelHtml(pre.projId||'')+'</div>'
+      +'<div class="field"><label>'+t.fMarcoEtapa+'</label><select id="nMarcoSel" onchange="nMarcoChange()"><option value="">'+t.fSemMarco+'</option></select>'
+      +'<input type="text" id="nMarcoNovo" style="display:none;margin-top:6px" placeholder="'+escA(t.fMarcoNomeNovo)+'"></div></div>'
+      +'<div id="nProjNewBox" class="newprojbox" style="display:none"><div class="sub" style="margin-bottom:8px"><b>'+t.fNovoProj.replace('…','')+'</b></div>'
+      +'<div class="fieldrow"><div class="field full"><label>'+t.fProjNome+' *</label><input type="text" id="nPjNome"></div></div>'
+      +'<div class="fieldrow"><div class="field"><label>'+t.fProjResp+'</label><input type="text" list="dlNames" id="nPjResp"></div>'
+      +'<div class="field"><label>'+t.mPlat+'</label><select id="nPjPlat">'+selPlat('CORP')+'</select></div>'
+      +'<div class="field"><label>'+t.fInicio+'</label><input type="date" id="nPjIni"></div>'
+      +'<div class="field"><label>'+t.fFim+'</label><input type="date" id="nPjFim"></div></div>'
+      +'<div class="fieldrow"><div class="field full"><label>'+t.fProjDescr+'</label><textarea id="nPjDescr"></textarea></div></div></div>'
+      +'<div class="fieldrow"><div class="field full"><label>'+t.thAtiv+' <span class="muted" id="nAtivReq">*</span></label><textarea id="nAtiv"></textarea><span class="sub">'+t.fAtivOpc+'</span></div></div>'
       +'<div class="fieldrow"><div class="field"><label>'+t.mResp+' *</label><input type="text" list="dlNames" id="nResp"></div>'
       +'<div class="field"><label>'+t.fInicio+'</label><input type="date" id="nIni"></div>'
       +'<div class="field"><label>'+t.fFim+'</label><input type="date" id="nFim"></div></div>'
@@ -1255,10 +1627,11 @@ function openCreate(kind){kind=kind||'entregavel';
   }
   h+='<div class="fieldrow"><div class="field full"><label>'+t.fComentInit+'</label><textarea id="nComent"></textarea></div></div>'
     +'<div class="modalfoot"><button class="btn green big" onclick="saveNew(\''+kind+'\')">'+t.fCriar+'</button></div></div>';
-  document.getElementById('mBody').innerHTML=h;openModal();}
+  document.getElementById('mBody').innerHTML=h;openModal();
+  if(kind==='projeto'){fillMarcoSel(pre.projId||'',pre.marcoId||'');}}
 function newId(pfx){return pfx+Date.now()+Math.floor(Math.random()*1000);}
 function monthName(iso){if(!iso)return '';try{return new Date(iso+'T00:00:00').toLocaleDateString('pt-BR',{month:'long'});}catch(e){return '';}}
-function nextProjNum(projName){var proj=A(DATA.projetos).find(x=>x.nome===projName);
+function nextProjNum(projName){var proj=PROJBY[projName]||A(DATA.projetos).find(x=>projNome(x)===projName||x.nome===projName);
   if(!proj)return (A(DATA.projetos).length+1)+'.1';
   var base='',maxSub=0;A(proj.atividades).forEach(a=>{var mm=String(a.num||'').match(/^(\d+)\.(\d+)/);if(mm){base=mm[1];if(+mm[2]>maxSub)maxSub=+mm[2];}});
   if(!base){var first=A(proj.atividades)[0];var pm=first?String(first.num||'').match(/^(\d+)/):null;base=pm?pm[1]:String(A(DATA.projetos).indexOf(proj)+1);}
@@ -1273,11 +1646,7 @@ function saveNew(kind){const val=id=>{const el=document.getElementById(id);retur
   } else if(kind==='rotina'){const ativ=val('nAtiv');const di=parseInt(val('nDia'),10);
     if(!ativ||!resp||isNaN(di)||di<1){toast(t.reqRot);return;}
     ni={id:newId('NR'),kind:'rotina',ativ,resp,period:val('nPer')||'Mensal',diaUtil:di,createdBy:USER,createdTs:nowStamp()};
-  } else {const ativ=val('nAtiv');if(!ativ||!resp){toast(t.reqMsg);return;}
-    let pct=parseFloat(val('nPct'));if(isNaN(pct))pct=0;
-    const projName=val('nProj')||'(novo projeto)';
-    ni={id:newId('NP'),kind:'projeto',projeto:projName,num:nextProjNum(projName),fase:val('nFase'),ativ,resp,inicio:val('nIni')||null,fim:val('nFim')||null,pct:Math.max(0,Math.min(1,pct/100)),marco:val('nMarco'),prio:val('nPrio'),createdBy:USER,createdTs:nowStamp()};
-  }
+  } else {return saveNewProjeto();}
   DATA.overlay.newItems=A(DATA.overlay.newItems);DATA.overlay.newItems.push(ni);
   sessionNewIds.add(ni.id);
   const it=ovItem(ni.id);
@@ -1286,9 +1655,347 @@ function saveNew(kind){const val=id=>{const el=document.getElementById(id);retur
   // injeta ao vivo
   if(ni.kind==='entregavel'){const e=entFromNew(ni);e.comments=it.comments.slice();e.nComments=e.comments.length;DATA.entregaveis=A(DATA.entregaveis);DATA.entregaveis.push(e);ENTBY[ni.id]=e;}
   else if(ni.kind==='rotina'){const r=rotFromNew(ni);r.comments=it.comments.slice();r.nComments=r.comments.length;DATA.rotinas=A(DATA.rotinas);DATA.rotinas.push(r);ROTBY[ni.id]=r;}
-  else{const a=actFromNew(ni);a.comments=it.comments.slice();a.nComments=a.comments.length;let p=A(DATA.projetos).find(x=>x.nome===ni.projeto);if(!p){p={id:'NP_'+ni.id,nome:ni.projeto,resp:a.resp,curto:a.curto,inicio:a.inicio,fim:a.fim,pct:0,prev:0,st:'Pendente',marco:'',coment:'',obs:'',plat:'CORP',atividades:[]};DATA.projetos=A(DATA.projetos);DATA.projetos.push(p);}p.atividades=A(p.atividades);p.atividades.push(a);ACTBY[ni.id]=a;}
   markDirty(ni.id);refreshAll();toast(t.created);saveOverlay();
-  if(ni.kind==='entregavel')openEnt(ni.id);else if(ni.kind==='rotina')openRot(ni.id);else openAct(ni.id);}
+  if(ni.kind==='entregavel')openEnt(ni.id);else openRot(ni.id);}
+/* Incluir ação → Projeto (v4): cria projeto novo (projdef) e/ou marco e/ou atividade, nesta ordem.
+   Grava: newItems[projdef], overlay.items[projId].official.marcos[], newItems[projeto]{projId,projeto,marcoId,fase}. */
+function saveNewProjeto(){const val=id=>{const el=document.getElementById(id);return el?(el.value||'').trim():'';};
+  const sel=val('nProjSel'),ativ=val('nAtiv'),coment=val('nComent'),status=val('nStatus');let resp=val('nResp');
+  const msel=val('nMarcoSel'),mNovo=val('nMarcoNovo');
+  let pdef=null,p=null;
+  if(sel==='__new__'){const nome=val('nPjNome');if(!nome){toast(t.reqProjNome);return;}
+    pdef={id:newId('NPJ'),kind:'projdef',nome:nome,resp:val('nPjResp'),plat:val('nPjPlat')||'CORP',descricao:val('nPjDescr'),inicio:val('nPjIni')||null,fim:val('nPjFim')||null,createdBy:USER,createdTs:nowStamp()};
+    if(!pdef.resp)pdef.resp=resp||DATA.adminName||'';   /* C1/F4: projeto sem responsável herda o da atividade, senão o admin */
+    if(!resp)resp=pdef.resp;
+  }else{p=sel?PROJBY[sel]:null;if(!p){toast(t.reqProj);return;}}
+  if(msel==='__new__'&&!mNovo){toast(t.reqMarcoNome);return;}
+  if(ativ&&!resp){toast(t.reqMsg);return;}
+  if(!ativ&&!pdef&&!(msel==='__new__')){toast(t.reqMsg);return;}
+  /* 1) projeto novo */
+  DATA.overlay.newItems=A(DATA.overlay.newItems);
+  if(pdef){DATA.overlay.newItems.push(pdef);sessionNewIds.add(pdef.id);p=projFromDef(pdef);addProjData(p);markDirty(pdef.id);}
+  const pid=p.id;
+  /* 2) marco */
+  let marcoId=null,faseNome='';
+  if(msel==='__new__'){const ex=projMarcos(p).find(g=>g.explicit&&nk(g.nome)===nk(mNovo));
+    if(ex){marcoId=ex.id;faseNome=ex.nome;}
+    else{const arr=marcosArr(pid);const mx=arr.reduce((s,m)=>Math.max(s,+m.ordem||0),0);const mk={id:newId('MK'),nome:mNovo,ordem:mx+1,deleted:false};arr.push(mk);marcoId=mk.id;faseNome=mk.nome;markDirty(pid);}}
+  else if(msel.indexOf('fase:')===0){faseNome=msel.slice(5);}
+  else if(msel){const g=projMarcos(p).find(x=>x.id===msel);if(g){marcoId=g.id;faseNome=g.nome;}}
+  /* 3) atividade */
+  let ni=null;
+  if(ativ){let pct=parseFloat(val('nPct'));if(isNaN(pct))pct=0;
+    ni={id:newId('NP'),kind:'projeto',projId:pid,projeto:projNome(p),num:nextProjNum(pid),fase:faseNome,marcoId:marcoId,ativ:ativ,resp:resp,inicio:val('nIni')||null,fim:val('nFim')||null,pct:Math.max(0,Math.min(1,pct/100)),marco:val('nMarco'),prio:val('nPrio'),createdBy:USER,createdTs:nowStamp()};
+    DATA.overlay.newItems.push(ni);sessionNewIds.add(ni.id);
+    const it=ovItem(ni.id);
+    if(status)it.official.status=status;
+    if(coment)it.comments.push({ts:nowStamp(),by:t.adminAuthor,text:coment});
+    const a=actFromNew(ni);a.comments=it.comments.slice();a.nComments=a.comments.length;linkAct(p,a);
+    markDirty(ni.id);}
+  openProj.add(pid);markDirty(pid);refreshAll();toast(ni?t.created:(pdef?t.projCreated:t.marcoCreated));saveOverlay();
+  if(ni)openAct(ni.id);else{closeModal();state.tab='proj';renderTabs();renderContent();}}
+
+/* ---------- v4 A3: importar Excel de projeto + fila de aprovação ----------
+   Leitor .xlsx mínimo (zip via DecompressionStream + DOMParser, sem biblioteca), cruza a aba PROJETO com o
+   projeto do sistema e grava um lote em overlay.importBatches (changes pendentes). Nada muda no projeto até o
+   admin aprovar/ajustar cada alteração e clicar "Aplicar aprovadas" (applyImportBatch). */
+const IMP_COLS=['ID (não alterar)','Marco / Etapa','Atividade','Responsável','Data Início','Data Fim','% Conclusão (0-100)','Status','Comentário (novo)'];
+const IMP_RNS='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+let impSeq=0;
+function impId(pfx){impSeq++;return pfx+Date.now()+('000'+(impSeq%1000)).slice(-3);}
+function nrm(s){return String(s==null?'':s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\s+/g,' ').trim();}
+function z2(n){return ('0'+n).slice(-2);}
+async function zipRead(buf){
+  const u8=new Uint8Array(buf),dv=new DataView(buf);let e=-1;
+  for(let i=u8.length-22;i>=Math.max(0,u8.length-65557);i--){if(dv.getUint32(i,true)===0x06054b50){e=i;break;}}
+  if(e<0)throw new Error('ZIP inválido (EOCD)');
+  const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);const files={};const dec=new TextDecoder('utf-8');
+  for(let k=0;k<n;k++){if(dv.getUint32(p,true)!==0x02014b50)break;
+    const m=dv.getUint16(p+10,true),cs=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),el=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),lho=dv.getUint32(p+42,true);
+    files[dec.decode(u8.subarray(p+46,p+46+nl))]={m:m,cs:cs,lho:lho};p+=46+nl+el+cl;}
+  async function get(name){const f=files[name];if(!f)return null;const h=f.lho;
+    if(dv.getUint32(h,true)!==0x04034b50)throw new Error('ZIP inválido (local header)');
+    const st=h+30+dv.getUint16(h+26,true)+dv.getUint16(h+28,true);const data=u8.subarray(st,st+f.cs);
+    if(f.m===0)return data;
+    if(f.m!==8)throw new Error('método de compressão '+f.m+' não suportado');
+    return new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());}
+  return {names:Object.keys(files),get:get,text:async function(name){const d=await get(name);return d?dec.decode(d):null;}};}
+function xmlDoc(s){const d=new DOMParser().parseFromString(s,'application/xml');if(d.getElementsByTagName('parsererror').length)throw new Error('XML inválido');return d;}
+function xEls(n,name){return Array.prototype.slice.call(n.getElementsByTagNameNS('*',name));}
+function colRow(ref){const m=/^([A-Z]+)(\d+)$/i.exec(ref||'');if(!m)return null;let c=0;const s=m[1].toUpperCase();for(let i=0;i<s.length;i++)c=c*26+(s.charCodeAt(i)-64);return {c:c-1,r:(+m[2])-1};}
+/* devolve {sheets:{nome:grid}, styles:{xfFmt,fmts}}; grid[row][col] = {raw,t,s,isPct,isDate,text} (linhas/colunas 0-based, esparso) */
+async function xlsxRead(file){
+  const buf=await file.arrayBuffer();const z=await zipRead(buf);
+  const wbx=await z.text('xl/workbook.xml');if(!wbx)throw new Error('não é um .xlsx (sem xl/workbook.xml)');
+  const wb=xmlDoc(wbx);const relT={};
+  const rx=await z.text('xl/_rels/workbook.xml.rels');if(rx)xEls(xmlDoc(rx),'Relationship').forEach(r=>{relT[r.getAttribute('Id')]=r.getAttribute('Target');});
+  const shs=xEls(wb,'sheet').map(s=>({name:s.getAttribute('name'),rid:s.getAttributeNS(IMP_RNS,'id')||s.getAttribute('r:id')}));
+  const sst=[];const ssx=await z.text('xl/sharedStrings.xml');
+  if(ssx)xEls(xmlDoc(ssx),'si').forEach(si=>{sst.push(xEls(si,'t').filter(x=>x.parentNode.localName!=='rPh').map(x=>x.textContent).join(''));});
+  const xfFmt=[],fmts={};const stx=await z.text('xl/styles.xml');
+  if(stx){const sd=xmlDoc(stx);xEls(sd,'numFmt').forEach(f=>{fmts[f.getAttribute('numFmtId')]=f.getAttribute('formatCode')||'';});
+    const cx=xEls(sd,'cellXfs')[0];if(cx)Array.prototype.forEach.call(cx.children,x=>{xfFmt.push(+x.getAttribute('numFmtId')||0);});}
+  function fmtKind(si){const id=xfFmt[si];if(id==null)return {pct:false,date:false};
+    if(id===9||id===10)return {pct:true,date:false};
+    if((id>=14&&id<=22)||(id>=45&&id<=47))return {pct:false,date:true};
+    const code=fmts[id];if(!code)return {pct:false,date:false};
+    const c=code.replace(/"[^"]*"/g,'').replace(/\[[^\]]*\]/g,'').replace(/\\./g,'');
+    return {pct:/%/.test(c),date:/[dmy]/i.test(c)};}
+  const sheets={};
+  for(const sh of shs){const tg=relT[sh.rid];if(!tg)continue;const path=tg.charAt(0)==='/'?tg.slice(1):'xl/'+tg;
+    const sx=await z.text(path);if(!sx)continue;const d=xmlDoc(sx);const grid=[];
+    xEls(d,'c').forEach(c=>{const pos=colRow(c.getAttribute('r'));if(!pos)return;
+      const ty=c.getAttribute('t')||'n',s=+c.getAttribute('s')||0;let raw=null;const v=xEls(c,'v')[0];
+      if(ty==='s')raw=v?sst[+v.textContent]:null;
+      else if(ty==='inlineStr')raw=xEls(c,'t').map(x=>x.textContent).join('');
+      else if(ty==='str'||ty==='e')raw=v?v.textContent:null;
+      else if(ty==='b')raw=v?(v.textContent==='1'):null;
+      else raw=(v&&v.textContent!=='')?parseFloat(v.textContent):null;
+      if(raw===null||raw===undefined||raw==='')return;
+      const k=fmtKind(s);(grid[pos.r]=grid[pos.r]||[])[pos.c]={raw:raw,t:ty,s:s,isPct:k.pct,isDate:k.date,text:String(raw)};});
+    sheets[sh.name]=grid;}
+  return {sheets:sheets,styles:{xfFmt:xfFmt,fmts:fmts}};}
+function gc(grid,r,c){const row=grid[r];return row?row[c]:undefined;}
+function cText(c,keepNl){if(!c||c.raw==null)return '';if(typeof c.raw==='number')return String(c.raw);const s=String(c.raw);return keepNl?s.trim():s.replace(/\s+/g,' ').trim();}
+function impIso(y,m,d){if(!(y>=1900&&y<=2200&&m>=1&&m<=12&&d>=1&&d<=31))return undefined;const dt=new Date(Date.UTC(y,m-1,d));if(dt.getUTCMonth()!==m-1)return undefined;return y+'-'+z2(m)+'-'+z2(d);}
+/* data: null = vazio, undefined = ilegível (vira aviso) */
+function cDate(c){if(!c)return null;
+  if(typeof c.raw==='number'){const n=Math.floor(c.raw);if(n<1||n>2958465)return undefined;const d=new Date(Date.UTC(1899,11,30)+n*86400000);return d.getUTCFullYear()+'-'+z2(d.getUTCMonth()+1)+'-'+z2(d.getUTCDate());}
+  const s=String(c.raw).trim();if(!s)return null;let m=/^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s);if(m)return impIso(+m[1],+m[2],+m[3]);
+  m=/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/.exec(s);if(m){let y=+m[3];if(y<100)y+=2000;return impIso(y,+m[2],+m[1]);}
+  return undefined;}
+/* %: coluna é 0-100; célula formatada como % guarda fração (0.5 = 50%). Devolve fração 0..1 */
+/* C1: sem formato %, 0<x<1 é lido como fração (0,5 → 50%) — vide pctIsFrac/aviso em parseProjSheet; x>=1 é 0-100 (1 → 1%). */
+function pctIsFrac(c){if(!c||c.isPct)return false;let n=null;
+  if(typeof c.raw==='number')n=c.raw;else{const m=/^(-?[\d.,]+)\s*(%?)$/.exec(String(c.raw).trim());if(m&&!m[2])n=parseFloat(m[1].replace(',','.'));}
+  return n!=null&&!isNaN(n)&&n>0&&n<1;}
+function cPct(c){if(!c)return null;const cl=x=>Math.round(Math.max(0,Math.min(1,x))*10000)/10000;
+  if(typeof c.raw==='number')return cl((c.isPct||pctIsFrac(c))?c.raw:c.raw/100);
+  const s=String(c.raw).trim();if(!s)return null;const m=/^(-?[\d.,]+)\s*%?$/.exec(s);if(!m)return undefined;
+  const n=parseFloat(m[1].replace(',','.'));return isNaN(n)?undefined:cl(pctIsFrac(c)?n:n/100);}
+function impStatus(s){const n=nrm(s);if(!n||n==='(auto)'||n==='auto')return {v:null,known:true};
+  if(/^conclu/.test(n))return {v:'Concluído',known:true};if(/^cancel/.test(n))return {v:'Cancelado',known:true};return {v:null,known:false};}
+/* lê a aba PROJETO → {nome,resp,plat,descr,projId,rows[],warnings[]} ou {error} */
+function parseProjSheet(grid){
+  const bad=[];for(let i=0;i<9;i++){if(nrm(cText(gc(grid,6,i)))!==nrm(IMP_COLS[i]))bad.push(i);}
+  if(bad.length)return {error:t.impBadHdr+IMP_COLS.join(' | ')};
+  const out={nome:cText(gc(grid,0,1)),resp:cText(gc(grid,1,1)),plat:cText(gc(grid,2,1)),descr:cText(gc(grid,3,1),true),projId:cText(gc(grid,4,1)),rows:[],warnings:[]};
+  let blanks=0;
+  for(let r=7;r<grid.length&&blanks<20;r++){const row=grid[r];
+    if(!row||!row.some(x=>x)){blanks++;continue;}blanks=0;
+    const id=cText(row[0]),ativ=cText(row[2]);
+    const w=out.warnings,ln='linha '+(r+1)+': ';
+    if(!ativ&&!id){if(cText(row[8],true))w.push(ln+'só tem comentário (sem ID nem atividade); descartada');continue;}
+    const ini=cDate(row[4]),fim=cDate(row[5]),pct=cPct(row[6]),st=impStatus(cText(row[7]));
+    if(ini===undefined)w.push(ln+'Data Início ilegível (ignorada)');
+    if(fim===undefined)w.push(ln+'Data Fim ilegível (ignorada)');
+    if(pct===undefined)w.push(ln+'% Conclusão ilegível (ignorado)');
+    else if(pct!=null&&pctIsFrac(row[6]))w.push(ln+'% Conclusão '+cText(row[6])+' entre 0 e 1 sem formato %: lido como fração ('+Math.round(pct*100)+'%)');
+    if(!st.known)w.push(ln+'Status "'+cText(row[7])+'" não reconhecido (ignorado)');
+    out.rows.push({row:r+1,id:id,marco:cText(row[1]),ativ:ativ,resp:cText(row[3]),ini:ini===undefined?null:ini,fim:fim===undefined?null:fim,
+      pct:pct===undefined?null:pct,status:st.known?st.v:undefined,comment:cText(row[8],true)});}
+  return out;}
+/* nome do marco → valor aceito por applyActMarco: id do marco explícito, 'fase:<nome>' ou '' (sem marco) */
+function impMarcoVal(p,name){const n=String(name||'').trim();if(!n||nk(n)===nk(SEMK))return '';
+  const g=p?projMarcos(p).find(x=>x.id!==SEM_ID&&nk(x.nome)===nk(n)):null;return g?g.id:'fase:'+n;}
+function impStMap(a){const s=actStatus(a);return (s==='Concluído'||s==='Cancelado')?s:null;}
+/* cruza o arquivo com o sistema → lote {id,ts,file,by,projId,projNome,newProject,state,changes} (ou null se nada mudou) */
+function buildImportBatch(parsed,fileName){
+  const warn=(parsed.warnings||[]).slice();
+  let p=null;if(parsed.projId)p=PROJBY[parsed.projId]||null;
+  if(!p&&parsed.nome)p=A(DATA.projetos).find(x=>!projDeleted(x)&&nrm(projNome(x))===nrm(parsed.nome))||null;   /* C1: ignora projeto excluído */
+  const changes=[];let n=0;const mk=o=>{o.cid='c'+(++n);o.state=o.state||'pending';changes.push(o);return o;};
+  let newProject=null;
+  if(!p){const pl=String(parsed.plat||'').trim(),up=pl.toUpperCase();const plat=PLATOPTS.indexOf(up)>=0?up:(PLATOPTS.indexOf(normPlat(pl))>=0?normPlat(pl):'CORP');
+    newProject={nome:parsed.nome,resp:parsed.resp,plat:plat,descricao:parsed.descr};
+    mk({type:'new-project',itemId:null,marcoNome:null,ativ:parsed.nome,field:'projeto',label:t.impNewProj,old:null,new:{nome:newProject.nome,resp:newProject.resp,plat:newProject.plat,descricao:newProject.descricao}});}
+  const known={};if(p)projMarcos(p).forEach(g=>{if(g.id!==SEM_ID)known[nk(g.nome)]=1;});
+  const ensureMarco=name=>{const nm=String(name||'').trim();if(!nm||nk(nm)===nk(SEMK)||known[nk(nm)])return;known[nk(nm)]=1;
+    mk({type:'new-marco',itemId:null,marcoNome:nm,ativ:null,field:'marco',label:t.impNewMarco,old:null,new:nm});};
+  const seen={};
+  /* C1: IDs que o arquivo já cita (não podem ser "roubados" pelo casamento por nome) */
+  const idsInFile={};parsed.rows.forEach(r=>{if(r.id&&ACTBY[r.id]&&p&&PROJOF[r.id]===p)idsInFile[r.id]=1;});
+  const cmtHas=(a,txt)=>{const k=nrm(txt);const ov=ovLookup(a.id);
+    return A(a.comments).concat(A(ov&&ov.comments)).some(c=>c&&nrm(c.text)===k);};
+  parsed.rows.forEach(r=>{
+    let a=r.id?ACTBY[r.id]:null;
+    if(a&&(!p||PROJOF[a.id]!==p)){warn.push('linha '+r.row+': o ID '+r.id+' não pertence a este projeto; tratado como atividade nova');a=null;}
+    else if(!a&&r.id)warn.push('linha '+r.row+': o ID '+r.id+' é desconhecido; tratado como atividade nova');
+    /* C1: linha sem ID (ou ID desconhecido) cujo marco+atividade já existe e está ativa → edição dessa atividade, não duplicata */
+    if(!a&&p&&r.ativ){const mk=nrm(r.marco&&nk(r.marco)!==nk(SEMK)?r.marco:SEMK);
+      a=A(p.atividades).find(x=>x.ativ&&!actDeleted(x)&&!idsInFile[x.id]&&!seen[x.id]&&nrm(actAtiv(x))===nrm(r.ativ)&&nrm(actMarcoNome(x))===mk)||null;}
+    if(a&&seen[a.id]){warn.push('linha '+r.row+': ID '+r.id+' repetido (ignorada)');return;}
+    if(a){seen[a.id]=1;
+      const add=(field,old,nw,extra)=>{const o={type:'edit',itemId:a.id,marcoNome:null,ativ:actAtiv(a),field:field,label:t['impF_'+field],old:old,new:nw};if(extra)for(const k in extra)o[k]=extra[k];return mk(o);};
+      const curAtiv=String(actAtiv(a)||'').replace(/\s+/g,' ').trim();
+      if(r.ativ&&r.ativ!==curAtiv)add('ativ',actAtiv(a),r.ativ);
+      if(r.resp&&nrm(r.resp)!==nrm(actResp(a)))add('resp',actResp(a),r.resp);
+      const curMk=actMarcoNome(a);const fileMk=r.marco||SEMK;
+      if(nk(fileMk)!==nk(curMk)){ensureMarco(r.marco);add('marco',curMk,r.marco&&nk(r.marco)!==nk(SEMK)?r.marco:'',{marcoNome:r.marco&&nk(r.marco)!==nk(SEMK)?r.marco:''});}
+      if(r.ini&&r.ini!==actIni(a))add('inicio',actIni(a),r.ini);
+      if(r.fim&&r.fim!==actFim(a))add('limite',actFim(a),r.fim);
+      if(r.pct!=null&&Math.abs(r.pct-effPct(a))>0.005)add('pct',effPct(a),r.pct);
+      if(r.status!==undefined){const cur=impStMap(a);
+        if(r.status===null){if(ovOf(a.id,'status'))add('status',cur,null);}
+        else if(r.status!==cur)add('status',cur,r.status);}
+      if(r.comment&&!cmtHas(a,r.comment))mk({type:'comment',itemId:a.id,marcoNome:null,ativ:actAtiv(a),field:'comment',label:t.impF_comment,old:null,new:r.comment,by:r.resp||''});
+    }else{
+      if(!r.ativ){warn.push('linha '+r.row+': sem nome de atividade (ignorada)');return;}
+      ensureMarco(r.marco);
+      mk({type:'new-act',itemId:null,marcoNome:(r.marco&&nk(r.marco)!==nk(SEMK))?r.marco:'',ativ:r.ativ,field:'new-act',label:t.impNew,old:null,
+        new:{ativ:r.ativ,resp:r.resp||(p?projResp(p):parsed.resp)||'',inicio:r.ini||null,fim:r.fim||null,pct:r.pct==null?0:r.pct,status:r.status||null,comment:r.comment||''}});}
+  });
+  if(p)A(p.atividades).forEach(a=>{if(!a.ativ||seen[a.id]||actDeleted(a)||actStatus(a)==='Cancelado')return;
+    mk({type:'missing',itemId:a.id,marcoNome:null,ativ:actAtiv(a),field:'missing',label:t.impMissing,old:null,new:null,state:'rejected'});});
+  if(!changes.some(c=>c.type!=='missing'))return null;
+  const rank={'new-project':0,'new-marco':1,'new-act':2,'edit':3,'comment':3,'missing':4};
+  changes.sort((x,y)=>rank[x.type]-rank[y.type]);
+  return {id:impId('IB'),ts:nowStamp(),file:fileName||'',by:USER,projId:p?p.id:null,projNome:p?projNome(p):parsed.nome,newProject:newProject,state:'pending',warnings:warn,changes:changes};}
+async function importExcelFile(file){
+  try{const wbk=await xlsxRead(file);const key=Object.keys(wbk.sheets).find(k=>nrm(k)==='projeto');
+    if(!key){alert(t.impNoSheet);return null;}
+    const parsed=parseProjSheet(wbk.sheets[key]);if(parsed.error){alert(parsed.error);return null;}
+    if(!parsed.projId&&!parsed.nome){alert(t.impNoProj);return null;}
+    const b=buildImportBatch(parsed,file.name);if(!b){toast(t.impNothing);return null;}
+    /* C1: já existe lote pendente do mesmo projeto? */
+    const dup=impBatchesLive().filter(x=>x.state!=='done'&&(b.projId?x.projId===b.projId:(!x.projId&&nrm(x.projNome)===nrm(b.projNome))));
+    if(dup.length){if(!confirm(t.impDupPending))return null;dup.forEach(x=>{x.deleted=true;impTouch(x);});}
+    DATA.overlay.importBatches=A(DATA.overlay.importBatches);DATA.overlay.importBatches.push(b);
+    importTouched.add(b.id);markDirty(b.id);state.tab='sug';refreshAll();saveOverlay();
+    toast('📥 '+b.changes.filter(c=>c.type!=='missing').length+' '+t.impPend);return b;}
+  catch(e){alert(t.impReadErr+(e&&e.message?e.message:e));return null;}}
+function impPick(el){const f=el.files&&el.files[0];el.value='';if(f)importExcelFile(f);}
+function impBtnHtml(){return '<input type="file" id="impFile" accept=".xlsx" hidden onchange="impPick(this)"><button class="btn primary sm" onclick="document.getElementById(\'impFile\').click()">'+t.impBtn+'</button>';}
+
+/* ---- fila de aprovação ---- */
+function impBatchesLive(){return A(DATA.overlay&&DATA.overlay.importBatches).filter(b=>b&&b.id&&!b.deleted);}
+function impPendingN(){let n=0;impBatchesLive().forEach(b=>{if(b.state==='done')return;A(b.changes).forEach(c=>{if(c.state==='pending')n++;});});return n;}
+function impBatch(id){return impBatchesLive().find(b=>b.id===id)||null;}
+function impTouch(b){importTouched.add(b.id);markDirty(b.id);}
+function impKind(f){return (f==='inicio'||f==='limite'||f==='fim')?'date':(f==='pct'?'pct':(f==='status'?'status':(f==='resp'?'resp':(f==='marco'?'marco':'text'))));}
+function impFmtVal(f,v){if(f==='status'&&(v==null||v===''))return '(auto)';if(v==null||v==='')return '—';if(f==='pct')return Math.round(v*100)+'%';if(impKind(f)==='date')return fmtY(v);return esc(v);}
+function impInp(bid,cid,f,v,ro){const k=impKind(f);const hd='onchange="impEdit(\''+bid+'\',\''+cid+'\',\''+f+'\',this)"';
+  if(ro)return esc(v==null?'':v);
+  if(k==='date')return '<input type="date" value="'+escA(v||'')+'" '+hd+'>';
+  if(k==='pct')return '<input type="number" min="0" max="100" step="5" value="'+(v==null?'':Math.round(v*100))+'" '+hd+'>';
+  if(k==='status')return '<select '+hd+'><option value="">(auto)</option><option value="Concluído"'+(v==='Concluído'?' selected':'')+'>'+t.stConcluir+'</option><option value="Cancelado"'+(v==='Cancelado'?' selected':'')+'>'+t.stCancel+'</option></select>';
+  if(k==='resp')return '<input type="text" list="dlNames" value="'+escA(v||'')+'" '+hd+'>';
+  if(k==='marco')return '<input type="text" list="dlMk_'+bid+'" value="'+escA(v||'')+'" '+hd+'>';
+  return '<input type="text" value="'+escA(v==null?'':v)+'" '+hd+'>';}
+function impBtns(b,c){if(c.state==='applied')return '<td class="acts">✓</td>';
+  return '<td class="acts"><button class="btn green sm" title="'+t.mApprove+'" onclick="impSet(\''+b.id+'\',\''+c.cid+'\',\'approved\')">✔</button> <button class="btn dangerghost sm" title="'+t.mReject+'" onclick="impSet(\''+b.id+'\',\''+c.cid+'\',\'rejected\')">✕</button></td>';}
+function impCls(c){return c.state==='approved'||c.state==='applied'?'ok':(c.state==='rejected'?'no':'');}
+function impRows(b,gk,items){let h='';
+  items.forEach(c=>{const cl=impCls(c),ro=(c.state==='applied');
+    if(c.type==='missing'){h+='<tr class="info"><td colspan="4">⚠ '+esc(c.ativ||c.itemId)+' — '+t.impMissing+'</td></tr>';}
+    else if(c.type==='edit'){h+='<tr class="'+cl+'"><td>'+esc(c.label)+'</td><td class="old">'+impFmtVal(c.field,c.old)+'</td><td>'+impInp(b.id,c.cid,c.field,c.new,ro)+'</td>'+impBtns(b,c)+'</tr>';}
+    else if(c.type==='comment'){h+='<tr class="'+cl+'"><td>💬 '+esc(c.label)+'</td><td class="old">—</td><td>'+impInp(b.id,c.cid,'comment',c.new,ro)+'</td>'+impBtns(b,c)+'</tr>';}
+    else if(c.type==='new-marco'){h+='<tr class="'+cl+'"><td>🏁 '+esc(c.label)+'</td><td class="old">—</td><td><b>'+esc(c.marcoNome)+'</b></td>'+impBtns(b,c)+'</tr>';}
+    else if(c.type==='new-project'){h+='<tr class="imph2 '+cl+'"><td colspan="3">🆕 '+esc(c.label)+': '+esc(c.new.nome)+'</td>'+impBtns(b,c)+'</tr>';
+      ['nome','resp','plat','descricao'].forEach(f=>{h+='<tr class="'+cl+' sub"><td>'+esc(t['impF_'+f])+'</td><td class="old">—</td><td colspan="2">'+impInp(b.id,c.cid,f,c.new[f],ro)+'</td></tr>';});}
+    else if(c.type==='new-act'){h+='<tr class="imph2 '+cl+'"><td colspan="3">🆕 '+t.impNew+' — '+esc(c.new.ativ)+'</td>'+impBtns(b,c)+'</tr>';
+      [['ativ',c.new.ativ],['marco',c.marcoNome],['resp',c.new.resp],['inicio',c.new.inicio],['fim',c.new.fim],['pct',c.new.pct],['status',c.new.status],['comment',c.new.comment]].forEach(x=>{
+        h+='<tr class="'+cl+' sub"><td>'+esc(t['impF_'+x[0]])+'</td><td class="old">—</td><td colspan="2">'+impInp(b.id,c.cid,x[0],x[1],ro)+'</td></tr>';});}
+  });return h;}
+function impBatchHtml(b){
+  const ch=A(b.changes),done=b.state==='done';
+  const nP=ch.filter(c=>c.state==='pending').length,nA=ch.filter(c=>c.state==='approved').length,nAp=ch.filter(c=>c.state==='applied').length;
+  let h='<div class="impb" id="ib_'+b.id+'"><div class="imph"><b>📄 '+esc(b.file)+'</b><span>'+t.impProj+': <b>'+esc(b.projNome||'')+'</b>'+(b.newProject?' · '+t.impNewProj:'')+'</span><span class="muted">'+esc(b.ts||'')+' · '+esc(b.by||'')+'</span>'
+    +'<span class="sp"></span><span>'+nP+' '+t.impPend+(nA?' · '+nA+' ✔':'')+(nAp?' · '+nAp+' '+t.impApplied:'')+'</span>';
+  if(!done)h+='<button class="btn green sm" onclick="impAll(\''+b.id+'\',\'approved\')">'+t.impApproveAll+'</button><button class="btn dangerghost sm" onclick="impAll(\''+b.id+'\',\'rejected\')">'+t.impRejectAll+'</button><button class="btn primary sm" onclick="impApply(\''+b.id+'\')">'+t.impApply+'</button>';
+  else h+='<span class="b-ok" style="color:var(--green)">✓ '+t.impDone+'</span>';
+  h+='<button class="btn sm" onclick="impDiscard(\''+b.id+'\')">'+t.impDiscard+'</button></div>';
+  const wr=A(b.warnings);if(wr.length)h+='<div class="note" style="padding:6px 14px">⚠ '+t.impWarn+' '+esc(wr.join(' · '))+'</div>';
+  if(!done){
+    const p=b.projId?PROJBY[b.projId]:null;
+    h+='<datalist id="dlMk_'+b.id+'">'+(p?projMarcos(p).filter(g=>g.id!==SEM_ID).map(g=>'<option value="'+escA(g.nome)+'">').join(''):'')+'</datalist>';
+    const gs=[],gi={};
+    ch.forEach(c=>{const k=(c.type==='new-project'||c.type==='new-marco')?'__p':(c.type==='new-act'?c.cid:(c.type==='missing'?'__m':c.itemId));
+      if(!gi[k]){gi[k]={k:k,items:[]};gs.push(gi[k]);}gi[k].items.push(c);});
+    h+='<table class="impt"><thead><tr><th>'+t.impCol+'</th><th>'+t.impCur+'</th><th>'+t.impProp+'</th><th></th></tr></thead><tbody>';
+    gs.forEach(g=>{
+      if(g.k!=='__p'&&g.k!=='__m'&&g.items[0].type!=='new-act'){const a=ACTBY[g.k];h+='<tr class="imph2"><td colspan="4">'+esc(a?actAtiv(a):(g.items[0].ativ||g.k))+'</td></tr>';}
+      h+=impRows(b,g.k,g.items);});
+    h+='</tbody></table>';}
+  return h+'</div>';}
+function impSection(){const L=impBatchesLive();
+  let h='<div class="sec"><header style="--c:var(--blue)"><span class="dot" style="--c:var(--blue)"></span><h2>'+t.impTitle+'</h2><span class="n">'+impPendingN()+'</span></header><div style="padding:14px">'
+    +'<div class="projtools">'+impBtnHtml()+'</div>';
+  h+=L.length?L.map(impBatchHtml).join(''):'<div class="note">'+t.impEmpty+'</div>';
+  return h+'</div></div>';}
+function impRefresh(b){const el=document.getElementById('ib_'+b.id);
+  if(el){const tmp=document.createElement('div');tmp.innerHTML=impBatchHtml(b);el.replaceWith(tmp.firstChild);}
+  renderKpis();renderTabs();}
+function impChange(b,cid){return A(b.changes).find(c=>c.cid===cid)||null;}
+/* aprovar uma alteração que depende de projeto/marco novo aprova junto o projeto/marco (pendente) */
+function impApproveDeps(b,c){const ch=A(b.changes);
+  if(c.type!=='new-project'){const np=ch.find(x=>x.type==='new-project'&&x.state==='pending');if(np)np.state='approved';}
+  if(c.marcoNome&&c.type!=='new-marco'){const nm=ch.find(x=>x.type==='new-marco'&&nk(x.marcoNome)===nk(c.marcoNome)&&x.state==='pending');if(nm)nm.state='approved';}}
+function impSet(bid,cid,st){const b=impBatch(bid),c=b&&impChange(b,cid);if(!c||c.state==='applied')return;
+  c.state=(c.state===st)?'pending':st;if(c.state==='approved')impApproveDeps(b,c);impTouch(b);impRefresh(b);}
+function impAll(bid,st){const b=impBatch(bid);if(!b)return;
+  A(b.changes).forEach(c=>{if(c.type==='missing'||c.state==='applied')return;c.state=st;});impTouch(b);impRefresh(b);}
+function impEdit(bid,cid,f,el){const b=impBatch(bid),c=b&&impChange(b,cid);if(!c||c.state==='applied')return;
+  const k=impKind(f);let v=el.value;
+  if(k==='date')v=v||null;
+  else if(k==='pct'){const n=parseFloat(String(v).replace(',','.'));v=isNaN(n)?null:Math.max(0,Math.min(1,n/100));}
+  else if(k==='status')v=v||null;
+  else v=String(v).trim();
+  if(c.type==='new-act'){if(f==='marco')c.marcoNome=v;else c.new[f]=v;}
+  else if(c.type==='new-project')c.new[f]=v;
+  else{c.new=v;if(c.type==='edit'&&c.field==='marco')c.marcoNome=v;}
+  c.state='approved';impApproveDeps(b,c);impTouch(b);impRefresh(b);}
+function impApply(bid){const b=impBatch(bid);if(!b)return;const n=A(b.changes).filter(c=>c.state==='approved').length;
+  if(!n){toast(t.impNoneAppr);return;}if(!confirm(t.impConfirm.replace('{n}',n)))return;applyImportBatch(bid);}
+function impDiscard(bid){const b=impBatch(bid);if(!b)return;if(!confirm(t.impDiscConfirm))return;
+  b.deleted=true;impTouch(b);refreshAll();saveOverlay();}
+/* aplica as alterações APROVADAS: new-project → new-marco → new-act → edit → comment */
+function applyImportBatch(bid){const b=impBatch(bid);if(!b)return null;
+  const ap=A(b.changes).filter(c=>c.state==='approved');const res={applied:0,skipped:0,projId:b.projId||null};
+  const touched=new Set(),file=b.file||'Importação Excel';
+  let pid=b.projId||null,p=pid?PROJBY[pid]:null;
+  const skip=c=>{c.state='rejected';res.skipped++;};
+  const np=ap.find(c=>c.type==='new-project');
+  if(np){const v=np.new||{};
+    const pdef={id:newId('NPJ'),kind:'projdef',nome:v.nome||b.projNome||'(novo projeto)',resp:v.resp||'',plat:v.plat||'CORP',descricao:v.descricao||'',inicio:null,fim:null,createdBy:USER,createdTs:nowStamp()};
+    DATA.overlay.newItems=A(DATA.overlay.newItems);DATA.overlay.newItems.push(pdef);sessionNewIds.add(pdef.id);
+    p=projFromDef(pdef);addProjData(p);pid=pdef.id;b.projId=pid;touched.add(pid);np.state='applied';res.applied++;res.projId=pid;}
+  ap.filter(c=>c.type==='new-marco').forEach(c=>{const nm=String(c.new||c.marcoNome||'').trim();
+    if(!p||!nm){skip(c);return;}
+    if(projMarcos(p).some(g=>g.explicit&&nk(g.nome)===nk(nm))){c.state='applied';return;}
+    const arr=marcosArr(pid);const mx=arr.reduce((s,m)=>Math.max(s,+m.ordem||0),0);
+    arr.push({id:impId('MK'),nome:nm,ordem:mx+1,deleted:false});touched.add(pid);c.state='applied';res.applied++;});
+  ap.filter(c=>c.type==='new-act').forEach(c=>{const v=c.new||{};if(!p||!v.ativ){skip(c);return;}
+    const mv=impMarcoVal(p,c.marcoNome);let marcoId=null,fase='';
+    if(mv&&mv.indexOf('fase:')===0)fase=mv.slice(5);else if(mv){const g=projMarcos(p).find(x=>x.id===mv);if(g){marcoId=g.id;fase=g.nome;}}
+    const ni={id:impId('NP'),kind:'projeto',projId:pid,projeto:projNome(p),num:nextProjNum(pid),fase:fase,marcoId:marcoId,ativ:v.ativ,resp:v.resp||projResp(p)||'',
+      inicio:v.inicio||null,fim:v.fim||null,pct:v.pct==null?0:Math.max(0,Math.min(1,v.pct)),marco:'',prio:'',createdBy:'Importação Excel',createdTs:nowStamp()};
+    DATA.overlay.newItems=A(DATA.overlay.newItems);DATA.overlay.newItems.push(ni);sessionNewIds.add(ni.id);
+    const it=ovItem(ni.id);if(v.status==='Concluído'||v.status==='Cancelado')it.official.status=v.status;
+    if(v.comment)it.comments.push({ts:nowStamp(),by:file,text:v.comment});
+    const a=actFromNew(ni);a.comments=it.comments.slice();a.nComments=a.comments.length;linkAct(p,a);
+    touched.add(ni.id);touched.add(pid);c.state='applied';res.applied++;});
+  ap.filter(c=>c.type==='edit').forEach(c=>{const a=ACTBY[c.itemId];if(!a){skip(c);return;}
+    const it=ovItem(a.id),v=c.new,o=it.official;
+    switch(c.field){
+      case 'ativ':if(v)o.ativ=(v!==a.ativ)?v:null;break;
+      case 'resp':if(v)o.resp=(v!==a.resp)?v:null;break;
+      case 'inicio':if(v)o.inicio=(v!==(a.baseInicio||''))?v:null;break;   /* C1: base, não o efetivo */
+      case 'limite':if(v){const cur=o.limite||a.baseFim||a.fim||'';
+        if(v!==cur)it.dateHistory.push({date:v,ts:nowStamp(),by:t.adminAuthor,note:'Importado de '+file});o.limite=(v!==(a.baseFim||''))?v:null;}break;
+      case 'pct':if(v!=null)o.pct=Math.max(0,Math.min(1,+v));break;
+      case 'status':o.status=v||null;break;
+      case 'marco':{const pa=PROJOF[a.id];applyActMarco(a,it,impMarcoVal(pa,c.marcoNome!=null?c.marcoNome:v));break;}
+    }
+    touched.add(a.id);c.state='applied';res.applied++;});
+  ap.filter(c=>c.type==='comment').forEach(c=>{const a=ACTBY[c.itemId];if(!a||!c.new){skip(c);return;}
+    const it=ovItem(a.id);it.comments.push({ts:nowStamp(),by:c.by||file,text:c.new});a.comments=it.comments.slice();a.nComments=a.comments.length;
+    touched.add(a.id);c.state='applied';res.applied++;});
+  if(!A(b.changes).some(c=>c.state==='pending'||c.state==='approved'))b.state='done';
+  touched.forEach(id=>markDirty(id));if(pid)openProj.add(pid);impTouch(b);
+  refreshAll();saveOverlay();
+  toast('✔ '+res.applied+' '+t.impApplied+(res.skipped?' · '+res.skipped+' ✕':''));
+  return res;}
 
 /* ---------- init ---------- */
 function init(){
